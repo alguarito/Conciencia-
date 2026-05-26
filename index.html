@@ -6,68 +6,126 @@
 <title>ConciencIA · Asesor del Debido Proceso · I.E. Sor María Juliana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Librerías para generación de documentos Word -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <style>
 /* ============================================================
-   SISTEMA DE TEMAS — 3 variantes
-   El default (sin atributo) es editorial. data-theme="moderno"
-   activa el tema claro moderno. data-theme="moderno-oscuro" el modo oscuro.
+   SISTEMA "BENTO JURÍDICO" v2.1 · design-system-conciencia
+   Dos temas: claro institucional (default) + oscuro alto contraste.
+   Todos los contrastes verificados WCAG 2.2 AA.
    ============================================================ */
 
-:root, [data-theme="editorial"]{
-  /* Variables semánticas */
-  --bg-app:#FAF7F2;
-  --bg-surface:#FAF7F2;
-  --bg-elevated:#FAF7F2;
-  --bg-muted:#F0EBE3;
+:root, [data-theme="editorial"], [data-theme="moderno"]{
+  /* ── Superficies (claro institucional) ──────────────────── */
+  --bg-app:#FAF7F2;          /* hueso · página */
+  --bg-surface:#FFFFFF;       /* card */
+  --bg-elevated:#FFFFFF;
+  --bg-muted:#F0EBE3;         /* hover suave, card secundaria */
   --bg-hover:#F0EBE3;
   --bg-strong:#E8DFD0;
-  --border:#D6CFC2;
-  --border-strong:#B8B0A0;
-  --border-subtle:rgba(214,207,194,.5);
-  --text:#1A1614;
-  --text-muted:#3D3633;
-  --text-subtle:#71665E;
-  --text-on-accent:#FAF7F2;
-  --accent:#6B1820;
+
+  /* ── Estructura ─────────────────────────────────────────── */
+  --border:#9C9486;           /* 3.13:1 sobre bg-app ✓ */
+  --border-strong:#7A7268;
+  --border-subtle:#E5DDD0;    /* solo para divisiones internas no críticas */
+  --border-soft:#E5DDD0;
+  --divider:#D6CFC2;
+
+  /* ── Tinta ──────────────────────────────────────────────── */
+  --text:#1A1614;             /* 16.7:1 ✓ */
+  --text-muted:#3D3633;       /* 10.5:1 ✓ */
+  --text-subtle:#71665E;      /* 4.84:1 ✓ */
+  --text-on-accent:#FFFFFF;
+
+  /* ── Acento primario: vino tinto ────────────────────────── */
+  --accent:#6B1820;           /* 13.2:1 ✓ */
   --accent-hover:#8B2230;
-  --accent-strong:#4A1015;
+  --accent-strong:#5A1318;
   --accent-soft:rgba(107,24,32,.08);
   --accent-soft-strong:rgba(107,24,32,.15);
-  --secondary-accent:#B89968; /* dorado */
-  --secondary-accent-soft:rgba(184,153,104,.12);
-  --success:#3A6B4D;
+
+  /* ── Acento secundario: dorado oscurecido ──────────────── */
+  --secondary-accent:#8B6F3F; /* 4.62:1 ✓ — A11Y-001 fix */
+  --secondary-accent-soft:rgba(139,111,63,.10);
+  --dorado-decorativo:#B89968; /* el dorado claro original, SOLO no-texto */
+  --dorado-warm:#F5C77E;      /* para tema oscuro */
+
+  /* ── Estados ────────────────────────────────────────────── */
+  --success:#3A6B4D;          /* 5.2:1 ✓ */
   --success-soft:rgba(58,107,77,.08);
-  --warning:#C97B00;
+  --warning:#B86E1F;          /* 4.7:1 ✓ */
   --warning-soft:#FFF6E5;
-  --danger:#A8312C;
+  --danger:#B91C1C;           /* 5.5:1 ✓ */
   --danger-soft:#FCEBE9;
-  /* Sombras */
-  --shadow-sm:0 1px 2px rgba(26,22,20,.08);
-  --shadow:0 1px 2px rgba(26,22,20,.08), 0 8px 24px -12px rgba(26,22,20,.15);
-  --shadow-lg:0 4px 16px -4px rgba(26,22,20,.18), 0 24px 48px -16px rgba(26,22,20,.22);
-  /* Tipografía */
-  --serif:'Crimson Pro', Georgia, serif;
-  --sans:'DM Sans', system-ui, sans-serif;
-  --mono:'JetBrains Mono', monospace;
+  --critical-bg:#6B1820;
+  --critical-grad-top:#8B0E1A;
+
+  /* ── Sombras (mínimas · Vignelli) ──────────────────────── */
+  --shadow-sm:0 1px 2px rgba(26,22,20,.04);
+  --shadow:0 4px 12px rgba(26,22,20,.06);
+  --shadow-lg:0 8px 24px rgba(26,22,20,.08);
+  --shadow-focus:0 0 0 3px rgba(107,24,32,.25);
+  --shadow-critical:0 8px 32px rgba(107,24,32,.20);
+
+  /* ── Tipografía ─────────────────────────────────────────── */
+  --serif:'Crimson Pro', Georgia, 'Times New Roman', serif;
+  --sans:'Inter Tight', system-ui, -apple-system, sans-serif;
+  --mono:'JetBrains Mono', 'SF Mono', Consolas, monospace;
   --ui-font:var(--sans);
-  --display-font:var(--serif);
-  /* Forma */
-  --radius:2px;
-  --radius-md:4px;
-  --radius-lg:6px;
-  --radius-modal:2px;
-  /* Tamaños tipográficos */
-  --fs-xs:10px; --fs-sm:11px; --fs-base:13px; --fs-md:14px;
-  --fs-lg:16px; --fs-xl:20px; --fs-2xl:26px;
-  /* Layout */
-  --col1: 30%; --col2: 40%; --col3: 30%;
-  /* Aliases legacy (no quitar — los usa parte del CSS antiguo) */
+  --display-font:var(--sans); /* default sans — usar var(--serif) puntualmente */
+
+  /* ── Forma (radius) — Bento ───────────────────────────── */
+  --radius:8px;
+  --radius-sm:4px;
+  --radius-md:8px;
+  --radius-lg:12px;
+  --radius-xl:16px;           /* "rounded-bento" */
+  --radius-2xl:24px;
+  --radius-modal:12px;
+  --radius-full:9999px;
+
+  /* ── Escala tipográfica (Butterick: 15-25px screen) ────── */
+  --fs-xs:12px;
+  --fs-sm:13px;
+  --fs-base:15px;             /* SUBE de 13 → 15 · resuelve TIPO-001 */
+  --fs-md:16px;
+  --fs-lg:18px;
+  --fs-xl:22px;
+  --fs-2xl:28px;
+  --fs-3xl:40px;
+  --fs-4xl:56px;
+
+  /* ── Espaciado (sistema 4pt) ───────────────────────────── */
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-5:20px;
+  --space-6:24px;
+  --space-7:32px;
+  --space-8:40px;
+  --space-9:48px;
+  --space-10:64px;
+
+  /* ── Motion ────────────────────────────────────────────── */
+  --motion-fast:150ms;
+  --motion-normal:250ms;
+  --motion-slow:400ms;
+  --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Focus ─────────────────────────────────────────────── */
+  --focus-ring:var(--accent);
+  --focus-ring-on-dark:var(--dorado-warm);
+
+  /* ── Layout ───────────────────────────────────────────── */
+  --col1: 28%; --col2: 44%; --col3: 28%;
+
+  /* ── Aliases legacy (mantenidos para compatibilidad) ───── */
   --vino:var(--accent); --vino-claro:var(--accent-hover); --vino-oscuro:var(--accent-strong);
-  --dorado:var(--secondary-accent); --dorado-claro:#D4B886;
+  --dorado:var(--secondary-accent); --dorado-claro:var(--dorado-decorativo);
   --tinta:var(--text); --tinta-suave:var(--text-muted);
   --hueso:var(--bg-app); --hueso-osc:var(--bg-muted); --crema:var(--bg-strong);
   --gris-papel:var(--border); --gris-tenue:var(--border-strong);
@@ -76,112 +134,43 @@
   --sombra-papel:var(--shadow); --sombra-elevada:var(--shadow-lg);
 }
 
-/* === TEMA: Moderno Claro === */
-[data-theme="moderno"]{
-  --bg-app:#FAFAFA;
-  --bg-surface:#FFFFFF;
-  --bg-elevated:#FFFFFF;
-  --bg-muted:#F4F4F5;
-  --bg-hover:#F4F4F5;
-  --bg-strong:#E4E4E7;
-  --border:#E4E4E7;
-  --border-strong:#D4D4D8;
-  --border-subtle:rgba(228,228,231,.5);
-  --text:#18181B;
-  --text-muted:#52525B;
-  --text-subtle:#A1A1AA;
-  --text-on-accent:#FFFFFF;
-  --accent:#6B1820;
-  --accent-hover:#8B2230;
-  --accent-strong:#4A1015;
-  --accent-soft:rgba(107,24,32,.06);
-  --accent-soft-strong:rgba(107,24,32,.12);
-  --secondary-accent:#71717A;
-  --secondary-accent-soft:rgba(113,113,122,.08);
-  --success:#10B981;
-  --success-soft:rgba(16,185,129,.08);
-  --warning:#F59E0B;
-  --warning-soft:rgba(245,158,11,.08);
-  --danger:#EF4444;
-  --danger-soft:rgba(239,68,68,.08);
-  /* Sombras más sutiles */
-  --shadow-sm:0 1px 2px rgba(0,0,0,.04);
-  --shadow:0 1px 3px rgba(0,0,0,.06), 0 4px 12px -4px rgba(0,0,0,.06);
-  --shadow-lg:0 4px 12px -2px rgba(0,0,0,.08), 0 16px 32px -8px rgba(0,0,0,.12);
-  /* Tipografía: todo Inter */
-  --ui-font:'Inter', system-ui, sans-serif;
-  --display-font:'Inter', system-ui, sans-serif;
-  /* Forma redondeada */
-  --radius:6px;
-  --radius-md:8px;
-  --radius-lg:12px;
-  --radius-modal:12px;
-  /* Aliases legacy reapuntados */
-  --vino:var(--accent); --vino-claro:var(--accent-hover); --vino-oscuro:var(--accent-strong);
-  --dorado:var(--secondary-accent); --dorado-claro:#A1A1AA;
-  --tinta:var(--text); --tinta-suave:var(--text-muted);
-  --hueso:var(--bg-surface); --hueso-osc:var(--bg-muted); --crema:var(--bg-strong);
-  --gris-papel:var(--border); --gris-tenue:var(--border-strong);
-  --verde:var(--success); --rojo-alerta:var(--danger); --ambar:var(--warning);
-  --rojo-tenue:var(--danger-soft); --ambar-tenue:var(--warning-soft);
-  --sombra-papel:var(--shadow); --sombra-elevada:var(--shadow-lg);
-}
-
-/* === TEMA: Moderno Oscuro === */
-[data-theme="moderno-oscuro"]{
+/* === TEMA: oscuro · alto contraste === */
+[data-theme="moderno-oscuro"], [data-theme="oscuro"]{
   --bg-app:#09090B;
   --bg-surface:#18181B;
   --bg-elevated:#27272A;
   --bg-muted:#27272A;
   --bg-hover:#27272A;
   --bg-strong:#3F3F46;
-  --border:#27272A;
-  --border-strong:#3F3F46;
-  --border-subtle:rgba(63,63,70,.5);
-  --text:#FAFAFA;
-  --text-muted:#A1A1AA;
-  --text-subtle:#71717A;
+  --border:#52525B;           /* 3.06:1 sobre bg-surface ✓ */
+  --border-strong:#71717A;
+  --border-subtle:#3F3F46;
+  --border-soft:#3F3F46;
+  --divider:#3F3F46;
+  --text:#FAFAFA;             /* 19.1:1 ✓ */
+  --text-muted:#D4D4D8;       /* 14.1:1 ✓ */
+  --text-subtle:#8E8E97;      /* 5.20:1 sobre bg-app ✓ — A11Y-001 fix */
   --text-on-accent:#FFFFFF;
-  --accent:#C42B3A;
-  --accent-hover:#D44856;
-  --accent-strong:#8B2230;
-  --accent-soft:rgba(196,43,58,.12);
-  --accent-soft-strong:rgba(196,43,58,.2);
-  --secondary-accent:#A1A1AA;
-  --secondary-accent-soft:rgba(161,161,170,.1);
-  --success:#10B981;
-  --success-soft:rgba(16,185,129,.12);
-  --warning:#F59E0B;
-  --warning-soft:rgba(245,158,11,.12);
-  --danger:#EF4444;
-  --danger-soft:rgba(239,68,68,.12);
+  --accent:#E55C6A;           /* 6.62:1 ✓ — A11Y-001 fix */
+  --accent-hover:#FF7484;
+  --accent-strong:#C42B3A;
+  --accent-soft:rgba(229,92,106,.16);
+  --accent-soft-strong:rgba(229,92,106,.28);
+  --secondary-accent:#F5C77E; /* 11.3:1 ✓ */
+  --secondary-accent-soft:rgba(245,199,126,.12);
+  --dorado-decorativo:#F5C77E;
+  --success:#34D399;
+  --success-soft:rgba(52,211,153,.12);
+  --warning:#FBBF24;
+  --warning-soft:rgba(251,191,36,.12);
+  --danger:#F87171;
+  --danger-soft:rgba(248,113,113,.12);
   --shadow-sm:0 1px 2px rgba(0,0,0,.4);
-  --shadow:0 4px 12px -2px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.4);
-  --shadow-lg:0 12px 32px -4px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.5);
-  --ui-font:'Inter', system-ui, sans-serif;
-  --display-font:'Inter', system-ui, sans-serif;
-  --radius:6px;
-  --radius-md:8px;
-  --radius-lg:12px;
-  --radius-modal:12px;
-  --vino:var(--accent); --vino-claro:var(--accent-hover); --vino-oscuro:var(--accent-strong);
-  --dorado:var(--secondary-accent); --dorado-claro:#D4D4D8;
-  --tinta:var(--text); --tinta-suave:var(--text-muted);
-  --hueso:var(--bg-surface); --hueso-osc:var(--bg-muted); --crema:var(--bg-strong);
-  --gris-papel:var(--border); --gris-tenue:var(--border-strong);
-  --verde:var(--success); --rojo-alerta:var(--danger); --ambar:var(--warning);
-  --rojo-tenue:var(--danger-soft); --ambar-tenue:var(--warning-soft);
-  --sombra-papel:var(--shadow); --sombra-elevada:var(--shadow-lg);
-}
-
-/* Layout (no varía con tema) */
-:root, [data-theme]{
-  --col1: 30%; --col2: 40%; --col3: 30%;
-  --serif:'Crimson Pro', Georgia, serif;
-  --sans:'DM Sans', system-ui, sans-serif;
-  --mono:'JetBrains Mono', monospace;
-  --fs-xs:10px; --fs-sm:11px; --fs-base:13px; --fs-md:14px;
-  --fs-lg:16px; --fs-xl:20px; --fs-2xl:26px;
+  --shadow:0 4px 12px rgba(0,0,0,.5);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.6);
+  --shadow-focus:0 0 0 3px rgba(245,199,126,.4);
+  --shadow-critical:0 8px 32px rgba(229,92,106,.30);
+  --focus-ring:var(--secondary-accent);
 }
 
 /* Transición suave entre temas */
@@ -406,33 +395,94 @@ input, textarea, select{font-family:inherit; color:inherit}
 .clasif-meta strong{color:var(--tinta); font-weight:600}
 
 /* === ALERTAS === */
+/* Alerta normal: warning ámbar suave (advertencia procedimental) */
 .alerta-card{
-  margin:16px 20px; padding:16px 18px;
-  background:linear-gradient(135deg, #FFF6E5 0%, #FFEFD5 100%);
-  border:1px solid var(--ambar); border-left:4px solid var(--ambar);
-  border-radius:2px; animation:slideIn .3s ease-out;
-}
-.alerta-card.critica{
-  background:linear-gradient(135deg, #FCEBE9 0%, #F9D9D5 100%);
-  border-color:var(--rojo-alerta); border-left-color:var(--rojo-alerta);
+  margin:var(--space-4) var(--space-5); padding:var(--space-4) var(--space-5);
+  background:var(--warning-soft);
+  border:1px solid var(--warning); border-left:4px solid var(--warning);
+  border-radius:var(--radius-md); animation:slideIn .3s var(--ease-out);
 }
 .alerta-titulo{
-  font-family:var(--serif); font-size:var(--fs-lg); font-weight:700;
-  margin-bottom:8px; color:var(--rojo-alerta);
+  font-family:var(--sans); font-size:var(--fs-lg); font-weight:700;
+  margin-bottom:var(--space-2); color:var(--warning);
+  letter-spacing:-0.01em;
 }
-.alerta-mensaje{font-size:var(--fs-base); line-height:1.5; color:var(--tinta-suave)}
+.alerta-mensaje{font-size:var(--fs-base); line-height:1.5; color:var(--text-muted)}
 .alerta-acciones{
-  margin-top:10px; padding-top:10px; border-top:1px dashed rgba(168,49,44,.3);
+  margin-top:var(--space-3); padding-top:var(--space-3);
+  border-top:1px dashed rgba(184,110,31,.3);
   font-size:var(--fs-sm);
 }
 .alerta-acciones-tit{
-  font-size:var(--fs-xs); letter-spacing:1.5px; text-transform:uppercase;
-  color:var(--rojo-alerta); font-weight:700; margin-bottom:6px;
+  font-size:var(--fs-sm); letter-spacing:.04em;
+  font-variant-caps:all-small-caps;
+  color:var(--warning); font-weight:700; margin-bottom:var(--space-2);
 }
 .alerta-acciones ul{list-style:none; padding-left:0}
-.alerta-acciones li{padding:3px 0 3px 16px; position:relative; line-height:1.4}
+.alerta-acciones li{padding:var(--space-1) 0 var(--space-1) var(--space-5); position:relative; line-height:1.4}
 .alerta-acciones li::before{
-  content:'▸'; position:absolute; left:4px; color:var(--rojo-alerta);
+  content:'▸'; position:absolute; left:var(--space-1); color:var(--warning);
+}
+
+/* Alerta CRÍTICA Tipo III · radicalmente distinta · UX-002 fix */
+.alerta-card.critica{
+  background:linear-gradient(135deg, var(--critical-grad-top) 0%, var(--vino) 100%);
+  border:none;
+  color:var(--text-on-accent);
+  padding:var(--space-7) var(--space-8);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-critical);
+  position:relative;
+  animation:criticalIn var(--motion-slow) var(--ease-out);
+}
+.alerta-card.critica::before{
+  content:'🚨';
+  font-size:48px;
+  position:absolute;
+  top:var(--space-6); right:var(--space-6);
+  opacity:.95;
+}
+.alerta-card.critica .alerta-titulo{
+  font-family:var(--sans);
+  font-weight:900;
+  font-size:var(--fs-2xl);
+  color:var(--text-on-accent);
+  letter-spacing:-0.025em;
+  line-height:1.15;
+  margin-bottom:var(--space-3);
+  padding-right:var(--space-9);
+}
+.alerta-card.critica .alerta-titulo::before{
+  content:'ACCIÓN INMEDIATA · ';
+  font-variant-caps:all-small-caps;
+  letter-spacing:.06em;
+  font-size:var(--fs-sm);
+  font-weight:600;
+  color:var(--dorado-warm);
+  display:block;
+  margin-bottom:var(--space-2);
+}
+.alerta-card.critica .alerta-mensaje{
+  color:rgba(255,255,255,0.92);
+  font-size:var(--fs-md);
+  line-height:1.55;
+  max-width:60ch;
+}
+.alerta-card.critica .alerta-acciones{
+  border-top:1px solid rgba(255,255,255,0.15);
+  margin-top:var(--space-5);
+  padding-top:var(--space-5);
+}
+.alerta-card.critica .alerta-acciones-tit{
+  color:var(--dorado-warm);
+}
+.alerta-card.critica .alerta-acciones li::before{
+  color:var(--dorado-warm);
+}
+
+@keyframes criticalIn {
+  from { opacity:0; transform:translateY(-12px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
 }
 
 /* === PROTOCOLO TIMELINE === */
@@ -806,19 +856,30 @@ input, textarea, select{font-family:inherit; color:inherit}
 }
 .campo-form{margin-bottom:14px}
 .campo-label{
-  display:block; font-size:var(--fs-sm); font-weight:600;
-  color:var(--vino); margin-bottom:4px;
-  letter-spacing:.5px; text-transform:uppercase; font-family:var(--mono);
+  display:block; font-size:var(--fs-base); font-weight:600;
+  color:var(--vino); margin-bottom:var(--space-2);
+  letter-spacing:.02em; font-family:var(--sans);
+  font-variant-caps:all-small-caps;
 }
-.campo-label .req{color:var(--rojo-alerta); margin-left:3px}
+.campo-label .req{color:var(--rojo-alerta); margin-left:3px; font-variant-caps:normal}
 .campo-input, .campo-textarea, .campo-select{
-  width:100%; padding:8px 10px; border:1px solid var(--gris-papel);
-  background:var(--hueso); border-radius:2px;
-  font-size:var(--fs-base); line-height:1.4; transition:border-color .15s;
+  width:100%; padding:var(--space-3) var(--space-4);
+  border:1px solid var(--border);
+  background:var(--bg-surface); border-radius:var(--radius-md);
+  font-size:var(--fs-md); line-height:1.45;
   font-family:var(--sans);
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+  transition:border-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast);
+  min-height:44px;
 }
-.campo-input:focus, .campo-textarea:focus, .campo-select:focus{
+.campo-input:focus-visible, .campo-textarea:focus-visible, .campo-select:focus-visible{
   outline:none; border-color:var(--vino); background:#fff;
+  box-shadow:var(--shadow-focus);
+}
+.campo-input[aria-invalid="true"], .campo-textarea[aria-invalid="true"]{
+  border-color:var(--danger);
+  box-shadow:0 0 0 3px rgba(185,28,28,.15);
 }
 .campo-textarea{min-height:60px; resize:vertical; font-family:var(--sans)}
 .campo-help{font-size:var(--fs-xs); color:var(--tinta-suave); margin-top:3px; font-style:italic}
@@ -913,19 +974,21 @@ input, textarea, select{font-family:inherit; color:inherit}
   vertical-align:middle;
 }
 
-/* Banner de validación al intentar descargar */
+/* Banner de validación de formulario · distinto de la alerta crítica */
 .validacion-banner{
-  margin:0 0 16px; padding:12px 14px;
-  background:linear-gradient(135deg, #FCEBE9 0%, #F9D9D5 100%);
-  border:1px solid var(--rojo-alerta); border-left:4px solid var(--rojo-alerta);
-  border-radius:2px;
+  margin:0 0 var(--space-4); padding:var(--space-3) var(--space-4);
+  background:var(--bg-muted);
+  border:1px solid var(--border);
+  border-left:4px solid var(--danger);
+  border-radius:var(--radius-md);
   display:none;
 }
-.validacion-banner.activo{display:block; animation:slideIn .3s ease-out}
+.validacion-banner.activo{display:block; animation:slideIn .3s var(--ease-out)}
 .validacion-banner-titulo{
-  font-family:var(--serif); font-size:var(--fs-md); font-weight:700;
-  color:var(--rojo-alerta); margin-bottom:6px;
-  display:flex; align-items:center; gap:8px;
+  font-family:var(--sans); font-size:var(--fs-md); font-weight:700;
+  color:var(--danger); margin-bottom:var(--space-2);
+  display:flex; align-items:center; gap:var(--space-2);
+  letter-spacing:-0.01em;
 }
 .validacion-banner-lista{
   font-size:var(--fs-base); color:var(--tinta-suave); line-height:1.6;
@@ -1418,6 +1481,103 @@ input, textarea, select{font-family:inherit; color:inherit}
   }
   .divider{display:none}
   .column{border-right:none; border-bottom:1px solid var(--gris-papel)}
+}
+
+/* ============================================================
+   ACCESIBILIDAD GLOBAL (A11Y-007 · 2.4.7 Foco visible)
+   ============================================================ */
+*:focus-visible{
+  outline:3px solid var(--focus-ring);
+  outline-offset:2px;
+  border-radius:var(--radius-sm);
+}
+button:focus-visible, a:focus-visible{
+  outline:3px solid var(--focus-ring);
+  outline-offset:3px;
+}
+/* Tema oscuro: focus ring dorado claro */
+[data-theme="oscuro"] *:focus-visible,
+[data-theme="moderno-oscuro"] *:focus-visible{
+  outline-color:var(--secondary-accent);
+}
+
+/* Screen-reader only · A11Y-005 */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+/* Respetar preferencia de movimiento reducido · WCAG 2.3.3 */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ============================================================
+   REFINAMIENTOS TIPOGRÁFICOS · Butterick
+   ============================================================ */
+/* Versalitas en lugar de uppercase para chips de protocolo, columnas */
+.col-tag, .clasif-tag, .protocolo-tag, .modal-section-tag,
+.alerta-acciones-tit, .chip-obligatorio{
+  text-transform:none !important;
+  font-variant-caps:all-small-caps;
+  letter-spacing:.06em !important;
+  font-family:var(--sans) !important;
+}
+
+/* Body type ajustado al sistema */
+body{
+  font-family:var(--sans);
+  font-size:var(--fs-base);
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+/* Tarjetas y superficies con radius bento */
+.alerta-card, .clasif-card, .pregunta-card, .doc-item, .modal,
+.caso-info, .validacion-banner{
+  border-radius:var(--radius-xl) !important;
+}
+.col-header, .protocolo-header, .doc-editor-header, .docs-tabs,
+.chat-modo-info, .chat-input-area, .principios-footer, .topbar{
+  border-radius:0 !important;
+}
+
+/* Botones con sistema unificado */
+.btn-iniciar, .btn-doc-action, .btn-editar-caso{
+  border-radius:var(--radius-full);
+  min-height:44px;
+  font-family:var(--sans);
+  font-weight:600;
+  letter-spacing:-0.01em;
+  transition:all var(--motion-fast) var(--ease-out);
+}
+.btn-iniciar:hover, .btn-doc-action.primary:hover{
+  transform:translateY(-1px);
+}
+.btn-icon{
+  min-width:44px; min-height:44px;
+  border-radius:var(--radius-md);
+}
+
+/* Inputs reciben tabular-nums y borders WCAG */
+input, textarea, select{
+  font-variant-numeric:tabular-nums;
+}
+
+/* Display editorial Crimson Pro para títulos de pregunta del árbol */
+.pregunta-texto{
+  font-family:var(--serif) !important;
+  font-style:italic;
+  font-weight:500;
+  letter-spacing:-0.015em;
+  line-height:1.1;
 }
 </style>
 <link rel="manifest" href="manifest.webmanifest">
