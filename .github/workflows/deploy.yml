@@ -1,0 +1,55 @@
+# =========================================================
+#  Deploy automático a GitHub Pages
+#  Cada push a main publica el sitio en:
+#  https://alguarito.github.io/Conciencia-/
+# =========================================================
+name: Deploy a GitHub Pages
+
+on:
+  # Se ejecuta en cada push a main
+  push:
+    branches: [main]
+  # Permite lanzarlo manualmente desde la pestaña Actions
+  workflow_dispatch:
+
+# Permisos necesarios para el deploy oficial de Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita deploys simultáneos: si llega un push mientras
+# el anterior aún no termina, se cancela el viejo.
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Preparar artefacto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto del sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Sube todo el contenido del repo como sitio estático.
+          # ConciencIA no necesita build (HTML/CSS/JS vanilla).
+          path: '.'
+
+  deploy:
+    name: Publicar en Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Desplegar a GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
