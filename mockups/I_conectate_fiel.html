@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es-CO" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup I · ConectaTE Fiel · ConciencIA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bento-blue:#2563eb;
+    --bento-radius:1.25rem;
+  }
+  *{font-family:'Inter',system-ui,sans-serif}
+  .font-black{font-weight:900;letter-spacing:-0.025em}
+  .rounded-bento{border-radius:var(--bento-radius)}
+  .btn-bento{border-radius:9999px;font-weight:700;transition:all .2s}
+  .btn-bento:hover{transform:translateY(-1px)}
+  .text-bento-blue{color:var(--bento-blue)}
+  .bg-bento-blue{background:var(--bento-blue)}
+  .hover\:translate-x-1:hover{transform:translateX(4px);transition:transform .2s}
+  @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .animate-slide-up{animation:slide-up .5s ease-out}
+</style>
+</head>
+<body class="bg-neutral-50 text-neutral-950">
+
+<!-- Topbar -->
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
+    <a href="#" class="flex items-center gap-2 font-black text-lg">
+      <span class="text-2xl">🌱</span>
+      <span>ConciencIA</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-700">
+      <a href="#" class="hover:text-neutral-950">Inicio</a>
+      <a href="#" class="hover:text-neutral-950">Protocolos</a>
+      <a href="#" class="hover:text-neutral-950">Documentos</a>
+      <a href="#" class="hover:text-neutral-950">Manual</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="hidden sm:inline-flex items-center gap-2 text-sm text-neutral-600 px-3 py-1.5 border border-neutral-200 rounded-lg hover:bg-neutral-50">
+        <span>Buscar</span>
+        <kbd class="text-xs bg-neutral-100 px-1.5 py-0.5 rounded">⌘K</kbd>
+      </button>
+      <button class="btn-bento bg-neutral-950 text-white px-5 py-2 text-sm">Iniciar caso</button>
+    </div>
+  </nav>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+
+<!-- Hero -->
+<section class="space-y-6 animate-slide-up">
+  <p class="text-sm font-bold uppercase tracking-widest text-bento-blue">Asesor del Debido Proceso</p>
+  <h1 class="font-black text-5xl md:text-7xl leading-[0.95] tracking-tight max-w-4xl">
+    Acompañamos a cada docente en cada decisión.
+  </h1>
+  <p class="text-lg md:text-xl text-neutral-600 max-w-2xl">
+    Plataforma del Dr. Álvaro Cárdenas Orozco para la I.E. Sor María Juliana, Cartago.
+    Implementa el Manual de Convivencia y el SIE 2025.
+  </p>
+  <div class="flex flex-wrap gap-3 pt-2">
+    <button class="btn-bento bg-neutral-950 text-white px-6 py-3">Iniciar nuevo caso</button>
+    <button class="btn-bento border border-neutral-300 text-neutral-950 px-6 py-3 hover:bg-neutral-100">Explorar protocolos</button>
+  </div>
+</section>
+
+<!-- Métricas bento -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <div class="md:col-span-4 rounded-bento bg-white border border-neutral-200 p-8 hover:border-neutral-950 transition-colors">
+    <p class="font-black text-7xl tracking-tighter">30</p>
+    <p class="mt-2 text-sm font-semibold text-neutral-600">Protocolos completos</p>
+    <p class="mt-3 text-sm text-neutral-500">Tipo I, II, III · Faltas graves · Recursos · Restaurativo · Académico</p>
+  </div>
+  <div class="md:col-span-4 rounded-bento bg-white border border-neutral-200 p-8 hover:border-neutral-950 transition-colors">
+    <p class="font-black text-7xl tracking-tighter">176</p>
+    <p class="mt-2 text-sm font-semibold text-neutral-600">Pasos verificables</p>
+    <p class="mt-3 text-sm text-neutral-500">Cada paso con responsable, plazo, fundamento y documentos asociados</p>
+  </div>
+  <div class="md:col-span-4 rounded-bento bg-neutral-950 text-white p-8 hover:bg-neutral-800 transition-colors">
+    <p class="font-black text-7xl tracking-tighter">124</p>
+    <p class="mt-2 text-sm font-semibold text-neutral-300">Plantillas de documentos</p>
+    <p class="mt-3 text-sm text-neutral-400">Actas, citaciones, resoluciones · Word + PDF auto-rellenados</p>
+  </div>
+</section>
+
+<!-- Pregunta árbol -->
+<section class="rounded-bento bg-white border border-neutral-200 p-8 md:p-12 space-y-6">
+  <div class="flex items-center justify-between text-sm">
+    <span class="font-bold text-bento-blue uppercase tracking-widest">Pregunta 3 de aprox. 5</span>
+    <span class="text-neutral-500">Caso · CASO-2026-0042</span>
+  </div>
+  <h2 class="font-black text-3xl md:text-5xl leading-tight max-w-3xl">
+    ¿Hubo daño físico, psíquico o emocional?
+  </h2>
+  <p class="text-neutral-600">Manual de Convivencia · Art. 31</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+    <button class="rounded-bento border border-neutral-200 p-6 text-left hover:border-neutral-950 hover:translate-x-1 transition-all">
+      <span class="text-xs font-bold uppercase text-neutral-500">A</span>
+      <p class="mt-2 font-bold text-lg">No, ningún daño</p>
+      <p class="mt-2 text-sm text-neutral-500">→ Continúa evaluación</p>
+    </button>
+    <button class="rounded-bento border border-neutral-200 p-6 text-left hover:border-neutral-950 hover:translate-x-1 transition-all">
+      <span class="text-xs font-bold uppercase text-neutral-500">B</span>
+      <p class="mt-2 font-bold text-lg">Sí, sin incapacidad</p>
+      <p class="mt-2 text-sm text-neutral-500">→ Verificar tipo penal</p>
+    </button>
+    <button class="rounded-bento border border-neutral-200 p-6 text-left hover:border-neutral-950 hover:translate-x-1 transition-all">
+      <span class="text-xs font-bold uppercase text-neutral-500">C</span>
+      <p class="mt-2 font-bold text-lg">Sí, con incapacidad</p>
+      <p class="mt-2 text-sm text-neutral-500">→ Alerta Tipo III</p>
+    </button>
+  </div>
+
+  <div class="flex items-center justify-between pt-4 text-sm">
+    <button class="text-neutral-600 hover:text-neutral-950 font-semibold">← Volver a respuesta anterior</button>
+    <span class="text-neutral-400">3 / ~5</span>
+  </div>
+</section>
+
+<!-- Mini expediente -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="rounded-bento bg-neutral-950 text-white p-8">
+    <p class="text-xs font-bold uppercase tracking-widest text-neutral-400">Expediente</p>
+    <h3 class="mt-3 font-black text-2xl">3 documentos pendientes</h3>
+    <ul class="mt-4 space-y-2 text-sm text-neutral-300">
+      <li class="flex items-center justify-between border-b border-neutral-800 pb-2">
+        <span>Acta de versión libre</span><span class="text-amber-400">Requerido</span>
+      </li>
+      <li class="flex items-center justify-between border-b border-neutral-800 pb-2">
+        <span>Citación a padres de familia</span><span class="text-amber-400">Requerido</span>
+      </li>
+      <li class="flex items-center justify-between">
+        <span>Resolución sancionatoria</span><span class="text-neutral-500">Bloqueado</span>
+      </li>
+    </ul>
+  </div>
+  <div class="rounded-bento bg-white border border-neutral-200 p-8">
+    <p class="text-xs font-bold uppercase tracking-widest text-bento-blue">Progreso</p>
+    <h3 class="mt-3 font-black text-2xl">3 / 13 pasos · 23%</h3>
+    <div class="mt-4 h-2 bg-neutral-100 rounded-full overflow-hidden">
+      <div class="h-full bg-bento-blue rounded-full" style="width:23%"></div>
+    </div>
+    <p class="mt-4 text-sm text-neutral-600">Próximo paso: <strong class="text-neutral-950">Notificar al acudiente del estudiante</strong></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-neutral-200 mt-20">
+  <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-neutral-500 flex flex-wrap items-center justify-between gap-4">
+    <p>ConciencIA · I.E. Sor María Juliana · Cartago, Valle del Cauca</p>
+    <p>Mockup I · Estética ConectaTE Fiel</p>
+  </div>
+</footer>
+
+</body>
+</html>

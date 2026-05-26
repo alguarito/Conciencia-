@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="es-CO" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup L · Bento Documental · ConciencIA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --papel:#F4EDD8;
+    --papel-2:#EAE3CC;
+    --papel-3:#DDD2B0;
+    --tinta:#2A2218;
+    --tinta-2:#5C4F3F;
+    --sepia:#3A2E1F;
+    --vino:#6B1820;
+    --dorado:#8B6F3F;
+    --bento-radius:0.5rem;
+  }
+  *{font-family:'Inter Tight',system-ui,sans-serif}
+  body{
+    background:var(--papel);
+    color:var(--tinta);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139,111,63,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(107,24,32,0.03) 0%, transparent 50%),
+      url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noiseFilter'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23noiseFilter)' opacity='0.04'/></svg>");
+  }
+  .font-serif{font-family:'Crimson Pro',Georgia,serif}
+  .font-mono{font-family:'JetBrains Mono',monospace}
+  .rounded-bento{border-radius:var(--bento-radius)}
+  .btn-bento{border-radius:2px;font-weight:600;transition:all .2s}
+  .btn-bento:hover{transform:translateY(-1px)}
+  .text-vino{color:var(--vino)}
+  .bg-vino{background:var(--vino)}
+  .text-dorado{color:var(--dorado)}
+  .text-sepia{color:var(--sepia)}
+  .border-papel{border-color:var(--papel-3)}
+  .bg-papel-2{background:var(--papel-2)}
+  .hover\:translate-x-1:hover{transform:translateX(4px);transition:transform .2s}
+  @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .animate-slide-up{animation:slide-up .5s ease-out}
+  .versalitas{font-variant-caps:all-small-caps;letter-spacing:0.06em;font-weight:600}
+  .display{font-family:'Crimson Pro',Georgia,serif;font-weight:500;letter-spacing:-0.015em;line-height:1.05}
+  .display-italic{font-family:'Crimson Pro',Georgia,serif;font-style:italic;font-weight:500;line-height:1.05}
+  .sello{
+    display:inline-block;
+    border:2px solid var(--vino);
+    color:var(--vino);
+    padding:6px 14px;
+    border-radius:4px;
+    transform:rotate(-3deg);
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-size:0.7rem;
+    background:rgba(244,237,216,0.85);
+  }
+  .ribete{
+    background:repeating-linear-gradient(135deg,var(--papel-3) 0,var(--papel-3) 4px,transparent 4px,transparent 12px);
+    height:3px;
+  }
+  .folio{
+    background:rgba(255,255,255,0.55);
+    border:1px solid var(--papel-3);
+    box-shadow:0 1px 3px rgba(0,0,0,0.06);
+  }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="sticky top-0 z-50 border-b" style="background:rgba(244,237,216,0.9);backdrop-filter:blur(12px);border-color:var(--papel-3)">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
+    <a href="#" class="flex items-center gap-3">
+      <span class="w-8 h-8 rounded flex items-center justify-center text-white text-sm" style="background:var(--vino)">📁</span>
+      <div class="leading-tight">
+        <p class="font-serif text-lg font-semibold" style="letter-spacing:-0.01em">ConciencIA</p>
+        <p class="text-[10px] versalitas text-dorado -mt-1">Archivo del debido proceso</p>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-mono" style="color:var(--sepia)">
+      <a href="#" class="hover:text-vino">expediente</a>
+      <a href="#" class="hover:text-vino">protocolos</a>
+      <a href="#" class="hover:text-vino">asesor</a>
+      <a href="#" class="hover:text-vino">manual</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="hidden sm:inline-flex items-center gap-2 text-xs px-3 py-1.5 border rounded font-mono" style="border-color:var(--papel-3);color:var(--sepia)">
+        <span>buscar</span>
+        <kbd class="text-xs px-1.5 py-0.5 rounded" style="background:var(--papel-2)">⌘K</kbd>
+      </button>
+      <button class="btn-bento bg-vino text-white px-5 py-2 text-sm">Iniciar caso</button>
+    </div>
+  </nav>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+
+<!-- Hero -->
+<section class="space-y-6 animate-slide-up">
+  <div class="flex items-center gap-4">
+    <p class="versalitas text-vino text-sm">Asesor del Debido Proceso</p>
+    <span class="ribete flex-1"></span>
+  </div>
+  <h1 class="display text-6xl md:text-8xl max-w-4xl">
+    Un <em class="display-italic">archivo notarial digital</em> para cada decisión disciplinaria.
+  </h1>
+  <p class="font-serif text-xl max-w-2xl italic" style="color:var(--sepia)">
+    Plataforma del Dr. Álvaro Cárdenas Orozco — I.E. Sor María Juliana, Cartago.
+    Implementa el Manual de Convivencia y el SIE 2025 con foliado de expediente físico.
+  </p>
+  <div class="flex flex-wrap gap-3 pt-2">
+    <button class="btn-bento bg-vino text-white px-6 py-3">Abrir nuevo expediente</button>
+    <button class="btn-bento border px-6 py-3 hover:bg-papel-2" style="border-color:var(--papel-3);color:var(--sepia)">Consultar archivo</button>
+  </div>
+</section>
+
+<!-- Métricas con apariencia de tarjeta de archivo -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="folio rounded-bento p-8 relative">
+    <span class="sello absolute top-4 right-4">v.2026</span>
+    <p class="display text-7xl">30</p>
+    <div class="ribete my-3"></div>
+    <p class="versalitas text-vino text-sm">Protocolos catalogados</p>
+    <p class="font-serif italic mt-1 text-sm" style="color:var(--sepia)">Convivencia · Académico · Restaurativo</p>
+  </div>
+  <div class="folio rounded-bento p-8 relative">
+    <span class="sello absolute top-4 right-4">176×</span>
+    <p class="display text-7xl">176</p>
+    <div class="ribete my-3"></div>
+    <p class="versalitas text-vino text-sm">Pasos verificables</p>
+    <p class="font-serif italic mt-1 text-sm" style="color:var(--sepia)">Cada uno con folio, fundamento y plazo</p>
+  </div>
+  <div class="rounded-bento p-8 relative text-white" style="background:linear-gradient(135deg,#5A1318 0%,#6B1820 100%);border:1px solid var(--vino)">
+    <span class="absolute top-4 right-4 text-xs versalitas" style="color:#F5C77E">📜 oficial</span>
+    <p class="display text-7xl">124</p>
+    <div class="my-3 h-[3px] opacity-30" style="background:repeating-linear-gradient(135deg,#F5C77E 0,#F5C77E 4px,transparent 4px,transparent 12px)"></div>
+    <p class="versalitas text-sm" style="color:#F5C77E">Plantillas notariales</p>
+    <p class="font-serif italic mt-1 text-sm" style="color:rgba(255,255,255,0.85)">Actas, citaciones, resoluciones</p>
+  </div>
+</section>
+
+<!-- Folio pregunta del árbol -->
+<section class="folio rounded-bento p-10 md:p-14 relative">
+  <span class="sello absolute top-6 right-6">CASO-2026-0042 · FOLIO 03</span>
+
+  <div class="flex items-center gap-4 mb-6">
+    <span class="versalitas text-vino text-sm">Folio Tres · Evaluación inicial del daño</span>
+    <span class="ribete flex-1"></span>
+  </div>
+
+  <p class="font-mono text-xs mb-2" style="color:var(--sepia)">[ Manual de Convivencia · Art. 31 ]</p>
+
+  <h2 class="display-italic text-5xl md:text-7xl max-w-3xl mb-4">
+    ¿Hubo daño físico, psíquico o emocional en el incidente?
+  </h2>
+
+  <p class="font-serif text-xl italic" style="color:var(--sepia)">
+    La presente cuestión determina la tipificación de la conducta según las categorías I, II o III del Manual.
+  </p>
+
+  <div class="ribete my-8"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <button class="folio rounded-bento p-6 text-left hover:translate-x-1 transition-all">
+      <p class="font-mono text-xs text-dorado">a.</p>
+      <p class="display text-3xl mt-2">No, ningún daño</p>
+      <p class="font-serif italic mt-3 text-sm" style="color:var(--sepia)">→ Procede a evaluar recurrencia</p>
+    </button>
+    <button class="folio rounded-bento p-6 text-left hover:translate-x-1 transition-all">
+      <p class="font-mono text-xs text-dorado">b.</p>
+      <p class="display text-3xl mt-2">Sí, sin incapacidad</p>
+      <p class="font-serif italic mt-3 text-sm" style="color:var(--sepia)">→ Verificar tipo penal</p>
+    </button>
+    <button class="rounded-bento p-6 text-left text-white hover:translate-x-1 transition-all" style="background:var(--vino);border:1px solid var(--vino);box-shadow:0 1px 3px rgba(0,0,0,0.15)">
+      <p class="font-mono text-xs" style="color:#F5C77E">c.</p>
+      <p class="display text-3xl mt-2">Sí, con incapacidad</p>
+      <p class="font-serif italic mt-3 text-sm" style="color:rgba(255,255,255,0.85)">→ Alerta Tipo III · acción inmediata</p>
+    </button>
+  </div>
+
+  <div class="ribete my-8"></div>
+
+  <div class="flex items-center justify-between text-sm">
+    <button class="font-serif italic hover:text-vino" style="color:var(--sepia)">« Reformular folio anterior</button>
+    <span class="font-mono text-xs" style="color:var(--sepia)">folio 03 / ~05</span>
+  </div>
+</section>
+
+<!-- Caso activo en estilo expediente -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <div class="md:col-span-7 folio rounded-bento p-8 relative">
+    <span class="sello absolute top-4 right-4">EN CURSO</span>
+    <p class="versalitas text-dorado text-sm mb-2">Expediente activo</p>
+    <p class="font-mono text-sm" style="color:var(--sepia)">CASO-2026-0042 · Abierto el 26.05.2026</p>
+    <h3 class="display text-4xl mt-3">María Fernanda Gómez Rodríguez</h3>
+    <p class="font-serif italic text-lg" style="color:var(--sepia)">Estudiante de 9°B · jornada mañana · sin condición PIAR</p>
+
+    <div class="ribete my-5"></div>
+
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+      <div>
+        <dt class="versalitas text-dorado">Acudiente</dt>
+        <dd class="font-serif mt-0.5">Liliana Rodríguez · C.C. 31.412.508</dd>
+      </div>
+      <div>
+        <dt class="versalitas text-dorado">Director de grupo</dt>
+        <dd class="font-serif mt-0.5">Carlos M. Vélez</dd>
+      </div>
+      <div>
+        <dt class="versalitas text-dorado">Funcionario reporta</dt>
+        <dd class="font-serif mt-0.5">Á. Cárdenas Orozco · Coordinador</dd>
+      </div>
+      <div>
+        <dt class="versalitas text-dorado">Clasificación</dt>
+        <dd class="font-serif mt-0.5"><strong class="text-vino">Tipo II</strong> · falta grave</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="md:col-span-5 folio rounded-bento p-8 relative">
+    <span class="sello absolute top-4 right-4">23%</span>
+    <p class="versalitas text-dorado text-sm">Progreso del protocolo</p>
+    <p class="display text-5xl mt-2">3 / 13</p>
+    <p class="font-serif italic" style="color:var(--sepia)">pasos verificables completados</p>
+
+    <div class="mt-5 h-2 rounded-full overflow-hidden" style="background:var(--papel-3)">
+      <div class="h-full" style="width:23%;background:linear-gradient(90deg,var(--vino) 0%,#8B2230 100%)"></div>
+    </div>
+
+    <div class="ribete my-5"></div>
+
+    <p class="font-mono text-xs mb-1" style="color:var(--sepia)">Próximo paso obligatorio</p>
+    <p class="display text-2xl">Notificación al acudiente</p>
+    <p class="font-serif italic mt-1 text-sm" style="color:var(--sepia)">Plazo: 24 horas · Manual Art. 37 num. 3</p>
+  </div>
+</section>
+
+<!-- Expediente · catálogo de documentos -->
+<section class="folio rounded-bento p-8 md:p-10">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <p class="versalitas text-dorado text-sm">Catálogo de documentos</p>
+      <h3 class="display text-3xl mt-1">Expediente del caso</h3>
+    </div>
+    <span class="font-serif italic text-sm" style="color:var(--sepia)">3 documentos · 1 pendiente</span>
+  </div>
+
+  <div class="ribete mb-6"></div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <article class="folio rounded-bento p-6 relative hover:translate-x-1 transition-all cursor-pointer">
+      <span class="sello absolute top-3 right-3" style="border-color:var(--vino);color:var(--vino)">req.</span>
+      <p class="display-italic text-3xl text-vino">Acta</p>
+      <p class="font-bold text-lg mt-1">de Versión Libre</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--sepia)">Manual · Art. 37 num. 2</p>
+      <div class="ribete my-4"></div>
+      <p class="font-serif italic text-sm" style="color:var(--sepia)">12 campos · 4 firmas</p>
+    </article>
+    <article class="folio rounded-bento p-6 relative hover:translate-x-1 transition-all cursor-pointer">
+      <span class="sello absolute top-3 right-3" style="border-color:var(--vino);color:var(--vino)">req.</span>
+      <p class="display-italic text-3xl text-vino">Citación</p>
+      <p class="font-bold text-lg mt-1">a Padres de Familia</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--sepia)">Manual · Art. 37 num. 3</p>
+      <div class="ribete my-4"></div>
+      <p class="font-serif italic text-sm" style="color:var(--sepia)">8 campos · 2 firmas</p>
+    </article>
+    <article class="rounded-bento p-6 relative" style="background:var(--papel-2);border:1px dashed var(--papel-3);opacity:0.65">
+      <span class="font-mono text-xs absolute top-3 right-3 px-2 py-1 rounded" style="background:var(--papel-3);color:var(--sepia)">bloq.</span>
+      <p class="display-italic text-3xl" style="color:var(--sepia)">Resolución</p>
+      <p class="font-bold text-lg mt-1">Sancionatoria</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--sepia)">Manual · Art. 37</p>
+      <div class="ribete my-4"></div>
+      <p class="font-serif italic text-sm" style="color:var(--sepia)">Esperando instrucción completa</p>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t mt-16" style="border-color:var(--papel-3)">
+  <div class="max-w-7xl mx-auto px-6 py-8 text-sm flex flex-wrap items-center justify-between gap-4" style="color:var(--sepia)">
+    <p class="font-serif italic">I.E. Sor María Juliana · «Moral, pedestal de la sabiduría» · Cartago, Valle del Cauca</p>
+    <p class="font-mono text-xs text-dorado">Mockup L · Bento Documental</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es-CO" class="scroll-smooth">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup K · Bento Editorial Híbrido · ConciencIA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --hueso:#FAF7F2;
+    --hueso-2:#F0EBE3;
+    --tinta:#1A1614;
+    --tinta-2:#3D3633;
+    --vino:#6B1820;
+    --vino-soft:#F2D9DA;
+    --dorado:#8B6F3F;
+    --bento-radius:1rem;
+  }
+  *{font-family:'Inter Tight',system-ui,sans-serif}
+  body{background:var(--hueso);color:var(--tinta)}
+  .font-serif{font-family:'Crimson Pro',Georgia,serif}
+  .font-mono{font-family:'JetBrains Mono',monospace}
+  .font-black{font-weight:900;letter-spacing:-0.025em}
+  .rounded-bento{border-radius:var(--bento-radius)}
+  .btn-bento{border-radius:9999px;font-weight:600;transition:all .2s}
+  .btn-bento:hover{transform:translateY(-1px)}
+  .text-vino{color:var(--vino)}
+  .bg-vino{background:var(--vino)}
+  .text-dorado{color:var(--dorado)}
+  .border-papel{border-color:#E5DDD0}
+  .bg-hueso-2{background:var(--hueso-2)}
+  .hover\:translate-x-1:hover{transform:translateX(4px);transition:transform .2s}
+  @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .animate-slide-up{animation:slide-up .5s ease-out}
+  .versalitas{font-variant-caps:all-small-caps;letter-spacing:0.04em;font-weight:600}
+  .display{font-family:'Crimson Pro',Georgia,serif;font-weight:500;letter-spacing:-0.015em;line-height:1.05}
+  .display-italic{font-family:'Crimson Pro',Georgia,serif;font-style:italic;font-weight:500;line-height:1.05}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="sticky top-0 z-50 backdrop-blur-md border-b border-papel" style="background:rgba(250,247,242,0.85)">
+  <nav class="max-w-7xl mx-auto flex items-center justify-between h-16 px-6">
+    <a href="#" class="flex items-center gap-3">
+      <span class="w-8 h-8 rounded-full bg-vino flex items-center justify-center text-white text-sm">⚖</span>
+      <div class="leading-tight">
+        <p class="font-serif text-lg font-semibold" style="letter-spacing:-0.01em">ConciencIA</p>
+        <p class="text-[10px] versalitas text-dorado -mt-1">I.E. Sor María Juliana</p>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-semibold" style="color:var(--tinta-2)">
+      <a href="#" class="hover:text-vino">Hoja de ruta</a>
+      <a href="#" class="hover:text-vino">Expediente</a>
+      <a href="#" class="hover:text-vino">Asesor</a>
+      <a href="#" class="hover:text-vino">Manual</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="hidden sm:inline-flex items-center gap-2 text-sm px-3 py-1.5 border border-papel rounded-lg hover:bg-hueso-2" style="color:var(--tinta-2)">
+        <span>Buscar</span>
+        <kbd class="text-xs px-1.5 py-0.5 rounded font-mono" style="background:var(--hueso-2)">⌘K</kbd>
+      </button>
+      <button class="btn-bento bg-vino text-white px-5 py-2 text-sm">Iniciar caso</button>
+    </div>
+  </nav>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+
+<!-- Hero -->
+<section class="space-y-6 animate-slide-up">
+  <p class="versalitas text-sm text-vino">Asesor del Debido Proceso · v2.0</p>
+  <h1 class="display text-6xl md:text-8xl max-w-4xl">
+    Acompañamos a cada docente <em class="display-italic text-vino">en cada decisión.</em>
+  </h1>
+  <p class="text-lg md:text-xl max-w-2xl" style="color:var(--tinta-2)">
+    Plataforma del Dr. Álvaro Cárdenas Orozco para la I.E. Sor María Juliana, Cartago.
+    Manual de Convivencia y SIE 2025 con fundamento jurídico verificable.
+  </p>
+  <div class="flex flex-wrap gap-3 pt-2">
+    <button class="btn-bento bg-vino text-white px-6 py-3">Iniciar nuevo caso</button>
+    <button class="btn-bento border border-papel px-6 py-3 hover:bg-hueso-2">Continuar caso activo</button>
+  </div>
+</section>
+
+<!-- Métricas con tipografía editorial -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="rounded-bento border border-papel bg-white p-8">
+    <p class="display text-8xl">30</p>
+    <p class="versalitas text-sm text-dorado mt-2">Protocolos</p>
+    <p class="mt-3 text-sm" style="color:var(--tinta-2)">Tipo I, II, III · faltas graves · recursos · restaurativo · académico</p>
+  </div>
+  <div class="rounded-bento border border-papel bg-white p-8">
+    <p class="display text-8xl">176</p>
+    <p class="versalitas text-sm text-dorado mt-2">Pasos verificables</p>
+    <p class="mt-3 text-sm" style="color:var(--tinta-2)">Cada paso con responsable, plazo, fundamento y documentos asociados</p>
+  </div>
+  <div class="rounded-bento bg-vino text-white p-8">
+    <p class="display text-8xl">124</p>
+    <p class="versalitas text-sm mt-2" style="color:#F5C77E">Plantillas</p>
+    <p class="mt-3 text-sm" style="color:rgba(255,255,255,0.85)">Actas, citaciones, resoluciones · Word + PDF auto-rellenados</p>
+  </div>
+</section>
+
+<!-- Pregunta árbol con tipografía editorial protagonista -->
+<section class="rounded-bento bg-white border border-papel p-10 md:p-16 space-y-8">
+  <div class="flex items-center justify-between text-sm">
+    <span class="versalitas text-vino">Pregunta tres de aprox. cinco</span>
+    <span class="font-mono text-xs" style="color:var(--tinta-2)">Manual · Art. 31</span>
+  </div>
+
+  <div class="space-y-4">
+    <p class="versalitas text-dorado">III · Evaluación del daño</p>
+    <h2 class="display-italic text-5xl md:text-7xl max-w-3xl">
+      ¿Hubo daño físico, psíquico o emocional en el incidente?
+    </h2>
+    <p class="font-serif text-xl" style="color:var(--tinta-2)">
+      Esta pregunta determina si la conducta se clasifica como Tipo I, II o III según el Manual de Convivencia.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+    <button class="rounded-bento border border-papel bg-hueso-2 p-6 text-left hover:border-vino hover:translate-x-1 transition-all">
+      <span class="display text-4xl text-dorado">A</span>
+      <p class="mt-2 font-bold text-lg">No, ningún daño</p>
+      <p class="mt-2 text-sm font-serif" style="color:var(--tinta-2)">→ Evaluar recurrencia</p>
+    </button>
+    <button class="rounded-bento border border-papel bg-hueso-2 p-6 text-left hover:border-vino hover:translate-x-1 transition-all">
+      <span class="display text-4xl text-dorado">B</span>
+      <p class="mt-2 font-bold text-lg">Sí, sin incapacidad</p>
+      <p class="mt-2 text-sm font-serif" style="color:var(--tinta-2)">→ Verificar tipo penal</p>
+    </button>
+    <button class="rounded-bento p-6 text-left text-white hover:translate-x-1 transition-all" style="background:var(--vino);border:1px solid var(--vino)">
+      <span class="display text-4xl" style="color:#F5C77E">C</span>
+      <p class="mt-2 font-bold text-lg">Sí, con incapacidad</p>
+      <p class="mt-2 text-sm font-serif" style="color:rgba(255,255,255,0.85)">→ Alerta Tipo III</p>
+    </button>
+  </div>
+
+  <div class="flex items-center justify-between pt-6 text-sm border-t border-papel">
+    <button class="font-serif italic hover:text-vino" style="color:var(--tinta-2)">« Reformular respuesta anterior</button>
+    <span class="font-mono text-xs" style="color:var(--tinta-2)">3 / ~5</span>
+  </div>
+</section>
+
+<!-- Caso activo + Tipo III -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <div class="md:col-span-7 rounded-bento bg-white border border-papel p-8">
+    <p class="versalitas text-dorado text-sm">Caso activo</p>
+    <p class="font-mono text-sm mt-3" style="color:var(--tinta-2)">CASO-2026-0042</p>
+    <h3 class="display text-3xl md:text-4xl mt-1">María Fernanda Gómez Rodríguez</h3>
+    <p class="font-serif text-lg italic mt-1" style="color:var(--tinta-2)">9°B · Jornada Mañana</p>
+
+    <div class="mt-6 space-y-3">
+      <div class="flex items-center justify-between text-sm border-b border-papel pb-2">
+        <span class="versalitas text-dorado">Apertura</span>
+        <span class="font-serif italic">26 de mayo de 2026</span>
+      </div>
+      <div class="flex items-center justify-between text-sm border-b border-papel pb-2">
+        <span class="versalitas text-dorado">Acudiente</span>
+        <span class="font-serif">Liliana Rodríguez</span>
+      </div>
+      <div class="flex items-center justify-between text-sm border-b border-papel pb-2">
+        <span class="versalitas text-dorado">Funcionario</span>
+        <span class="font-serif">Á. Cárdenas Orozco</span>
+      </div>
+      <div class="flex items-center justify-between text-sm">
+        <span class="versalitas text-dorado">Progreso</span>
+        <span><strong>3 / 13 pasos</strong> · 23%</span>
+      </div>
+    </div>
+  </div>
+  <div class="md:col-span-5 rounded-bento p-8 text-white" style="background:linear-gradient(135deg,#8B0E1A 0%,#6B1820 100%)">
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-4xl">🚨</span>
+      <span class="versalitas text-sm" style="color:#F5C77E">Alerta Tipo III · ejemplo</span>
+    </div>
+    <h3 class="display text-3xl mb-3">Acción inmediata</h3>
+    <p class="font-serif text-base" style="color:rgba(255,255,255,0.9)">
+      Lo descrito podría constituir un delito según Ley 599 de 2000.
+      <em>Competencia del Rector. Notificar a Policía Nacional.</em>
+    </p>
+    <button class="btn-bento bg-white px-5 py-2 mt-5 text-sm font-bold" style="color:var(--vino)">Ver protocolo →</button>
+  </div>
+</section>
+
+<!-- Expediente con tipografía editorial -->
+<section class="rounded-bento border border-papel bg-white p-8 md:p-10">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <p class="versalitas text-dorado text-sm">Expediente</p>
+      <h3 class="display text-3xl mt-1">Documentos del caso</h3>
+    </div>
+    <span class="font-serif italic text-sm" style="color:var(--tinta-2)">3 documentos · 1 pendiente</span>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <article class="rounded-bento border border-papel p-6 hover:border-vino transition-colors">
+      <p class="display-italic text-2xl" style="color:var(--vino)">Acta</p>
+      <p class="font-bold text-lg mt-1">de Versión Libre</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--tinta-2)">Manual Art. 37 num. 2</p>
+      <div class="mt-4 pt-3 border-t border-papel flex items-center justify-between">
+        <span class="versalitas text-xs text-vino">Requerido</span>
+        <button class="text-xs font-bold hover:text-vino">Editar →</button>
+      </div>
+    </article>
+    <article class="rounded-bento border border-papel p-6 hover:border-vino transition-colors">
+      <p class="display-italic text-2xl" style="color:var(--vino)">Citación</p>
+      <p class="font-bold text-lg mt-1">a Padres de Familia</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--tinta-2)">Manual Art. 37 num. 3</p>
+      <div class="mt-4 pt-3 border-t border-papel flex items-center justify-between">
+        <span class="versalitas text-xs text-vino">Requerido</span>
+        <button class="text-xs font-bold hover:text-vino">Editar →</button>
+      </div>
+    </article>
+    <article class="rounded-bento p-6" style="background:var(--hueso-2);border:1px solid var(--gris-papel,#9C9486);opacity:.65">
+      <p class="display-italic text-2xl">Resolución</p>
+      <p class="font-bold text-lg mt-1">Sancionatoria</p>
+      <p class="font-mono text-xs mt-3" style="color:var(--tinta-2)">Manual Art. 37</p>
+      <div class="mt-4 pt-3 border-t border-papel flex items-center justify-between">
+        <span class="versalitas text-xs">Bloqueado</span>
+        <span class="text-xs italic">Esperando instrucción</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer class="border-t border-papel mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-8 text-sm flex flex-wrap items-center justify-between gap-4" style="color:var(--tinta-2)">
+    <p class="font-serif italic">I.E. Sor María Juliana · Moral, pedestal de la sabiduría · Cartago, Valle</p>
+    <p class="font-mono text-xs text-dorado">Mockup K · Bento Editorial Híbrido</p>
+  </div>
+</footer>
+
+</body>
+</html>
