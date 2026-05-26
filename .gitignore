@@ -13,7 +13,10 @@ desktop.ini
 *~
 .project
 .settings/
-.claude/
+
+# Claude Code: ignorar todo menos las skills del proyecto
+.claude/*
+!.claude/skills/
 
 # Node (si en futuro se agregan herramientas)
 node_modules/
