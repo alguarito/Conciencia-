@@ -2942,8 +2942,11 @@ const DOCX_COLOR_VINO = "6B1820";
 const DOCX_COLOR_DORADO = "B89968";
 const DOCX_COLOR_TINTA = "1A1614";
 const DOCX_COLOR_GRIS = "A89F92";
-const DOCX_FONT_TITULOS = "Cambria"; // serif similar a Crimson Pro, universalmente disponible
-const DOCX_FONT_CUERPO = "Calibri";
+// TIPO-DOC-001 · Charter (Bitstream) es la serif clásica para documentos
+// jurídicos. Preinstalada en macOS/iOS; Windows cae a Cambria (también serif).
+// Linux cae a Liberation Serif. Reemplaza Calibri, el default perezoso.
+const DOCX_FONT_TITULOS = "Charter";
+const DOCX_FONT_CUERPO  = "Charter";
 
 // Conversión de medidas: 1 pulgada = 1440 DXA, 1 cm = 567 DXA aprox.
 // US Letter: 12240 x 15840 DXA. Margen 1": 1440 DXA.
@@ -3215,8 +3218,10 @@ function construirDocumentoDocx(doc, valores){
     sections: [{
       properties: {
         page: {
-          size: { width: 12240, height: 15840 }, // US Letter
-          margin: { top: 1080, right: 1080, bottom: 1440, left: 1080 } // 0.75" lados, 1" abajo
+          // TIPO-DOC-010 · A4 estándar colombiano (210×297mm) en DXA
+          size: { width: 11906, height: 16838 },
+          // TIPO-DOC-011 · márgenes 3cm/3.5cm cumplen ICONTEC NTC 1486 + Butterick (≥1")
+          margin: { top: 1701, right: 1701, bottom: 1985, left: 1701 }
         }
       },
       footers: { default: piePagina },
@@ -3741,14 +3746,31 @@ function construirHTMLImprimible(doc, valores){
 }
 *{margin:0; padding:0; box-sizing:border-box}
 body{
-  font-family:'DM Sans', system-ui, sans-serif;
-  font-size:11pt; line-height:1.5;
+  /* TIPO-DOC-003 · serif para body de documento jurídico (Butterick) */
+  font-family:'Charter','Source Serif Pro','Cambria',Georgia,serif;
+  font-size:11pt; line-height:1.45;
   color:var(--tinta); background:#fff;
   padding:0;
+  font-variant-numeric:tabular-nums;
 }
 @page{
-  size:letter;
-  margin:0.75in 0.75in 1in 0.75in;
+  /* TIPO-DOC-010 · A4 estándar colombiano */
+  size:A4;
+  /* TIPO-DOC-011 · márgenes ICONTEC NTC 1486 (≥3cm) */
+  margin:3cm 3cm 3.5cm 3cm;
+  /* TIPO-DOC-009 · paginación en footer */
+  @bottom-right{
+    content:'Página ' counter(page) ' de ' counter(pages);
+    font-family:'Charter','Cambria',Georgia,serif;
+    font-size:8pt;
+    color:#71665E;
+  }
+  @bottom-left{
+    content:'I.E. Sor María Juliana · Moral, pedestal de la sabiduría';
+    font-family:'Charter','Cambria',Georgia,serif;
+    font-size:7.5pt; font-style:italic;
+    color:#71665E;
+  }
 }
 
 /* Encabezado institucional */
@@ -3780,7 +3802,7 @@ h2.titulo-formato{
   letter-spacing:.04em; margin:16px 0 6px;
 }
 .fundamento-formato{
-  font-family:'DM Sans',sans-serif;
+  font-family:'Inter Tight','Inter',system-ui,sans-serif;
   font-size:9pt; font-style:italic; color:var(--dorado);
   text-align:center; padding-bottom:10px;
   border-bottom:1pt solid var(--vino);
@@ -3815,7 +3837,7 @@ h2.titulo-formato{
   font-size:9pt; font-weight:600; color:var(--vino);
   text-transform:uppercase; letter-spacing:.1em;
   margin-bottom:3px;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Inter Tight','Inter',system-ui,sans-serif;
 }
 .campo-valor{
   font-size:11pt; color:var(--tinta);
@@ -3880,7 +3902,7 @@ h2.titulo-formato{
     position:fixed; top:16px; left:50%; transform:translateX(-50%);
     background:#6B1820; color:#FAF7F2;
     padding:10px 20px; border-radius:4px;
-    font-size:13px; font-family:'DM Sans',sans-serif;
+    font-size:13px; font-family:'Inter Tight','Inter',system-ui,sans-serif;
     box-shadow:0 4px 16px rgba(0,0,0,.18);
     z-index:1000;
     display:flex; align-items:center; gap:12px;
@@ -3890,7 +3912,7 @@ h2.titulo-formato{
     background:#fff; color:#6B1820;
     border:none; padding:5px 12px; border-radius:3px;
     font-weight:600; cursor:pointer; font-size:12px;
-    font-family:'DM Sans',sans-serif;
+    font-family:'Inter Tight','Inter',system-ui,sans-serif;
   }
   .banner-instrucciones button:hover{background:#F0EBE3}
 }
