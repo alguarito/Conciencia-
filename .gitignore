@@ -1,0 +1,58 @@
+# === ConciencIA · .gitignore ===
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+.claude/
+
+# Node (si en futuro se agregan herramientas)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Python (si hay scripts auxiliares)
+__pycache__/
+*.py[cod]
+*.pyc
+.venv/
+venv/
+
+# Archivos temporales del desarrollo
+*.tmp
+*.temp
+*.bak
+*.cache
+*_backup.*
+
+# Casos personales / datos sensibles
+# NUNCA deben subirse al repositorio público
+casos/
+expedientes/
+*.smjcase
+casos-reales/
+
+# Builds locales
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Credenciales (jamás se deben subir)
+.env
+.env.local
+secrets.json
+credentials.json
