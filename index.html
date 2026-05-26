@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-CO">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1579,6 +1579,103 @@ input, textarea, select{
   letter-spacing:-0.015em;
   line-height:1.1;
 }
+
+/* === COMPONENTES NUEVOS DEL REDISEÑO === */
+
+/* UX-001 · botón Atrás del árbol */
+.btn-atras-arbol{
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  background:transparent; border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-full);
+  font-family:var(--sans); font-size:var(--fs-sm); font-weight:600;
+  cursor:pointer;
+  transition:all var(--motion-fast) var(--ease-out);
+  margin-bottom:var(--space-4);
+  min-height:36px;
+}
+.btn-atras-arbol:hover{
+  background:var(--bg-muted);
+  color:var(--vino);
+  border-color:var(--vino);
+  transform:translateX(-2px);
+}
+
+/* A11Y-004 · botón en banner de errores (reemplaza <a onclick>) */
+.enlace-error{
+  background:none; border:none;
+  color:var(--danger);
+  text-decoration:underline;
+  cursor:pointer;
+  font:inherit;
+  padding:0 var(--space-1);
+  border-radius:var(--radius-sm);
+}
+.enlace-error:hover{
+  background:var(--danger-soft);
+}
+
+/* Botones doc-item ahora son <button>, no <div> */
+.doc-item{
+  text-align:left;
+  width:100%;
+  background:var(--bg-surface);
+  font:inherit;
+  cursor:pointer;
+}
+
+/* Botones paso-doc-chip ahora son <button> */
+.paso-doc-chip{
+  background:rgba(107,24,32,0.08);
+  font:inherit;
+  cursor:pointer;
+  min-height:28px;
+  padding:var(--space-2) var(--space-3);
+}
+
+/* Botones de tabs del expediente */
+.docs-tab{
+  font:inherit;
+  cursor:pointer;
+  background:none;
+  border:none;
+}
+
+/* Mejoras visuales adicionales del Bento Jurídico */
+.brand-name, .col-title{
+  font-family:var(--serif);
+  font-weight:600;
+  letter-spacing:-0.02em;
+}
+.col-title{
+  font-size:var(--fs-2xl);
+  line-height:1.1;
+}
+.modal-titulo{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:var(--fs-xl);
+  letter-spacing:-0.015em;
+}
+.alerta-card.critica .alerta-acciones-tit{
+  color:var(--dorado-warm);
+  font-size:var(--fs-base);
+}
+
+/* Toast para cambios de tema */
+.toast{
+  position:fixed; bottom:var(--space-6); right:var(--space-6);
+  background:var(--text); color:var(--bg-surface);
+  padding:var(--space-3) var(--space-5);
+  border-radius:var(--radius-full);
+  font-size:var(--fs-sm); font-weight:500;
+  box-shadow:var(--shadow-lg);
+  z-index:200;
+  animation:toastIn var(--motion-normal) var(--ease-spring), toastOut var(--motion-normal) var(--ease-out) 1.5s forwards;
+}
+@keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { to { opacity:0; transform:translateY(20px); } }
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
@@ -1602,14 +1699,14 @@ input, textarea, select{
   <div class="topbar-actions">
     <span class="modo-badge" id="modo-badge">Modo Offline</span>
     <div class="theme-switcher" role="radiogroup" aria-label="Tema visual">
-      <button onclick="cambiarTema('editorial')" id="theme-editorial" title="Tema Editorial · Jurídico" aria-label="Tema Editorial">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <button onclick="cambiarTema('editorial')" id="theme-editorial" role="radio" aria-checked="true" title="Tema Editorial · Jurídico" aria-label="Tema Editorial">
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       </button>
-      <button onclick="cambiarTema('moderno')" id="theme-moderno" title="Tema Moderno claro" aria-label="Tema Moderno claro">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <button onclick="cambiarTema('moderno')" id="theme-moderno" role="radio" aria-checked="false" title="Tema Moderno claro" aria-label="Tema Moderno claro">
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       </button>
-      <button onclick="cambiarTema('moderno-oscuro')" id="theme-moderno-oscuro" title="Tema Moderno oscuro" aria-label="Tema Moderno oscuro">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button onclick="cambiarTema('moderno-oscuro')" id="theme-moderno-oscuro" role="radio" aria-checked="false" title="Tema Moderno oscuro" aria-label="Tema Moderno oscuro">
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
     </div>
     <button class="btn-icon" title="Configuración" onclick="abrirConfig()">
@@ -1662,7 +1759,7 @@ input, textarea, select{
       <span class="modo-dot"></span>
       <span id="chat-modo-text">Modo offline · Respuestas basadas en árbol de decisión</span>
     </div>
-    <div class="col-content chat-mensajes" id="chat-mensajes">
+    <div class="col-content chat-mensajes" id="chat-mensajes" role="log" aria-live="polite" aria-relevant="additions" aria-label="Historial de conversación con el asistente">
       <div class="mensaje mensaje-asistente">
         <strong style="font-family:var(--serif); font-size:var(--fs-lg)">Bienvenido(a).</strong><br>
         Soy su asistente para gestionar el debido proceso disciplinario y académico de la Institución Educativa Sor María Juliana, fundamentado en el Manual de Convivencia y el SIE.
@@ -1678,7 +1775,8 @@ input, textarea, select{
     </div>
     <div class="chat-input-area">
       <div class="chat-input-wrapper">
-        <textarea class="chat-input" id="chat-input" placeholder="Describa la situación o haga una pregunta..." rows="1"></textarea>
+        <label for="chat-input" class="sr-only">Mensaje al asistente del debido proceso</label>
+        <textarea class="chat-input" id="chat-input" placeholder="Describa la situación o haga una pregunta..." rows="1" aria-describedby="chat-info"></textarea>
         <div class="chat-input-bar">
           <span class="chat-input-bar-info" id="chat-info">Modo offline · 0/2000</span>
           <button class="btn-send" id="btn-send" onclick="enviarMensaje()">
@@ -1699,10 +1797,10 @@ input, textarea, select{
       <p class="col-sub">Formatos del proceso, edición en tiempo real</p>
     </div>
     <div id="docs-lista-view">
-      <div class="docs-tabs">
-        <div class="docs-tab active" data-tab="requeridos">Requeridos</div>
-        <div class="docs-tab" data-tab="opcionales">Opcionales</div>
-        <div class="docs-tab" data-tab="completos">Completos</div>
+      <div class="docs-tabs" role="tablist" aria-label="Categorías de documentos">
+        <button type="button" class="docs-tab active" data-tab="requeridos" role="tab" aria-selected="true" aria-controls="docs-list-panel">Requeridos</button>
+        <button type="button" class="docs-tab" data-tab="opcionales" role="tab" aria-selected="false" aria-controls="docs-list-panel">Opcionales</button>
+        <button type="button" class="docs-tab" data-tab="completos" role="tab" aria-selected="false" aria-controls="docs-list-panel">Completos</button>
       </div>
       <div class="col-content">
         <div class="docs-list" id="docs-list">
@@ -1891,14 +1989,15 @@ const CATALOGO = {"$schema":"http://json-schema.org/draft-07/schema#","version":
 // === ESTADO GLOBAL ===
 const state = {
   caso: null,
-  rutaPasos: [],   // pasos de protocolo aplicado
+  rutaPasos: [],
   nodoActual: null,
   protocoloActual: null,
   clasificacion: null,
   docActivo: null,
-  docsValores: {}, // documentosId -> {campoId: valor}
+  docsValores: {},
   docsCompletos: new Set(),
   pasosCompletados: new Set(),
+  historialNodos: [],   // UX-001 · pila para botón "Atrás"
   historialChat: [],
   funcionario: 'Docente',
   cargo: 'Docente'
@@ -1907,6 +2006,68 @@ const state = {
 // === HELPERS ===
 const $ = id => document.getElementById(id);
 const escape = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ============================================================
+// UX-003 · Persistencia local del caso activo (no envía a servidor)
+// Cumple Ley 1581 de 2012 (datos solo en navegador del usuario)
+// ============================================================
+const STORAGE_KEY = 'conciencia:state:v2';
+
+function guardarEstado(){
+  if (!state.caso) return; // solo persistir cuando hay caso activo
+  try {
+    const snapshot = {
+      caso: state.caso,
+      rutaPasos: state.rutaPasos,
+      nodoActual: state.nodoActual,
+      protocoloActual: state.protocoloActual,
+      clasificacion: state.clasificacion,
+      docsValores: state.docsValores,
+      docsCompletos: [...state.docsCompletos],
+      pasosCompletados: [...state.pasosCompletados],
+      historialNodos: state.historialNodos || [],
+      funcionario: state.funcionario,
+      cargo: state.cargo,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  } catch(e){ console.warn('No se pudo guardar:', e); }
+}
+
+function restaurarEstado(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !s.caso) return false;
+    Object.assign(state, {
+      caso: s.caso,
+      rutaPasos: s.rutaPasos || [],
+      nodoActual: s.nodoActual,
+      protocoloActual: s.protocoloActual,
+      clasificacion: s.clasificacion,
+      docsValores: s.docsValores || {},
+      docsCompletos: new Set(s.docsCompletos || []),
+      pasosCompletados: new Set(s.pasosCompletados || []),
+      historialNodos: s.historialNodos || [],
+      funcionario: s.funcionario || state.funcionario,
+      cargo: s.cargo || state.cargo
+    });
+    return true;
+  } catch(e){ console.warn('No se pudo restaurar:', e); return false; }
+}
+
+function limpiarEstadoPersistido(){
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+}
+
+// Avisar si hay cambios sin guardar al cerrar pestaña
+window.addEventListener('beforeunload', e => {
+  if (state.caso && state.docsCompletos.size < (state.rutaPasos?.length || 0)){
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 const generarCasoId = () => {
   const ano = new Date().getFullYear();
   const sec = String(Math.floor(Math.random()*9000)+1000);
@@ -2057,17 +2218,28 @@ function editarDatosCaso(){
   setTimeout(() => $('ic-estudiante-nombre').focus(), 100);
 }
 
-function navegarA(nodoId){
+function navegarA(nodoId, esRetorno){
   const nodo = ARBOL.nodos[nodoId];
   if (!nodo) {console.error('Nodo no encontrado:', nodoId); return}
+  // UX-001 · mantener historial para botón "Atrás"
+  if (!esRetorno && state.nodoActual && state.nodoActual !== nodoId){
+    state.historialNodos = state.historialNodos || [];
+    state.historialNodos.push(state.nodoActual);
+  }
   state.nodoActual = nodoId;
+  guardarEstado(); // UX-003 · persistencia
   renderColumnaRuta();
-  // Comentario contextual del asistente
   agregarMensajeAsistente(generarComentarioContextual(nodo));
 }
 
+// UX-001 · regresar al nodo anterior sin perder datos del caso
+function retrocederNodo(){
+  if (!state.historialNodos || state.historialNodos.length === 0) return;
+  const prev = state.historialNodos.pop();
+  navegarA(prev, true);
+}
+
 function seleccionarOpcion(opcion){
-  // Si la opción tiene 'siguiente', navegar
   if (opcion.siguiente) navegarA(opcion.siguiente);
 }
 
@@ -2134,16 +2306,25 @@ function renderProgreso(){
 }
 
 function renderPregunta(nodo){
+  // UX-001 · botón "Atrás" si hay historial
+  const puedeRetroceder = (state.historialNodos || []).length > 0;
+  const btnAtras = puedeRetroceder
+    ? `<button type="button" class="btn-atras-arbol" onclick="retrocederNodo()" aria-label="Volver a la pregunta anterior">
+        <span aria-hidden="true">←</span> Cambiar respuesta anterior
+       </button>`
+    : '';
+
   let html = `<div class="preguntas-stack">
+    ${btnAtras}
     <div class="pregunta-card">
-      <div class="pregunta-titulo">${escape(nodo.titulo)}</div>
+      <h3 class="pregunta-titulo">${escape(nodo.titulo)}</h3>
       <div class="pregunta-texto">${escape(nodo.pregunta)}</div>`;
-  if (nodo.fundamento) html += `<div class="pregunta-fundamento">📖 ${escape(nodo.fundamento)}</div>`;
-  if (nodo.advertencia) html += `<div class="alerta-card" style="margin:0 0 12px"><div class="alerta-mensaje">⚠ ${escape(nodo.advertencia)}</div></div>`;
-  html += `<div class="opciones-list">`;
+  if (nodo.fundamento) html += `<div class="pregunta-fundamento"><span aria-hidden="true">📖</span> ${escape(nodo.fundamento)}</div>`;
+  if (nodo.advertencia) html += `<div class="alerta-card" role="alert" style="margin:0 0 12px"><div class="alerta-mensaje"><span aria-hidden="true">⚠</span> ${escape(nodo.advertencia)}</div></div>`;
+  html += `<div class="opciones-list" role="group" aria-label="Opciones de respuesta">`;
   nodo.opciones.forEach((opt, i) => {
     html += `<button class="opcion-btn" data-opcion-idx="${i}">
-      <span class="opcion-btn-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="opcion-btn-num" aria-hidden="true">${String(i+1).padStart(2,'0')}</span>
       <div class="opcion-btn-texto">
         ${escape(opt.etiqueta)}
         ${opt.descripcion ? `<div class="opcion-btn-desc">${escape(opt.descripcion)}</div>` : ''}
@@ -2155,7 +2336,11 @@ function renderPregunta(nodo){
 }
 
 function renderAlerta(nodo){
-  let html = `<div class="alerta-card ${nodo.id.includes('iii')||nodo.id.includes('III')?'critica':''}">
+  const esCritica = nodo.id.includes('iii') || nodo.id.includes('III');
+  const ariaProps = esCritica
+    ? 'role="alert" aria-live="assertive" aria-atomic="true"'
+    : 'role="alert" aria-live="polite" aria-atomic="true"';
+  let html = `<div class="alerta-card ${esCritica?'critica':''}" ${ariaProps}>
     <div class="alerta-titulo">${escape(nodo.titulo)}</div>
     <div class="alerta-mensaje">${escape(nodo.mensaje)}</div>`;
   if (nodo.acciones_obligatorias){
@@ -2254,7 +2439,7 @@ function renderProtocolo(nodo){
       <div class="paso-desc">${escape(paso.descripcion||'')}</div>
       ${paso.documentos_generar && paso.documentos_generar.length ? `<div class="paso-docs">${paso.documentos_generar.map(d=>{
         const doc = CATALOGO.catalogo_documentos[d];
-        return doc?`<span class="paso-doc-chip" onclick="abrirEditorDoc('${d}')">📄 ${escape(doc.nombre.length>30?doc.nombre.slice(0,30)+'…':doc.nombre)}</span>`:'';
+        return doc?`<button type="button" class="paso-doc-chip" onclick="abrirEditorDoc('${d}')" aria-label="Editar ${escape(doc.nombre)}"><span aria-hidden="true">📄</span> ${escape(doc.nombre.length>30?doc.nombre.slice(0,30)+'…':doc.nombre)}</button>`:'';
       }).join('')}</div>` : ''}
       <div class="paso-checkbox">
         <input type="checkbox" id="chk-${i}" ${completado?'checked':''} onchange="togglePasoCompleto(${i})">
@@ -2342,14 +2527,14 @@ function renderDocumentos(tab){
     const doc = CATALOGO.catalogo_documentos[docId];
     if (!doc) return '';
     const completo = state.docsCompletos.has(docId);
-    return `<div class="doc-item ${completo?'completo':''}" onclick="abrirEditorDoc('${docId}')">
-      <div class="doc-icon ${completo?'completo':''}">${completo?'✓':'DOC'}</div>
+    return `<button type="button" class="doc-item ${completo?'completo':''}" onclick="abrirEditorDoc('${docId}')" aria-label="${completo?'Completado: ':''}Editar ${escape(doc.nombre)}">
+      <div class="doc-icon ${completo?'completo':''}" aria-hidden="true">${completo?'✓':'DOC'}</div>
       <div class="doc-info">
         <div class="doc-nombre">${escape(doc.nombre)}</div>
-        ${doc.fundamento?`<div class="doc-fundamento">📖 ${escape(doc.fundamento.slice(0,40))}</div>`:''}
+        ${doc.fundamento?`<div class="doc-fundamento"><span aria-hidden="true">📖</span> ${escape(doc.fundamento.slice(0,40))}</div>`:''}
         <div class="doc-estado ${completo?'completo':''}">${completo?'Completado':`${(doc.campos||[]).length} campos`}</div>
       </div>
-    </div>`;
+    </button>`;
   }).join('');
 }
 
@@ -2377,7 +2562,7 @@ function abrirEditorDoc(docId){
   const enc = METADATA.configuracion_documentos.encabezado_estandar;
   const cont = $('doc-editor-content');
   cont.innerHTML = `
-    <div class="validacion-banner" id="validacion-banner"></div>
+    <div class="validacion-banner" id="validacion-banner" tabindex="-1"></div>
     <div class="doc-encabezado">
       <div class="doc-encabezado-mark">SMJ</div>
       <div class="doc-encabezado-nombre">${escape(enc.linea_1)}</div>
@@ -2469,31 +2654,46 @@ function aplicarAutoRelleno(doc, valores){
 function renderCampo(c, valores, prellenados){
   prellenados = prellenados || new Set();
   const v = valores[c.id] || c.default || '';
-  const req = c.obligatorio ? '<span class="req">*</span>' : '';
-  const help = c.min_chars ? `<div class="campo-help">Mínimo ${c.min_chars} caracteres</div>` : '';
+  const inputId = `campo-${c.id}`;
+  const errorId = `err-${inputId}`;
+  const helpId = c.min_chars ? `help-${inputId}` : '';
+  const req = c.obligatorio ? '<span class="req" aria-hidden="true">*</span>' : '';
+  const labelObl = c.obligatorio ? '<span class="sr-only"> (obligatorio)</span>' : '';
+  const ariaReq = c.obligatorio ? 'aria-required="true"' : '';
+  const describedBy = [helpId, errorId].filter(Boolean).join(' ');
+  const ariaDescribed = describedBy ? `aria-describedby="${describedBy}"` : '';
+  const help = c.min_chars ? `<div class="campo-help" id="${helpId}">Mínimo ${c.min_chars} caracteres</div>` : '';
   const esPrefilled = prellenados.has(c.id);
   const claseExtra = esPrefilled ? 'prefilled' : '';
   const tagPrefill = esPrefilled ? `<span class="campo-prefill-tag">auto</span>` : '';
-  const errorDiv = `<div class="campo-error"></div>`;
-  // Etiqueta formateada (si no hay etiqueta explícita, capitalizar el id)
+  const errorDiv = `<div class="campo-error" id="${errorId}" aria-live="polite"></div>`;
   const etiqueta = c.etiqueta || c.id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   if (c.tipo === 'textarea')
-    return `<div class="campo-form"><label class="campo-label">${escape(etiqueta)}${req}${tagPrefill}</label>
-      <textarea class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3">${escape(v)}</textarea>${help}${errorDiv}</div>`;
+    return `<div class="campo-form">
+      <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
+      <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>${help}${errorDiv}
+    </div>`;
   if (c.tipo === 'select' && c.opciones)
-    return `<div class="campo-form"><label class="campo-label">${escape(etiqueta)}${req}${tagPrefill}</label>
-      <select class="campo-select ${claseExtra}" data-campo="${c.id}">${c.opciones.map(o=>`<option ${v===o?'selected':''}>${escape(o)}</option>`).join('')}</select>${errorDiv}</div>`;
+    return `<div class="campo-form">
+      <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
+      <select id="${inputId}" class="campo-select ${claseExtra}" data-campo="${c.id}" ${ariaReq} ${ariaDescribed}>${c.opciones.map(o=>`<option ${v===o?'selected':''}>${escape(o)}</option>`).join('')}</select>${errorDiv}
+    </div>`;
   if (c.tipo === 'firma' || c.tipo === 'firmas_multiples')
-    return `<div class="campo-form"><label class="campo-label">${escape(etiqueta)}${req}</label>
-      <div style="border:1px dashed var(--gris-tenue); padding:18px; text-align:center; font-style:italic; color:var(--gris-tenue); font-size:var(--fs-sm); border-radius:2px">— Espacio para firma —</div></div>`;
+    return `<div class="campo-form">
+      <span class="campo-label" id="${inputId}-label">${escape(etiqueta)}${req}${labelObl}</span>
+      <div aria-labelledby="${inputId}-label" style="border:1px dashed var(--border); padding:18px; text-align:center; font-style:italic; color:var(--text-subtle); font-size:var(--fs-sm); border-radius:var(--radius-md)">— Espacio para firma física —</div>
+    </div>`;
   if (c.tipo === 'boolean')
-    return `<div class="campo-form" style="display:flex; align-items:center; gap:8px">
-      <input type="checkbox" data-campo="${c.id}" ${v?'checked':''} style="width:16px; height:16px; accent-color:var(--vino)">
-      <label class="campo-label" style="margin:0">${escape(etiqueta)}${req}</label></div>`;
+    return `<div class="campo-form" style="display:flex; align-items:center; gap:var(--space-2); padding:var(--space-2) 0">
+      <input type="checkbox" id="${inputId}" data-campo="${c.id}" ${v?'checked':''} style="width:20px; height:20px; accent-color:var(--vino); cursor:pointer" ${ariaReq}>
+      <label class="campo-label" for="${inputId}" style="margin:0; cursor:pointer">${escape(etiqueta)}${req}${labelObl}</label>
+    </div>`;
   const tipo = c.tipo === 'fecha' ? 'date' : c.tipo === 'hora' ? 'time' : c.tipo === 'datetime' ? 'datetime-local' : c.tipo === 'numero' ? 'number' : c.tipo === 'email' ? 'email' : 'text';
-  return `<div class="campo-form"><label class="campo-label">${escape(etiqueta)}${req}${tagPrefill}</label>
-    <input type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}">${help}${errorDiv}</div>`;
+  return `<div class="campo-form">
+    <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
+    <input id="${inputId}" type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}" ${ariaReq} ${ariaDescribed}>${help}${errorDiv}
+  </div>`;
 }
 
 function cerrarEditor(){
@@ -2670,9 +2870,56 @@ document.addEventListener('mouseup', () => {
 });
 
 // === MODALES ===
-function abrirConfig(){$('modal-config').classList.add('activo')}
-function abrirInfo(){$('modal-info').classList.add('activo')}
-function cerrarModal(id){$(id).classList.remove('activo')}
+// ====================================================
+// A11Y-003 · Modal accesible (trampa de foco + Escape + role=dialog)
+// ====================================================
+let _focoAntesModal = null;
+
+function abrirModalA11y(id){
+  _focoAntesModal = document.activeElement;
+  const m = $(id);
+  if (!m) return;
+  m.classList.add('activo');
+  m.setAttribute('role', 'dialog');
+  m.setAttribute('aria-modal', 'true');
+  // Inerte resto del DOM
+  document.querySelectorAll('body > *:not(.modal-overlay)').forEach(el => el.setAttribute('inert',''));
+  // Foco al primer focusable
+  setTimeout(() => {
+    const primer = m.querySelector('input, select, textarea, button:not([disabled])');
+    if (primer) primer.focus();
+  }, 60);
+}
+
+function abrirConfig(){ abrirModalA11y('modal-config'); }
+function abrirInfo(){ abrirModalA11y('modal-info'); }
+
+function cerrarModal(id){
+  const m = $(id);
+  if (!m) return;
+  m.classList.remove('activo');
+  document.querySelectorAll('body > *:not(.modal-overlay)').forEach(el => el.removeAttribute('inert'));
+  if (_focoAntesModal) _focoAntesModal.focus();
+}
+
+// UX-013 · Escape global cierra cualquier modal abierto
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const abierto = document.querySelector('.modal-overlay.activo');
+  if (abierto) cerrarModal(abierto.id);
+});
+
+// A11Y-003 · Trampa de foco con Tab dentro del modal abierto
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Tab') return;
+  const m = document.querySelector('.modal-overlay.activo');
+  if (!m) return;
+  const focusables = m.querySelectorAll('input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+  if (!focusables.length) return;
+  const primero = focusables[0], ultimo = focusables[focusables.length-1];
+  if (e.shiftKey && document.activeElement === primero){ ultimo.focus(); e.preventDefault(); }
+  else if (!e.shiftKey && document.activeElement === ultimo){ primero.focus(); e.preventDefault(); }
+});
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => {if (e.target === m) m.classList.remove('activo')});
 });
@@ -2680,7 +2927,7 @@ function guardarConfig(){
   state.funcionario = $('input-funcionario').value || 'Docente';
   state.cargo = $('select-cargo').value;
   cerrarModal('modal-config');
-  agregarMensajeAsistente({texto:`Hola, <strong>${state.funcionario}</strong> (${state.cargo}). Su configuración ha sido guardada. Listo para iniciar.`});
+  agregarMensajeAsistente({texto:`Hola, <strong>${escape(state.funcionario)}</strong> (${escape(state.cargo)}). Su configuración ha sido guardada. Listo para iniciar.`});
 }
 
 // === INICIO ===
@@ -2741,7 +2988,7 @@ function mostrarErroresValidacion(faltantes){
   const banner = $('validacion-banner');
   if (banner){
     const lista = faltantes.map(f =>
-      `<a onclick="irACampoConError('${f.id}')">${escape(f.etiqueta)}</a>`
+      `<button type="button" class="enlace-error" onclick="irACampoConError('${f.id}')">${escape(f.etiqueta)}</button>`
     ).join(' · ');
     banner.innerHTML = `
       <div class="validacion-banner-titulo">⚠ No es posible descargar el documento</div>
@@ -3475,7 +3722,7 @@ function construirHTMLImprimible(doc, valores){
   const seccionFirmas = construirSeccionFirmasHTML(doc);
 
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="es-CO">
 <head>
 <meta charset="UTF-8">
 <title>${escape(tituloPagina)}</title>
@@ -3802,17 +4049,36 @@ function construirSeccionFirmasHTML(doc){
 
 // === ESTADO DE CARGA DE LIBRERÍAS ===
 window.addEventListener('load', () => {
-  // Verificar disponibilidad de librerías
   if (typeof docx === 'undefined' || typeof saveAs === 'undefined'){
     console.warn('⚠️ Librerías de generación Word no disponibles. La descarga estará deshabilitada.');
     const btn = $('btn-descargar-docx');
     if (btn){
+      btn.disabled = true;
       btn.title = 'Sin conexión: librería de Word no disponible';
       btn.style.opacity = '0.4';
     }
   } else {
     console.log('✅ Librería docx.js cargada — generación de Word habilitada');
   }
+
+  // UX-003 · restaurar caso si había uno guardado
+  if (restaurarEstado()){
+    console.log('✅ Caso restaurado desde almacenamiento local');
+    renderColumnaRuta();
+    renderDocumentos('requeridos');
+    agregarMensajeAsistente({
+      texto: `Bienvenido de nuevo. He restaurado el caso <strong>${escape(state.caso?.id || '')}</strong> con todo su progreso. Puede continuar donde lo dejó o iniciar uno nuevo.`,
+      fundamento: 'Ley 1581 de 2012 — datos almacenados solo en este dispositivo'
+    });
+  }
+
+  // UX-003 · autosave de campos del editor de documentos al cambiar inputs
+  document.addEventListener('input', e => {
+    if (e.target.matches('.campo-input, .campo-textarea, .campo-select') && state.docActivo){
+      clearTimeout(window._saveTimer);
+      window._saveTimer = setTimeout(guardarEstado, 800);
+    }
+  });
 });
 
 // ============================================================
@@ -3822,26 +4088,28 @@ const TEMAS_DISPONIBLES = ['editorial', 'moderno', 'moderno-oscuro'];
 
 function cambiarTema(tema){
   if (!TEMAS_DISPONIBLES.includes(tema)) tema = 'editorial';
-  // Aplicar al documento
   if (tema === 'editorial'){
     document.documentElement.removeAttribute('data-theme');
   } else {
     document.documentElement.setAttribute('data-theme', tema);
   }
-  // Actualizar UI del switcher
+  // A11Y-008 · actualizar aria-checked y .active en los botones radio
   TEMAS_DISPONIBLES.forEach(t => {
     const btn = document.getElementById('theme-' + t);
-    if (btn) btn.classList.toggle('active', t === tema);
+    if (btn){
+      btn.classList.toggle('active', t === tema);
+      btn.setAttribute('aria-checked', t === tema ? 'true' : 'false');
+    }
   });
-  // Guardar preferencia en sessionStorage (más limitado pero seguro en este entorno)
-  try { window.sessionStorage.setItem('asesor-tema', tema); } catch(e){}
+  // UX-019 · persistencia en localStorage (no sessionStorage)
+  try { localStorage.setItem('conciencia:tema', tema); } catch(e){}
   state.temaActivo = tema;
 }
 
 function inicializarTema(){
   let temaInicial = 'editorial';
   try {
-    const guardado = window.sessionStorage.getItem('asesor-tema');
+    const guardado = localStorage.getItem('conciencia:tema') || sessionStorage.getItem('asesor-tema');
     if (guardado && TEMAS_DISPONIBLES.includes(guardado)) temaInicial = guardado;
   } catch(e){}
   cambiarTema(temaInicial);
