@@ -1,0 +1,1780 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "2.0.0",
+  "descripcion": "Catálogo completo de plantillas de documentos del debido proceso",
+  "depende_de": ["01_metadata.json"],
+
+  "catalogo_documentos": {
+
+    "doc_observador": {
+      "id": "doc_observador",
+      "nombre": "Anotación en el Observador del Estudiante",
+      "categoria": "disciplinario",
+      "fundamento": "Manual Art. 37 num. 5",
+      "campos": [
+        {"id": "fecha_hecho", "tipo": "fecha", "etiqueta": "Fecha del hecho", "obligatorio": true},
+        {"id": "hora_hecho", "tipo": "hora", "etiqueta": "Hora del hecho"},
+        {"id": "lugar_hecho", "tipo": "texto", "etiqueta": "Lugar del hecho"},
+        {"id": "descripcion_hecho", "tipo": "textarea", "etiqueta": "Descripción detallada del hecho", "obligatorio": true, "min_chars": 50},
+        {"id": "testigos", "tipo": "textarea", "etiqueta": "Testigos"},
+        {"id": "version_estudiante", "tipo": "textarea", "etiqueta": "Versión del estudiante"},
+        {"id": "compromiso", "tipo": "textarea", "etiqueta": "Compromiso adquirido"},
+        {"id": "firma_funcionario", "tipo": "firma", "etiqueta": "Firma del funcionario"},
+        {"id": "firma_estudiante", "tipo": "firma", "etiqueta": "Firma del estudiante"}
+      ]
+    },
+
+    "doc_llamado_atencion": {
+      "id": "doc_llamado_atencion",
+      "nombre": "Formato de Llamado de Atención",
+      "categoria": "disciplinario",
+      "fundamento": "Manual Art. 37 num. 1",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "tipo_llamado", "tipo": "select", "opciones": ["Verbal", "Escrito"]},
+        {"id": "motivo", "tipo": "textarea", "obligatorio": true},
+        {"id": "articulo_violado", "tipo": "select", "etiqueta": "Numeral del Art. 39 violado"},
+        {"id": "compromiso", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples", "personas": ["Docente", "Estudiante", "Director de grupo"]}
+      ]
+    },
+
+    "doc_acta_version_libre": {
+      "id": "doc_acta_version_libre",
+      "nombre": "Acta de Versión Libre",
+      "categoria": "disciplinario",
+      "fundamento": "Manual Art. 37 num. 2; Art. 43",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "lugar", "tipo": "texto", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "etiqueta": "Asistentes con cargo y firma", "obligatorio": true},
+        {"id": "narracion_libre", "tipo": "textarea", "etiqueta": "Versión libre de los hechos por el estudiante", "obligatorio": true, "min_chars": 100},
+        {"id": "preguntas_aclaratorias", "tipo": "textarea"},
+        {"id": "respuestas_estudiante", "tipo": "textarea"},
+        {"id": "pruebas_solicitadas", "tipo": "textarea", "etiqueta": "Pruebas solicitadas por el estudiante"},
+        {"id": "manifestacion_acudiente", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_citacion_padres": {
+      "id": "doc_citacion_padres",
+      "nombre": "Formato de Citación a Padres de Familia",
+      "categoria": "comunicacion",
+      "fundamento": "Manual Art. 37 num. 3",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_citacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_citacion", "tipo": "hora", "obligatorio": true},
+        {"id": "lugar_citacion", "tipo": "texto", "obligatorio": true},
+        {"id": "motivo_citacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "nombre_acudiente", "tipo": "texto", "obligatorio": true},
+        {"id": "documentos_traer", "tipo": "textarea"},
+        {"id": "firma_funcionario", "tipo": "firma"},
+        {"id": "firma_recibido_acudiente", "tipo": "firma"}
+      ]
+    },
+
+    "doc_remision_orientador": {
+      "id": "doc_remision_orientador",
+      "nombre": "Formato de Remisión al Docente Orientador",
+      "categoria": "remision",
+      "fundamento": "Manual Art. 37 num. 4",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "motivo_remision", "tipo": "textarea", "obligatorio": true},
+        {"id": "antecedentes", "tipo": "textarea"},
+        {"id": "intervenciones_previas", "tipo": "textarea"},
+        {"id": "firma_remitente", "tipo": "firma"},
+        {"id": "firma_orientador_recibido", "tipo": "firma"}
+      ]
+    },
+
+    "doc_acta_compromiso": {
+      "id": "doc_acta_compromiso",
+      "nombre": "Acta de Compromiso",
+      "categoria": "compromiso",
+      "fundamento": "Manual Art. 37 num. 6",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "compromisos_estudiante", "tipo": "textarea", "obligatorio": true, "min_chars": 50},
+        {"id": "compromisos_acudiente", "tipo": "textarea"},
+        {"id": "compromisos_institucion", "tipo": "textarea"},
+        {"id": "plazo_cumplimiento", "tipo": "fecha", "obligatorio": true},
+        {"id": "consecuencias_incumplimiento", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples", "personas": ["Estudiante", "Acudiente", "Coordinador", "Director de grupo"]}
+      ]
+    },
+
+    "doc_acta_comite_convivencia": {
+      "id": "doc_acta_comite_convivencia",
+      "nombre": "Acta del Comité de Convivencia Escolar",
+      "categoria": "acta_organo_colegiado",
+      "fundamento": "Manual Art. 34 num. 7-8; Art. 25",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "numero_acta", "tipo": "texto", "obligatorio": true},
+        {"id": "tipo_sesion", "tipo": "select", "opciones": ["Ordinaria", "Extraordinaria"]},
+        {"id": "asistentes_comite", "tipo": "textarea", "obligatorio": true},
+        {"id": "orden_dia", "tipo": "textarea", "obligatorio": true},
+        {"id": "presentacion_caso", "tipo": "textarea"},
+        {"id": "analisis_situacion", "tipo": "textarea"},
+        {"id": "decisiones_adoptadas", "tipo": "textarea", "obligatorio": true},
+        {"id": "acciones_restaurativas", "tipo": "textarea"},
+        {"id": "responsables_seguimiento", "tipo": "textarea"},
+        {"id": "fecha_proximo_seguimiento", "tipo": "fecha"},
+        {"id": "firmas_integrantes", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_matricula_observacion": {
+      "id": "doc_matricula_observacion",
+      "nombre": "Formato de Matrícula en Observación",
+      "categoria": "sancion",
+      "fundamento": "Manual Art. 37 num. 10; Art. 42",
+      "campos": [
+        {"id": "fecha_inicio", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_fin", "tipo": "fecha", "obligatorio": true},
+        {"id": "motivo", "tipo": "textarea", "obligatorio": true},
+        {"id": "compromisos_especificos", "tipo": "textarea", "obligatorio": true},
+        {"id": "consecuencias_incumplimiento", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples", "personas": ["Estudiante", "Acudiente", "Rector"]}
+      ]
+    },
+
+    "doc_informe_rectoria": {
+      "id": "doc_informe_rectoria",
+      "nombre": "Informe de Coordinación / Orientador a Rectoría",
+      "categoria": "informe",
+      "fundamento": "Manual Art. 37 num. 11",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "remitente", "tipo": "select", "opciones": ["Coordinador", "Docente Orientador"]},
+        {"id": "antecedentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "diligencias_practicadas", "tipo": "textarea", "obligatorio": true},
+        {"id": "conclusiones", "tipo": "textarea", "obligatorio": true},
+        {"id": "recomendaciones", "tipo": "textarea"},
+        {"id": "anexos", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_resolucion_sancionatoria": {
+      "id": "doc_resolucion_sancionatoria",
+      "nombre": "Resolución Sancionatoria de Rectoría",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 37; Art. 42",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "considerandos", "tipo": "textarea", "obligatorio": true},
+        {"id": "fundamentos_juridicos", "tipo": "textarea", "obligatorio": true},
+        {"id": "hechos_probados", "tipo": "textarea", "obligatorio": true},
+        {"id": "tipo_sancion", "tipo": "select", "obligatorio": true, "opciones": ["Llamado de atención escrito", "Cambio de grupo", "Matrícula en observación", "Suspensión de 1 día", "Suspensión de 2 días", "Suspensión de 3 días", "Suspensión hasta decisión del Consejo", "Cancelación de matrícula"]},
+        {"id": "duracion_sancion", "tipo": "texto"},
+        {"id": "fecha_inicio_sancion", "tipo": "fecha"},
+        {"id": "fecha_fin_sancion", "tipo": "fecha"},
+        {"id": "recursos_procedentes", "tipo": "textarea", "obligatorio": true, "default": "Contra la presente decisión proceden los recursos de reposición ante la Rectoría dentro de los 3 días hábiles siguientes a la notificación, y de apelación ante el Consejo Directivo dentro de los 3 días hábiles siguientes a la decisión de reposición."},
+        {"id": "firma_rector", "tipo": "firma", "obligatorio": true},
+        {"id": "constancia_notificacion", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_reporte_siuce": {
+      "id": "doc_reporte_siuce",
+      "nombre": "Reporte al SIUCE",
+      "categoria": "reporte_externo",
+      "fundamento": "Manual Art. 34 num. 9; Art. 35 num. 7; Ley 1620/2013",
+      "campos": [
+        {"id": "fecha_reporte", "tipo": "fecha", "obligatorio": true},
+        {"id": "tipo_situacion", "tipo": "select", "opciones": ["Tipo II", "Tipo III"], "obligatorio": true},
+        {"id": "descripcion_caso", "tipo": "textarea", "obligatorio": true},
+        {"id": "fecha_ocurrencia", "tipo": "fecha", "obligatorio": true},
+        {"id": "involucrados_anonimizados", "tipo": "textarea"},
+        {"id": "medidas_adoptadas", "tipo": "textarea", "obligatorio": true},
+        {"id": "estado_caso", "tipo": "select", "opciones": ["Abierto", "En seguimiento", "Cerrado"]},
+        {"id": "responsable_reporte", "tipo": "texto", "obligatorio": true},
+        {"id": "numero_radicado_siuce", "tipo": "texto"}
+      ]
+    },
+
+    "doc_notificacion_policia": {
+      "id": "doc_notificacion_policia",
+      "nombre": "Notificación a Policía Nacional",
+      "categoria": "notificacion_externa",
+      "fundamento": "Manual Art. 35 num. 3",
+      "campos": [
+        {"id": "fecha_notificacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_notificacion", "tipo": "hora", "obligatorio": true},
+        {"id": "medio_utilizado", "tipo": "select", "opciones": ["Presencial", "Telefónico (línea 123)", "CAI más cercano", "Comunicación escrita"], "obligatorio": true},
+        {"id": "funcionario_receptor_policia", "tipo": "texto"},
+        {"id": "descripcion_situacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "numero_caso_policia", "tipo": "texto"},
+        {"id": "firma_rector", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_notificacion_recursos": {
+      "id": "doc_notificacion_recursos",
+      "nombre": "Notificación de Recursos de Reposición y Apelación",
+      "categoria": "notificacion",
+      "fundamento": "Art. 29 CP; Manual Art. 37, Art. 43",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "decision_notificada", "tipo": "textarea", "obligatorio": true},
+        {"id": "plazo_reposicion", "tipo": "texto", "default": "3 días hábiles siguientes a esta notificación"},
+        {"id": "plazo_apelacion", "tipo": "texto", "default": "3 días hábiles siguientes a la resolución del recurso de reposición"},
+        {"id": "instancia_reposicion", "tipo": "texto", "default": "Rectoría"},
+        {"id": "instancia_apelacion", "tipo": "texto", "default": "Consejo Directivo"},
+        {"id": "firma_estudiante_recibido", "tipo": "firma", "obligatorio": true},
+        {"id": "firma_acudiente_recibido", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_seguimiento": {
+      "id": "doc_acta_seguimiento",
+      "nombre": "Acta de Seguimiento Restaurativo",
+      "categoria": "seguimiento",
+      "fundamento": "Manual Art. 43 (faltas graves num. 5)",
+      "campos": [
+        {"id": "fecha_seguimiento", "tipo": "fecha", "obligatorio": true},
+        {"id": "semana_seguimiento", "tipo": "select", "opciones": ["Semana 2", "Semana 4", "Semana 6"]},
+        {"id": "compromisos_evaluados", "tipo": "textarea", "obligatorio": true},
+        {"id": "evidencias_cumplimiento", "tipo": "textarea"},
+        {"id": "obstaculos_identificados", "tipo": "textarea"},
+        {"id": "ajustes_propuestos", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_consejo_directivo": {
+      "id": "doc_acta_consejo_directivo",
+      "nombre": "Acta del Consejo Directivo",
+      "categoria": "acta_organo_colegiado",
+      "fundamento": "Manual Art. 37; Art. 43",
+      "campos": [
+        {"id": "numero_acta", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "antecedentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "deliberacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision", "tipo": "textarea", "obligatorio": true},
+        {"id": "votacion", "tipo": "texto"},
+        {"id": "firmas_consejeros", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_remision_entidad_competente": {
+      "id": "doc_remision_entidad_competente",
+      "nombre": "Remisión a Entidad Competente",
+      "categoria": "remision_externa",
+      "fundamento": "Manual Art. 34 num. 1; Art. 35 num. 1",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "entidad_destino", "tipo": "select", "opciones": ["EPS", "Hospital", "ICBF", "Comisaría de Familia", "Fiscalía", "Otro"]},
+        {"id": "motivo_remision", "tipo": "textarea", "obligatorio": true},
+        {"id": "diagnostico_preliminar", "tipo": "textarea"},
+        {"id": "datos_contacto_entidad", "tipo": "texto"},
+        {"id": "firma_remitente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_socializacion": {
+      "id": "doc_acta_socializacion",
+      "nombre": "Acta de Socialización con Acudientes y Personero",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 43 (faltas gravísimas num. 2)",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "sucesos_descritos", "tipo": "textarea", "obligatorio": true},
+        {"id": "violaciones_manual", "tipo": "textarea", "obligatorio": true},
+        {"id": "ruta_integral_activada", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_reunion_plenaria": {
+      "id": "doc_acta_reunion_plenaria",
+      "nombre": "Acta de Reunión Plenaria",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 43 (faltas gravísimas num. 3-4)",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "obligatorio": true, "default": "Rector(a), Coordinador(a), Docente Orientador, Personero, Director de grupo, Acudiente, Estudiante"},
+        {"id": "analisis_ruta_integral", "tipo": "textarea"},
+        {"id": "concepto_emitido", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision_rector", "tipo": "textarea"},
+        {"id": "firmas_obligatorias", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_audiencia_apelacion": {
+      "id": "doc_acta_audiencia_apelacion",
+      "nombre": "Acta de Audiencia de Apelación",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 43 num. 8-9",
+      "campos": [
+        {"id": "fecha_audiencia", "tipo": "fecha", "obligatorio": true},
+        {"id": "consejeros_presentes", "tipo": "textarea", "obligatorio": true, "default": "Sin presencia del Rector si la decisión recurrida fue suya"},
+        {"id": "sustentacion_estudiante", "tipo": "textarea", "obligatorio": true},
+        {"id": "deliberacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision_definitiva", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas_consejeros", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_resolucion_suspension": {
+      "id": "doc_resolucion_suspension",
+      "nombre": "Resolución de Suspensión Preventiva",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 43 parágrafo",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "motivo_suspension", "tipo": "textarea", "obligatorio": true},
+        {"id": "fecha_inicio", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_fin_estimada", "tipo": "fecha"},
+        {"id": "firma_rector", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_apertura": {
+      "id": "doc_acta_apertura",
+      "nombre": "Acta de Apertura de Proceso Disciplinario",
+      "categoria": "apertura",
+      "fundamento": "Manual Art. 43",
+      "campos": [
+        {"id": "fecha_apertura", "tipo": "fecha", "obligatorio": true},
+        {"id": "numero_proceso", "tipo": "texto", "obligatorio": true},
+        {"id": "hechos_imputados", "tipo": "textarea", "obligatorio": true},
+        {"id": "tipificacion_preliminar", "tipo": "texto", "obligatorio": true},
+        {"id": "diligencias_a_practicar", "tipo": "textarea"},
+        {"id": "firma_coordinador", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_citacion_estudiante": {
+      "id": "doc_citacion_estudiante",
+      "nombre": "Citación al Estudiante para Versión Libre",
+      "categoria": "citacion",
+      "fundamento": "Manual Art. 43 (faltas graves num. 1)",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_audiencia", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_audiencia", "tipo": "hora", "obligatorio": true},
+        {"id": "lugar", "tipo": "texto", "obligatorio": true},
+        {"id": "derecho_defensa_explicado", "tipo": "boolean", "default": true}
+      ]
+    },
+
+    "doc_citacion_personero": {
+      "id": "doc_citacion_personero",
+      "nombre": "Citación al Personero Estudiantil",
+      "categoria": "citacion",
+      "fundamento": "Manual Art. 43 (faltas graves num. 2)",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_audiencia", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_audiencia", "tipo": "hora", "obligatorio": true},
+        {"id": "motivo", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_citacion_comite": {
+      "id": "doc_citacion_comite",
+      "nombre": "Citación al Comité de Convivencia Escolar",
+      "categoria": "citacion",
+      "fundamento": "Manual Art. 25, Art. 35 num. 4",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_reunion", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_reunion", "tipo": "hora", "obligatorio": true},
+        {"id": "lugar", "tipo": "texto", "obligatorio": true},
+        {"id": "tipo_sesion", "tipo": "select", "opciones": ["Ordinaria", "Extraordinaria"]},
+        {"id": "orden_dia", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_remision_autoridad_competente": {
+      "id": "doc_remision_autoridad_competente",
+      "nombre": "Remisión a Autoridad Administrativa Competente",
+      "categoria": "remision_externa",
+      "fundamento": "Manual Art. 35 parágrafo; Ley 1098/2006 Art. 50",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "autoridad_destino", "tipo": "select", "opciones": ["ICBF", "Comisaría de Familia", "Fiscalía", "Defensoría de Familia"]},
+        {"id": "vulneracion_evidenciada", "tipo": "textarea", "obligatorio": true},
+        {"id": "soportes_anexos", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_presidente_comite", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_estudio_caso": {
+      "id": "doc_acta_estudio_caso",
+      "nombre": "Acta de Estudio del Caso",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 43 (faltas graves num. 3)",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "analisis_manual", "tipo": "textarea", "obligatorio": true},
+        {"id": "conclusiones", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_imposicion_sancion": {
+      "id": "doc_acta_imposicion_sancion",
+      "nombre": "Acta de Imposición de Sanción",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 43 (faltas graves num. 4)",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea", "obligatorio": true},
+        {"id": "sancion_impuesta", "tipo": "textarea", "obligatorio": true},
+        {"id": "motivacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_recurso_reposicion": {
+      "id": "doc_recurso_reposicion",
+      "nombre": "Recurso de Reposición Disciplinaria",
+      "categoria": "recurso",
+      "fundamento": "Manual Art. 43 num. 6-7",
+      "campos": [
+        {"id": "fecha_presentacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_notificacion_decision", "tipo": "fecha", "obligatorio": true, "etiqueta": "Fecha de notificación de la decisión recurrida"},
+        {"id": "decision_recurrida", "tipo": "textarea", "obligatorio": true, "etiqueta": "Decisión que se recurre"},
+        {"id": "hechos", "tipo": "textarea", "obligatorio": true},
+        {"id": "argumentos_juridicos", "tipo": "textarea", "obligatorio": true},
+        {"id": "pruebas_aportadas", "tipo": "textarea"},
+        {"id": "pretensiones", "tipo": "textarea", "obligatorio": true, "etiqueta": "Lo que se solicita"},
+        {"id": "firma_recurrente", "tipo": "firma", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_recurso_apelacion": {
+      "id": "doc_recurso_apelacion",
+      "nombre": "Recurso de Apelación Disciplinaria",
+      "categoria": "recurso",
+      "fundamento": "Manual Art. 43 num. 7-8",
+      "campos": [
+        {"id": "fecha_presentacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "fecha_decision_reposicion", "tipo": "fecha", "obligatorio": true},
+        {"id": "decision_recurrida", "tipo": "textarea", "obligatorio": true},
+        {"id": "argumentos_apelacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "pruebas_nuevas", "tipo": "textarea"},
+        {"id": "pretensiones", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_recurrente", "tipo": "firma", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_constancia_recepcion": {
+      "id": "doc_constancia_recepcion",
+      "nombre": "Constancia de Recepción",
+      "categoria": "constancia",
+      "campos": [
+        {"id": "numero_radicado", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha_hora_recepcion", "tipo": "datetime", "obligatorio": true},
+        {"id": "documento_recibido", "tipo": "texto", "obligatorio": true},
+        {"id": "presentado_por", "tipo": "texto", "obligatorio": true},
+        {"id": "funcionario_receptor", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_auto_admision_recurso": {
+      "id": "doc_auto_admision_recurso",
+      "nombre": "Auto de Admisión del Recurso",
+      "categoria": "auto",
+      "fundamento": "Manual Art. 43",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "tipo_recurso", "tipo": "select", "opciones": ["Reposición", "Apelación"]},
+        {"id": "verificacion_oportunidad", "tipo": "boolean", "etiqueta": "Presentado dentro del plazo"},
+        {"id": "verificacion_requisitos", "tipo": "boolean", "etiqueta": "Cumple requisitos formales"},
+        {"id": "decision", "tipo": "select", "opciones": ["Admitir", "Inadmitir", "Rechazar"]},
+        {"id": "motivacion", "tipo": "textarea"},
+        {"id": "firma_funcionario", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_analisis_recurso": {
+      "id": "doc_analisis_recurso",
+      "nombre": "Análisis del Recurso",
+      "categoria": "documento_interno",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "argumentos_recurrente", "tipo": "textarea", "obligatorio": true},
+        {"id": "pruebas_evaluadas", "tipo": "textarea"},
+        {"id": "valoracion_juridica", "tipo": "textarea", "obligatorio": true},
+        {"id": "proyecto_decision", "tipo": "select", "opciones": ["Confirmar", "Modificar", "Revocar", "Aclarar"]}
+      ]
+    },
+
+    "doc_resolucion_reposicion": {
+      "id": "doc_resolucion_reposicion",
+      "nombre": "Resolución que decide el Recurso de Reposición",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 43 num. 8",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "considerandos", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision", "tipo": "select", "opciones": ["Confirmar la decisión", "Modificar la decisión", "Revocar la decisión", "Aclarar la decisión"], "obligatorio": true},
+        {"id": "motivacion_decision", "tipo": "textarea", "obligatorio": true},
+        {"id": "procedencia_apelacion", "tipo": "textarea", "default": "Contra la presente decisión procede el recurso de apelación ante el Consejo Directivo dentro de los 3 días hábiles siguientes a la notificación."},
+        {"id": "firma_rector", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_resolucion_apelacion": {
+      "id": "doc_resolucion_apelacion",
+      "nombre": "Resolución que decide el Recurso de Apelación",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 43 num. 9-10",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "considerandos", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision_definitiva", "tipo": "select", "opciones": ["Confirmar", "Modificar", "Revocar"], "obligatorio": true},
+        {"id": "motivacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "agotamiento_via_gubernativa", "tipo": "texto", "default": "Contra la presente decisión NO procede ningún recurso ordinario adicional."},
+        {"id": "firmas_consejo", "tipo": "firmas_multiples", "obligatorio": true}
+      ]
+    },
+
+    "doc_notificacion_decision_recurso": {
+      "id": "doc_notificacion_decision_recurso",
+      "nombre": "Notificación de Decisión del Recurso",
+      "categoria": "notificacion",
+      "campos": [
+        {"id": "fecha_notificacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "tipo_recurso", "tipo": "select", "opciones": ["Reposición", "Apelación"]},
+        {"id": "decision_notificada", "tipo": "textarea", "obligatorio": true},
+        {"id": "recursos_procedentes", "tipo": "textarea"},
+        {"id": "firma_funcionario", "tipo": "firma"},
+        {"id": "firma_recibido_estudiante", "tipo": "firma"},
+        {"id": "firma_recibido_acudiente", "tipo": "firma"}
+      ]
+    },
+
+    "doc_remision_expediente": {
+      "id": "doc_remision_expediente",
+      "nombre": "Remisión de Expediente al Consejo Directivo",
+      "categoria": "documento_interno",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "numero_expediente", "tipo": "texto"},
+        {"id": "indice_documentos", "tipo": "textarea"},
+        {"id": "total_folios", "tipo": "numero"}
+      ]
+    },
+
+    "doc_citacion_audiencia": {
+      "id": "doc_citacion_audiencia",
+      "nombre": "Citación a Audiencia de Apelación",
+      "categoria": "citacion",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha"},
+        {"id": "fecha_audiencia", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora_audiencia", "tipo": "hora", "obligatorio": true},
+        {"id": "lugar", "tipo": "texto", "obligatorio": true},
+        {"id": "advertencias", "tipo": "textarea", "default": "Su asistencia es obligatoria. Puede asistir con su acudiente y presentar pruebas para su defensa."}
+      ]
+    },
+
+    "doc_archivo_expediente": {
+      "id": "doc_archivo_expediente",
+      "nombre": "Auto de Archivo de Expediente",
+      "categoria": "auto",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "numero_expediente", "tipo": "texto"},
+        {"id": "motivo_archivo", "tipo": "textarea"},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_solicitud_aclaracion_docente": {
+      "id": "doc_solicitud_aclaracion_docente",
+      "nombre": "Solicitud de Aclaración al Docente",
+      "categoria": "reclamacion_academica",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 1",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "docente", "tipo": "texto", "obligatorio": true},
+        {"id": "asignatura", "tipo": "texto", "obligatorio": true},
+        {"id": "valoracion_recurrida", "tipo": "texto"},
+        {"id": "motivos_inconformidad", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_solicitante", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_derecho_peticion": {
+      "id": "doc_derecho_peticion",
+      "nombre": "Derecho de Petición",
+      "categoria": "reclamacion_academica",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 2; Ley 1755/2015",
+      "campos": [
+        {"id": "fecha_presentacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "destinatario", "tipo": "texto", "obligatorio": true},
+        {"id": "hechos", "tipo": "textarea", "obligatorio": true},
+        {"id": "fundamentos_derecho", "tipo": "textarea"},
+        {"id": "peticion_concreta", "tipo": "textarea", "obligatorio": true},
+        {"id": "anexos", "tipo": "textarea"},
+        {"id": "firma_peticionario", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_respuesta_peticion": {
+      "id": "doc_respuesta_peticion",
+      "nombre": "Respuesta a Derecho de Petición",
+      "categoria": "respuesta",
+      "fundamento": "Ley 1755/2015",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "numero_radicado", "tipo": "texto"},
+        {"id": "antecedentes", "tipo": "textarea"},
+        {"id": "consideraciones", "tipo": "textarea", "obligatorio": true},
+        {"id": "evidencias_aportadas", "tipo": "textarea"},
+        {"id": "respuesta_de_fondo", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_funcionario", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_recurso_reposicion_academica": {
+      "id": "doc_recurso_reposicion_academica",
+      "nombre": "Recurso de Reposición Académica",
+      "categoria": "reclamacion_academica",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 3",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "destinatario", "tipo": "texto", "default": "Coordinación Académica"},
+        {"id": "decision_recurrida", "tipo": "textarea", "obligatorio": true},
+        {"id": "argumentos", "tipo": "textarea", "obligatorio": true},
+        {"id": "evidencias", "tipo": "textarea"},
+        {"id": "firma_recurrente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_recurso_apelacion_academica": {
+      "id": "doc_recurso_apelacion_academica",
+      "nombre": "Recurso de Apelación Académica",
+      "categoria": "reclamacion_academica",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 4",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "destinatario", "tipo": "texto", "default": "Rectoría / Consejo Académico"},
+        {"id": "argumentos_apelacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "evidencias_nuevas", "tipo": "textarea"},
+        {"id": "firma_recurrente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_consejo_academico": {
+      "id": "doc_acta_consejo_academico",
+      "nombre": "Acta del Consejo Académico",
+      "categoria": "acta_organo_colegiado",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 4; Art. 3 Lit. 10",
+      "campos": [
+        {"id": "numero_acta", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "deliberacion", "tipo": "textarea"},
+        {"id": "decision", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_solicitud_consejo_directivo": {
+      "id": "doc_solicitud_consejo_directivo",
+      "nombre": "Solicitud al Consejo Directivo",
+      "categoria": "reclamacion_academica",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 5",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "queja", "tipo": "textarea", "obligatorio": true},
+        {"id": "evidencia_debido_proceso_seguido", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_solicitante", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_respuesta_tutela": {
+      "id": "doc_respuesta_tutela",
+      "nombre": "Respuesta Institucional a Acción de Tutela",
+      "categoria": "respuesta",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 6",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "juzgado", "tipo": "texto"},
+        {"id": "numero_tutela", "tipo": "texto"},
+        {"id": "hechos_institucionales", "tipo": "textarea"},
+        {"id": "respuesta_a_pretensiones", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_designacion_segundo_evaluador": {
+      "id": "doc_designacion_segundo_evaluador",
+      "nombre": "Designación de Segundo Evaluador",
+      "categoria": "documento_interno",
+      "fundamento": "SIE Art. 13 Lit. 2 num. 7",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "instancia_que_designa", "tipo": "texto"},
+        {"id": "docente_designado", "tipo": "texto", "obligatorio": true},
+        {"id": "alcance_evaluacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_designante", "tipo": "firma"}
+      ]
+    },
+
+    "doc_acta_segunda_evaluacion": {
+      "id": "doc_acta_segunda_evaluacion",
+      "nombre": "Acta de Segunda Evaluación",
+      "categoria": "acta",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "actividades_aplicadas", "tipo": "textarea"},
+        {"id": "valoracion_emitida", "tipo": "numero"},
+        {"id": "promedio_final", "tipo": "numero"},
+        {"id": "firma_segundo_evaluador", "tipo": "firma"}
+      ]
+    },
+
+    "doc_apertura_expediente_restaurativo": {
+      "id": "doc_apertura_expediente_restaurativo",
+      "nombre": "Apertura de Expediente Restaurativo",
+      "categoria": "apertura",
+      "fundamento": "Manual Art. 47",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "numero_expediente", "tipo": "texto"},
+        {"id": "partes_involucradas", "tipo": "textarea"},
+        {"id": "hechos_iniciales", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_evaluacion_orientador": {
+      "id": "doc_evaluacion_orientador",
+      "nombre": "Evaluación Inicial del Docente Orientador",
+      "categoria": "evaluacion",
+      "fundamento": "Manual Art. 47",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "evaluacion_psicosocial", "tipo": "textarea", "obligatorio": true},
+        {"id": "viabilidad_restaurativa", "tipo": "select", "opciones": ["Viable", "No viable"]},
+        {"id": "recomendaciones", "tipo": "textarea"},
+        {"id": "firma_orientador", "tipo": "firma"}
+      ]
+    },
+
+    "doc_acta_reunion_preliminar": {
+      "id": "doc_acta_reunion_preliminar",
+      "nombre": "Acta de Reunión Preliminar Restaurativa",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 47 Etapa Preparación",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "objetivos_explicados", "tipo": "textarea"},
+        {"id": "condiciones_acordadas", "tipo": "textarea"},
+        {"id": "consentimiento_voluntario", "tipo": "boolean", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_aceptacion_responsabilidad": {
+      "id": "doc_acta_aceptacion_responsabilidad",
+      "nombre": "Acta de Aceptación de Responsabilidad",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 47",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "hechos_aceptados", "tipo": "textarea", "obligatorio": true},
+        {"id": "manifestacion_voluntaria", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_estudiante", "tipo": "firma", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_circulo_restaurativo": {
+      "id": "doc_acta_circulo_restaurativo",
+      "nombre": "Acta de Círculo Restaurativo",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 47 Etapa Mediación",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "facilitador", "tipo": "texto"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "narrativa_victima", "tipo": "textarea"},
+        {"id": "narrativa_infractor", "tipo": "textarea"},
+        {"id": "afectacion_comunidad", "tipo": "textarea"},
+        {"id": "construccion_acuerdos", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acuerdos_restaurativos": {
+      "id": "doc_acuerdos_restaurativos",
+      "nombre": "Acuerdos Restaurativos",
+      "categoria": "compromiso",
+      "fundamento": "Manual Art. 47",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "disculpas_compromisos", "tipo": "textarea"},
+        {"id": "reparacion_material", "tipo": "textarea"},
+        {"id": "reparacion_emocional", "tipo": "textarea"},
+        {"id": "compromisos_futuros", "tipo": "textarea", "obligatorio": true},
+        {"id": "actividades_comunitarias", "tipo": "textarea"},
+        {"id": "plazos_cumplimiento", "tipo": "textarea", "obligatorio": true},
+        {"id": "firmas", "tipo": "firmas_multiples", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_seguimiento_restaurativo": {
+      "id": "doc_acta_seguimiento_restaurativo",
+      "nombre": "Acta de Seguimiento Restaurativo",
+      "categoria": "seguimiento",
+      "fundamento": "Manual Art. 47, Art. 50",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "semana_seguimiento", "tipo": "select", "opciones": ["Semana 2", "Semana 4", "Semana 6"]},
+        {"id": "cumplimiento_acuerdos", "tipo": "select", "opciones": ["Total", "Parcial", "Nulo"]},
+        {"id": "evidencias", "tipo": "textarea"},
+        {"id": "indicadores_relacion", "tipo": "textarea"},
+        {"id": "reincidencia_detectada", "tipo": "boolean"},
+        {"id": "ajustes_o_escalamiento", "tipo": "textarea"},
+        {"id": "firma_responsable", "tipo": "firma"}
+      ]
+    },
+
+    "doc_solicitud_escolaridad_casa": {
+      "id": "doc_solicitud_escolaridad_casa",
+      "nombre": "Solicitud de Escolaridad en Casa",
+      "categoria": "solicitud",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "causal", "tipo": "select", "opciones": ["Salud", "Disciplinaria", "Compromiso de vida", "Protección especial", "Embarazo"], "obligatorio": true},
+        {"id": "descripcion_situacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "duracion_solicitada", "tipo": "texto", "obligatorio": true},
+        {"id": "documentos_soporte", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_resolucion_escolaridad_casa": {
+      "id": "doc_resolucion_escolaridad_casa",
+      "nombre": "Resolución de Escolaridad en Casa",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "considerandos", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision", "tipo": "select", "opciones": ["Aprobar", "Negar"], "obligatorio": true},
+        {"id": "duracion_aprobada", "tipo": "texto"},
+        {"id": "condiciones", "tipo": "textarea"},
+        {"id": "firmas_consejo", "tipo": "firmas_multiples", "obligatorio": true}
+      ]
+    },
+
+    "doc_plan_seguimiento_academico_casa": {
+      "id": "doc_plan_seguimiento_academico_casa",
+      "nombre": "Plan de Seguimiento Académico en Casa",
+      "categoria": "plan",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asignaturas", "tipo": "textarea", "obligatorio": true},
+        {"id": "materiales_pedagogicos", "tipo": "textarea", "obligatorio": true},
+        {"id": "actividades", "tipo": "textarea", "obligatorio": true},
+        {"id": "cronograma_evaluaciones", "tipo": "textarea", "obligatorio": true},
+        {"id": "responsables", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_compromiso_escolaridad_casa": {
+      "id": "doc_acta_compromiso_escolaridad_casa",
+      "nombre": "Acta de Compromiso de la Familia (Escolaridad en Casa)",
+      "categoria": "compromiso",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "compromisos_familia", "tipo": "textarea", "obligatorio": true},
+        {"id": "compromisos_estudiante", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true},
+        {"id": "firma_estudiante", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_seguimiento_escolaridad_casa": {
+      "id": "doc_acta_seguimiento_escolaridad_casa",
+      "nombre": "Acta de Seguimiento a Escolaridad en Casa",
+      "categoria": "seguimiento",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "avance_actividades", "tipo": "textarea"},
+        {"id": "estado_de_la_causal", "tipo": "select", "opciones": ["Persiste", "Ha mejorado", "Ha cesado"]},
+        {"id": "decision_continuidad", "tipo": "select", "opciones": ["Continuar", "Extender", "Reincorporar"]},
+        {"id": "firma_responsable", "tipo": "firma"}
+      ]
+    },
+
+    "doc_evaluacion_reincorporacion": {
+      "id": "doc_evaluacion_reincorporacion",
+      "nombre": "Evaluación de Reincorporación",
+      "categoria": "evaluacion",
+      "fundamento": "Manual Art. 44",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "desempeno_durante_casa", "tipo": "textarea"},
+        {"id": "ajustes_plan_estudios", "tipo": "textarea"},
+        {"id": "fecha_reincorporacion", "tipo": "fecha"},
+        {"id": "firma_coordinador", "tipo": "firma"}
+      ]
+    },
+
+    "doc_notificacion_suspension": {
+      "id": "doc_notificacion_suspension",
+      "nombre": "Notificación de Suspensión Preventiva",
+      "categoria": "notificacion",
+      "fundamento": "Manual Art. 43 parágrafo",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "motivos", "tipo": "textarea", "obligatorio": true},
+        {"id": "duracion_estimada", "tipo": "texto"},
+        {"id": "advertencia_consecuencias_academicas", "tipo": "texto", "default": "El estudiante asume las consecuencias académicas de la no asistencia durante la suspensión."},
+        {"id": "derecho_recursos", "tipo": "texto"},
+        {"id": "firma_recibido", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_resolucion_levantamiento_suspension": {
+      "id": "doc_resolucion_levantamiento_suspension",
+      "nombre": "Resolución de Levantamiento de Suspensión",
+      "categoria": "resolucion",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "decision_final", "tipo": "select", "opciones": ["Levantar suspensión y absolver", "Convertir en sanción definitiva", "Computar como parte de sanción"]},
+        {"id": "motivacion", "tipo": "textarea"},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_pqrs": {
+      "id": "doc_pqrs",
+      "nombre": "Formato PQRS",
+      "categoria": "pqrs",
+      "fundamento": "Manual Art. 22 num. 9; Ley 1755/2015",
+      "campos": [
+        {"id": "fecha_presentacion", "tipo": "fecha", "obligatorio": true},
+        {"id": "tipo", "tipo": "select", "opciones": ["Petición", "Queja", "Reclamo", "Sugerencia", "Felicitación", "Información", "Consulta"], "obligatorio": true},
+        {"id": "presentado_por", "tipo": "texto", "obligatorio": true},
+        {"id": "rol_solicitante", "tipo": "select", "opciones": ["Estudiante", "Acudiente", "Docente", "Otro"]},
+        {"id": "asunto", "tipo": "texto", "obligatorio": true},
+        {"id": "descripcion", "tipo": "textarea", "obligatorio": true},
+        {"id": "medio_respuesta", "tipo": "select", "opciones": ["Físico", "Correo electrónico", "Presencial"]},
+        {"id": "datos_contacto", "tipo": "texto", "obligatorio": true},
+        {"id": "firma", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_respuesta_pqrs": {
+      "id": "doc_respuesta_pqrs",
+      "nombre": "Respuesta PQRS",
+      "categoria": "respuesta",
+      "fundamento": "Ley 1755/2015",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "numero_radicado_original", "tipo": "texto", "obligatorio": true},
+        {"id": "antecedentes", "tipo": "textarea"},
+        {"id": "respuesta_de_fondo", "tipo": "textarea", "obligatorio": true},
+        {"id": "soportes", "tipo": "textarea"},
+        {"id": "firma_funcionario", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_constancia_notificacion": {
+      "id": "doc_constancia_notificacion",
+      "nombre": "Constancia de Notificación",
+      "categoria": "constancia",
+      "campos": [
+        {"id": "fecha_notificacion", "tipo": "fecha"},
+        {"id": "documento_notificado", "tipo": "texto"},
+        {"id": "medio", "tipo": "select", "opciones": ["Personal", "Correo electrónico", "Correo certificado", "Edicto"]},
+        {"id": "firma_notificado", "tipo": "firma"}
+      ]
+    },
+
+    "doc_lista_asistencia_comite": {
+      "id": "doc_lista_asistencia_comite",
+      "nombre": "Lista de Asistencia del Comité",
+      "categoria": "lista",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "tipo_sesion", "tipo": "select", "opciones": ["Ordinaria", "Extraordinaria"]},
+        {"id": "integrantes_presentes", "tipo": "textarea"},
+        {"id": "verificacion_quorum", "tipo": "boolean"}
+      ]
+    },
+
+    "doc_solicitud_comite_extraordinario": {
+      "id": "doc_solicitud_comite_extraordinario",
+      "nombre": "Solicitud de Sesión Extraordinaria del Comité",
+      "categoria": "solicitud",
+      "fundamento": "Manual Art. 25",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "solicitante", "tipo": "texto"},
+        {"id": "justificacion", "tipo": "textarea", "obligatorio": true},
+        {"id": "casos_a_tratar", "tipo": "textarea"},
+        {"id": "firma_solicitante", "tipo": "firma"}
+      ]
+    },
+
+    "doc_verificacion_cupo": {
+      "id": "doc_verificacion_cupo",
+      "nombre": "Verificación de Cupo en SIMAT",
+      "categoria": "verificacion",
+      "fundamento": "Manual Art. 12",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "grado_solicitado", "tipo": "select", "opciones": ["Transición", "1°", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°", "11°"]},
+        {"id": "cupos_disponibles", "tipo": "numero"},
+        {"id": "firma_secretaria", "tipo": "firma"}
+      ]
+    },
+
+    "doc_lista_chequeo_admision": {
+      "id": "doc_lista_chequeo_admision",
+      "nombre": "Lista de Chequeo de Documentos de Admisión",
+      "categoria": "lista",
+      "fundamento": "Manual Art. 12",
+      "campos": [
+        {"id": "registro_civil", "tipo": "boolean"},
+        {"id": "documento_identidad", "tipo": "boolean"},
+        {"id": "copia_servicios_publicos", "tipo": "boolean"},
+        {"id": "sisben", "tipo": "boolean"},
+        {"id": "certificado_vacunacion", "tipo": "boolean"},
+        {"id": "afiliacion_eps", "tipo": "boolean"},
+        {"id": "cedula_acudiente", "tipo": "boolean"},
+        {"id": "certificados_anteriores", "tipo": "boolean"},
+        {"id": "notas_parciales", "tipo": "boolean"}
+      ]
+    },
+
+    "doc_compromiso_nivelacion": {
+      "id": "doc_compromiso_nivelacion",
+      "nombre": "Compromiso de Nivelación",
+      "categoria": "compromiso",
+      "fundamento": "Manual Art. 12 num. 3",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "modalidad_origen", "tipo": "texto"},
+        {"id": "areas_a_nivelar", "tipo": "textarea"},
+        {"id": "compromiso_estudiante", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_compromiso_no_movil": {
+      "id": "doc_compromiso_no_movil",
+      "nombre": "Compromiso de No Uso de Teléfono Móvil",
+      "categoria": "compromiso",
+      "fundamento": "Manual Art. 12 num. 4",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "compromiso_texto", "tipo": "texto", "default": "Me comprometo a no usar el teléfono móvil durante la jornada escolar."},
+        {"id": "firma_estudiante", "tipo": "firma"},
+        {"id": "firma_acudiente", "tipo": "firma"}
+      ]
+    },
+
+    "doc_valoracion_psicologica": {
+      "id": "doc_valoracion_psicologica",
+      "nombre": "Valoración Psicológica",
+      "categoria": "documento_externo",
+      "fundamento": "Manual Art. 11 num. 7",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "profesional_emisor", "tipo": "texto"},
+        {"id": "diagnostico", "tipo": "textarea"},
+        {"id": "recomendaciones", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_matricula": {
+      "id": "doc_acta_matricula",
+      "nombre": "Acta de Matrícula",
+      "categoria": "acta",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "grado", "tipo": "texto"},
+        {"id": "compromisos_institucionales", "tipo": "textarea"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_solicitud_traslado": {
+      "id": "doc_solicitud_traslado",
+      "nombre": "Solicitud de Traslado",
+      "categoria": "solicitud",
+      "fundamento": "Manual Art. 15",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "tipo_traslado", "tipo": "select", "opciones": ["Sede", "Jornada", "Grupo", "Otra institución oficial"]},
+        {"id": "motivo", "tipo": "textarea", "obligatorio": true},
+        {"id": "institucion_origen", "tipo": "texto"},
+        {"id": "firma_acudiente", "tipo": "firma"}
+      ]
+    },
+
+    "doc_acta_traslado": {
+      "id": "doc_acta_traslado",
+      "nombre": "Acta de Traslado",
+      "categoria": "acta",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "origen", "tipo": "texto"},
+        {"id": "destino", "tipo": "texto"},
+        {"id": "fecha_efectiva", "tipo": "fecha"},
+        {"id": "firmas", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_recepcion_notas": {
+      "id": "doc_recepcion_notas",
+      "nombre": "Recepción de Notas de Institución de Origen",
+      "categoria": "constancia",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "institucion_origen", "tipo": "texto"},
+        {"id": "tipo_notas", "tipo": "select", "opciones": ["Finales", "Parciales"]},
+        {"id": "asignaturas", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_apostille": {
+      "id": "doc_apostille",
+      "nombre": "Verificación de Apostille (estudiante extranjero)",
+      "categoria": "verificacion",
+      "fundamento": "Manual Art. 15 num. 5",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "pais_origen", "tipo": "texto"},
+        {"id": "autorizacion_secretaria", "tipo": "boolean"},
+        {"id": "documentos_apostillados", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_verificacion_repitencia": {
+      "id": "doc_verificacion_repitencia",
+      "nombre": "Verificación de Causales de Repitencia",
+      "categoria": "verificacion",
+      "fundamento": "Manual Art. 16",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "anos_consecutivos_grado", "tipo": "numero"},
+        {"id": "prematricula_oportuna", "tipo": "boolean"},
+        {"id": "reportado_siuce", "tipo": "boolean"},
+        {"id": "decision", "tipo": "select", "opciones": ["Cumple condiciones", "No cumple condiciones"]}
+      ]
+    },
+
+    "doc_resolucion_admision_repitente": {
+      "id": "doc_resolucion_admision_repitente",
+      "nombre": "Resolución de Admisión/Rechazo de Repitente",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 16",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "decision", "tipo": "select", "opciones": ["Admitir", "Rechazar"]},
+        {"id": "motivacion", "tipo": "textarea"},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_notificacion_decision": {
+      "id": "doc_notificacion_decision",
+      "nombre": "Notificación de Decisión Administrativa",
+      "categoria": "notificacion",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "decision", "tipo": "textarea"},
+        {"id": "recursos_procedentes", "tipo": "textarea"},
+        {"id": "firma_recibido", "tipo": "firma"}
+      ]
+    },
+
+    "doc_paz_y_salvo": {
+      "id": "doc_paz_y_salvo",
+      "nombre": "Paz y Salvo Institucional",
+      "categoria": "constancia",
+      "fundamento": "Manual Art. 13 parágrafo, Art. 17",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "estudiante", "tipo": "texto"},
+        {"id": "areas_paz_salvo", "tipo": "textarea", "default": "Académico, biblioteca, secretaría, financiero"},
+        {"id": "firma_secretaria", "tipo": "firma"}
+      ]
+    },
+
+    "doc_certificacion_aprobacion": {
+      "id": "doc_certificacion_aprobacion",
+      "nombre": "Certificación de Aprobación de Áreas",
+      "categoria": "certificacion",
+      "fundamento": "Manual Art. 17 num. 1",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "areas_aprobadas", "tipo": "textarea"},
+        {"id": "firma_coordinador_academico", "tipo": "firma"}
+      ]
+    },
+
+    "doc_certificacion_labor_social": {
+      "id": "doc_certificacion_labor_social",
+      "nombre": "Certificación de Labor Social y Empresarial",
+      "categoria": "certificacion",
+      "fundamento": "Manual Art. 17 num. 2",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "horas_servicio_social", "tipo": "numero"},
+        {"id": "horas_labor_empresarial", "tipo": "numero"},
+        {"id": "concepto", "tipo": "select", "opciones": ["Satisfactorio", "No satisfactorio"]},
+        {"id": "firma_responsable", "tipo": "firma"}
+      ]
+    },
+
+    "doc_certificacion_no_sancion": {
+      "id": "doc_certificacion_no_sancion",
+      "nombre": "Certificación de No Sanción Vigente",
+      "categoria": "certificacion",
+      "fundamento": "Manual Art. 17 num. 3",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "estado", "tipo": "select", "opciones": ["Sin sanción vigente", "Con sanción vigente"]},
+        {"id": "firma_coordinador_convivencia", "tipo": "firma"}
+      ]
+    },
+
+    "doc_listado_proclamados": {
+      "id": "doc_listado_proclamados",
+      "nombre": "Listado Oficial de Proclamados",
+      "categoria": "lista",
+      "fundamento": "Manual Art. 63",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "estudiantes", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_programa_graduacion": {
+      "id": "doc_programa_graduacion",
+      "nombre": "Programa de Ceremonia de Graduación",
+      "categoria": "programa",
+      "campos": [
+        {"id": "fecha_ceremonia", "tipo": "fecha"},
+        {"id": "hora", "tipo": "hora"},
+        {"id": "lugar", "tipo": "texto"},
+        {"id": "agenda", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_diploma": {
+      "id": "doc_diploma",
+      "nombre": "Diploma de Bachiller Técnico Comercial",
+      "categoria": "diploma",
+      "campos": [
+        {"id": "numero_diploma", "tipo": "texto"},
+        {"id": "fecha_grado", "tipo": "fecha"},
+        {"id": "estudiante", "tipo": "texto"},
+        {"id": "firma_rector", "tipo": "firma"},
+        {"id": "firma_secretario", "tipo": "firma"}
+      ]
+    },
+
+    "doc_acta_grado": {
+      "id": "doc_acta_grado",
+      "nombre": "Acta de Grado",
+      "categoria": "acta",
+      "campos": [
+        {"id": "numero_acta", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "estudiante", "tipo": "texto"},
+        {"id": "documento", "tipo": "texto"},
+        {"id": "firmas_obligatorias", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_acta_ceremonia": {
+      "id": "doc_acta_ceremonia",
+      "nombre": "Acta de Ceremonia de Graduación",
+      "categoria": "acta",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "graduados", "tipo": "textarea"},
+        {"id": "observaciones", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_informe_causal_negacion": {
+      "id": "doc_informe_causal_negacion",
+      "nombre": "Informe de Causal de Negación de Proclamación",
+      "categoria": "informe",
+      "fundamento": "Manual Art. 17",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "causal", "tipo": "select", "opciones": ["No aprobación de áreas", "Sanción vigente", "No paz y salvo", "No labor social"]},
+        {"id": "evidencias", "tipo": "textarea"},
+        {"id": "firma_coordinador", "tipo": "firma"}
+      ]
+    },
+
+    "doc_notificacion_negacion_proclamacion": {
+      "id": "doc_notificacion_negacion_proclamacion",
+      "nombre": "Notificación de Negación de Proclamación",
+      "categoria": "notificacion",
+      "fundamento": "Manual Art. 17; Art. 29 CP",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "causal_notificada", "tipo": "textarea"},
+        {"id": "derecho_alegatos", "tipo": "texto", "default": "Tiene derecho a presentar alegatos y pruebas en su defensa dentro de los 5 días hábiles siguientes."},
+        {"id": "firma_recibido", "tipo": "firma"}
+      ]
+    },
+
+    "doc_alegatos_estudiante": {
+      "id": "doc_alegatos_estudiante",
+      "nombre": "Alegatos del Estudiante",
+      "categoria": "defensa",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "argumentos", "tipo": "textarea", "obligatorio": true},
+        {"id": "pruebas_aportadas", "tipo": "textarea"},
+        {"id": "firma_estudiante", "tipo": "firma"},
+        {"id": "firma_acudiente", "tipo": "firma"}
+      ]
+    },
+
+    "doc_resolucion_negacion_proclamacion": {
+      "id": "doc_resolucion_negacion_proclamacion",
+      "nombre": "Resolución de Negación de Proclamación",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 17",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "considerandos", "tipo": "textarea"},
+        {"id": "decision", "tipo": "textarea"},
+        {"id": "recursos", "tipo": "textarea"},
+        {"id": "firma_rector", "tipo": "firma"}
+      ]
+    },
+
+    "doc_propuesta_ajuste_manual": {
+      "id": "doc_propuesta_ajuste_manual",
+      "nombre": "Propuesta de Ajuste al Manual de Convivencia",
+      "categoria": "propuesta",
+      "fundamento": "Manual Art. 27; Art. 21 Ley 1620/2013",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "articulos_a_modificar", "tipo": "textarea"},
+        {"id": "justificacion", "tipo": "textarea"},
+        {"id": "redaccion_propuesta", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_propuesta_politica": {
+      "id": "doc_propuesta_politica",
+      "nombre": "Propuesta de Política Institucional",
+      "categoria": "propuesta",
+      "fundamento": "Manual Art. 27 num. 2",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "tema_politica", "tipo": "texto"},
+        {"id": "objetivos", "tipo": "textarea"},
+        {"id": "lineamientos", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_plan_formacion": {
+      "id": "doc_plan_formacion",
+      "nombre": "Plan de Formación",
+      "categoria": "plan",
+      "fundamento": "Manual Art. 27 num. 3-4",
+      "campos": [
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "tematicas", "tipo": "textarea"},
+        {"id": "publico_objetivo", "tipo": "textarea"},
+        {"id": "cronograma", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_programa_formativo": {
+      "id": "doc_programa_formativo",
+      "nombre": "Programa Formativo",
+      "categoria": "programa",
+      "fundamento": "Manual Art. 27 num. 4",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "tema", "tipo": "texto"},
+        {"id": "publico", "tipo": "texto"},
+        {"id": "metodologia", "tipo": "textarea"},
+        {"id": "evaluacion", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_diagnostico_riesgos": {
+      "id": "doc_diagnostico_riesgos",
+      "nombre": "Diagnóstico de Riesgos de Convivencia",
+      "categoria": "diagnostico",
+      "fundamento": "Manual Art. 28 num. 1; Art. 52",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "factores_identificados", "tipo": "textarea"},
+        {"id": "grupos_riesgo", "tipo": "textarea"},
+        {"id": "recomendaciones", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_dialogo_preventivo": {
+      "id": "doc_acta_dialogo_preventivo",
+      "nombre": "Acta de Diálogo Preventivo",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 52",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "tema_tratado", "tipo": "textarea"},
+        {"id": "compromisos", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_circulo_preventivo": {
+      "id": "doc_acta_circulo_preventivo",
+      "nombre": "Acta de Círculo Restaurativo Preventivo",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 52",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "facilitador", "tipo": "texto"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "situacion_latente", "tipo": "textarea"},
+        {"id": "acuerdos_preventivos", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_plan_convivencia_paz": {
+      "id": "doc_plan_convivencia_paz",
+      "nombre": "Plan de Convivencia y Paz",
+      "categoria": "plan",
+      "fundamento": "Manual Art. 52",
+      "campos": [
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "actividades", "tipo": "textarea"},
+        {"id": "responsables", "tipo": "textarea"},
+        {"id": "fechas_clave", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_informe_indicadores": {
+      "id": "doc_informe_indicadores",
+      "nombre": "Informe Anual de Indicadores de Convivencia",
+      "categoria": "informe",
+      "fundamento": "Manual Art. 50, Art. 52",
+      "campos": [
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "casos_atendidos", "tipo": "numero"},
+        {"id": "tipo_distribucion", "tipo": "textarea"},
+        {"id": "reincidencia", "tipo": "numero"},
+        {"id": "indicadores_exito", "tipo": "textarea"},
+        {"id": "areas_mejora", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_informe_revision_anual": {
+      "id": "doc_informe_revision_anual",
+      "nombre": "Informe de Revisión Anual",
+      "categoria": "informe",
+      "fundamento": "Manual Art. 50",
+      "campos": [
+        {"id": "ano_lectivo", "tipo": "numero"},
+        {"id": "evaluacion_general", "tipo": "textarea"},
+        {"id": "propuestas_mejora", "tipo": "textarea"},
+        {"id": "firma_comite", "tipo": "firmas_multiples"}
+      ]
+    },
+
+    "doc_preinforme": {
+      "id": "doc_preinforme",
+      "nombre": "Preinforme de Desempeño Académico",
+      "categoria": "academico",
+      "fundamento": "SIE Art. 11 Lit. 2",
+      "campos": [
+        {"id": "periodo", "tipo": "select", "opciones": ["1er periodo", "2do periodo", "3er periodo"]},
+        {"id": "asignaturas_bajas", "tipo": "textarea", "obligatorio": true},
+        {"id": "actividades_mejoramiento", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_preinforme": {
+      "id": "doc_acta_preinforme",
+      "nombre": "Acta de Entrega del Preinforme",
+      "categoria": "acta",
+      "fundamento": "SIE Art. 11 Lit. 2",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistencia_acudiente", "tipo": "boolean"},
+        {"id": "compromisos_adquiridos", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_plan_mejoramiento": {
+      "id": "doc_plan_mejoramiento",
+      "nombre": "Plan de Mejoramiento Académico",
+      "categoria": "plan",
+      "fundamento": "SIE Art. 9 Lit. 2",
+      "campos": [
+        {"id": "asignatura", "tipo": "texto", "obligatorio": true},
+        {"id": "competencias_a_superar", "tipo": "textarea", "obligatorio": true},
+        {"id": "actividades_propuestas", "tipo": "textarea", "obligatorio": true},
+        {"id": "cronograma", "tipo": "textarea", "obligatorio": true},
+        {"id": "criterios_evaluacion", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_escuela_padres": {
+      "id": "doc_acta_escuela_padres",
+      "nombre": "Acta de Escuela de Padres",
+      "categoria": "acta",
+      "fundamento": "SIE Art. 11 Lit. 2",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "temas_tratados", "tipo": "textarea", "obligatorio": true},
+        {"id": "compromisos", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_resultados_plan": {
+      "id": "doc_acta_resultados_plan",
+      "nombre": "Acta de Resultados del Plan de Mejoramiento",
+      "categoria": "acta",
+      "fundamento": "SIE Art. 9",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "valoracion_cognitiva", "tipo": "numero"},
+        {"id": "valoracion_procedimental", "tipo": "numero"},
+        {"id": "valoracion_actitudinal", "tipo": "numero"},
+        {"id": "promedio", "tipo": "numero"},
+        {"id": "concepto_aprobacion", "tipo": "select", "opciones": ["Aprobado", "No aprobado"]}
+      ]
+    },
+
+    "doc_acta_consenso_docente": {
+      "id": "doc_acta_consenso_docente",
+      "nombre": "Acta de Consenso Docente para Promoción Anticipada",
+      "categoria": "acta",
+      "fundamento": "SIE Art. 3 Lit. 10",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "docentes_firmantes", "tipo": "textarea", "obligatorio": true},
+        {"id": "justificacion", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_valoracion_integral": {
+      "id": "doc_valoracion_integral",
+      "nombre": "Valoración Cualitativa y Cuantitativa Integral",
+      "categoria": "academico",
+      "fundamento": "SIE Art. 3 Lit. 10",
+      "campos": [
+        {"id": "asignatura", "tipo": "texto"},
+        {"id": "valoracion_cuantitativa", "tipo": "numero"},
+        {"id": "valoracion_cualitativa", "tipo": "select", "opciones": ["Superior", "Alto", "Básico", "Bajo"]},
+        {"id": "observaciones", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_concepto_orientador": {
+      "id": "doc_concepto_orientador",
+      "nombre": "Concepto del Docente Orientador",
+      "categoria": "concepto",
+      "fundamento": "SIE Art. 3 Lit. 10",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "desarrollo_cognitivo", "tipo": "textarea"},
+        {"id": "desarrollo_personal", "tipo": "textarea"},
+        {"id": "desarrollo_social", "tipo": "textarea"},
+        {"id": "concepto_final", "tipo": "select", "opciones": ["Favorable", "No favorable"]}
+      ]
+    },
+
+    "doc_registro_valoracion": {
+      "id": "doc_registro_valoracion",
+      "nombre": "Registro Escolar de Valoración",
+      "categoria": "academico",
+      "fundamento": "SIE 2025; Decreto 1290",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "promedio_obtenido", "tipo": "numero"},
+        {"id": "decision_promocion", "tipo": "select", "opciones": ["Promovido", "No promovido"]},
+        {"id": "registrado_simat", "tipo": "boolean"}
+      ]
+    },
+
+    "doc_reporte_asistencia": {
+      "id": "doc_reporte_asistencia",
+      "nombre": "Reporte de Asistencia",
+      "categoria": "reporte",
+      "fundamento": "Manual Art. 14",
+      "campos": [
+        {"id": "periodo", "tipo": "texto"},
+        {"id": "total_dias", "tipo": "numero"},
+        {"id": "dias_inasistencia", "tipo": "numero"},
+        {"id": "porcentaje_inasistencia", "tipo": "numero"}
+      ]
+    },
+
+    "doc_comunicacion_inasistencia": {
+      "id": "doc_comunicacion_inasistencia",
+      "nombre": "Comunicación Escrita sobre Inasistencia",
+      "categoria": "comunicacion",
+      "fundamento": "Manual Art. 14",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "remitente", "tipo": "texto"},
+        {"id": "causas_motivos", "tipo": "textarea", "obligatorio": true}
+      ]
+    },
+
+    "doc_acta_estrategias_retencion": {
+      "id": "doc_acta_estrategias_retencion",
+      "nombre": "Acta de Estrategias de Retención",
+      "categoria": "acta",
+      "fundamento": "Manual Art. 14",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "estrategias_aplicadas", "tipo": "textarea", "obligatorio": true},
+        {"id": "resultado", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_resolucion_cancelacion_matricula": {
+      "id": "doc_resolucion_cancelacion_matricula",
+      "nombre": "Resolución de Cancelación de Matrícula",
+      "categoria": "resolucion",
+      "fundamento": "Manual Art. 14, Art. 42",
+      "campos": [
+        {"id": "numero_resolucion", "tipo": "texto", "obligatorio": true},
+        {"id": "fecha", "tipo": "fecha", "obligatorio": true},
+        {"id": "considerandos", "tipo": "textarea", "obligatorio": true},
+        {"id": "decision", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_rector", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_citacion_comision": {
+      "id": "doc_citacion_comision",
+      "nombre": "Citación a la Comisión de Evaluación",
+      "categoria": "citacion",
+      "fundamento": "Manual Art. 60",
+      "campos": [
+        {"id": "fecha_emision", "tipo": "fecha"},
+        {"id": "fecha_reunion", "tipo": "fecha", "obligatorio": true},
+        {"id": "hora", "tipo": "hora"},
+        {"id": "orden_dia", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_comision": {
+      "id": "doc_acta_comision",
+      "nombre": "Acta de la Comisión de Evaluación",
+      "categoria": "acta_organo_colegiado",
+      "fundamento": "Manual Art. 60",
+      "campos": [
+        {"id": "numero_acta", "tipo": "texto"},
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "asistentes", "tipo": "textarea"},
+        {"id": "casos_analizados", "tipo": "textarea"},
+        {"id": "decisiones", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_solicitud_diagnostico": {
+      "id": "doc_solicitud_diagnostico",
+      "nombre": "Solicitud de Diagnóstico Clínico",
+      "categoria": "solicitud",
+      "fundamento": "SIE Art. 15 Lit. 1",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "motivo_solicitud", "tipo": "textarea", "obligatorio": true},
+        {"id": "plazo_entrega", "tipo": "fecha"}
+      ]
+    },
+
+    "doc_conformacion_equipo_apoyo": {
+      "id": "doc_conformacion_equipo_apoyo",
+      "nombre": "Conformación del Equipo de Apoyo",
+      "categoria": "documento_interno",
+      "fundamento": "SIE Art. 15",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "integrantes", "tipo": "textarea", "obligatorio": true},
+        {"id": "responsabilidades", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_piar": {
+      "id": "doc_piar",
+      "nombre": "Plan Individual de Ajustes Razonables (PIAR)",
+      "categoria": "plan",
+      "fundamento": "Decreto 1421; SIE Art. 15",
+      "campos": [
+        {"id": "fecha_elaboracion", "tipo": "fecha"},
+        {"id": "barreras_aprendizaje", "tipo": "textarea", "obligatorio": true},
+        {"id": "ajustes_curriculares", "tipo": "textarea", "obligatorio": true},
+        {"id": "logros_basicos_promocion", "tipo": "textarea", "obligatorio": true},
+        {"id": "estrategias_evaluacion", "tipo": "textarea"},
+        {"id": "responsables_seguimiento", "tipo": "textarea"}
+      ]
+    },
+
+    "doc_acta_compromiso_acudiente": {
+      "id": "doc_acta_compromiso_acudiente",
+      "nombre": "Acta de Compromiso del Acudiente (Inclusión)",
+      "categoria": "compromiso",
+      "fundamento": "SIE Art. 15",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "compromiso_acompanamiento", "tipo": "textarea", "obligatorio": true},
+        {"id": "compromiso_tratamiento_clinico", "tipo": "textarea", "obligatorio": true},
+        {"id": "firma_acudiente", "tipo": "firma", "obligatorio": true}
+      ]
+    },
+
+    "doc_seguimiento_piar": {
+      "id": "doc_seguimiento_piar",
+      "nombre": "Acta de Seguimiento al PIAR",
+      "categoria": "seguimiento",
+      "fundamento": "SIE Art. 15",
+      "campos": [
+        {"id": "fecha", "tipo": "fecha"},
+        {"id": "periodo", "tipo": "select", "opciones": ["1er periodo", "2do periodo", "3er periodo"]},
+        {"id": "avances", "tipo": "textarea"},
+        {"id": "ajustes_realizados", "tipo": "textarea"}
+      ]
+    }
+  }
+}
