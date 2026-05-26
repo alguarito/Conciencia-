@@ -10,7 +10,7 @@ Esta guía explica paso a paso cómo usar **ConciencIA** para gestionar un caso 
 
 Tiene tres opciones:
 
-1. **En línea**: abra `https://[institución].github.io/ConciencIA/` en su navegador
+1. **En línea**: abra `https://alguarito.github.io/Conciencia-/` en su navegador
 2. **Instalada** (recomendada): siga las instrucciones del README para instalarla como app
 3. **Local**: descargue el `index.html` y ábralo con doble click
 

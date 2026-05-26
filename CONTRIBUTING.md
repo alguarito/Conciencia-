@@ -30,8 +30,8 @@
 
 ### 1. Fork del repositorio
 ```bash
-git clone https://github.com/[su-usuario]/ConciencIA.git
-cd ConciencIA
+git clone https://github.com/alguarito/Conciencia-.git
+cd Conciencia-
 ```
 
 ### 2. Estructura modular del código

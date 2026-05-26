@@ -236,7 +236,7 @@ Caso activo → AES-GCM 256-bit → IndexedDB
 1. Sube el repositorio a GitHub
 2. Settings → Pages
 3. Source: `main` branch, root folder
-4. URL: `https://usuario.github.io/ConciencIA/`
+4. URL: `https://alguarito.github.io/Conciencia-/`
 
 ### Servidor propio
 

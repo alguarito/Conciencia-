@@ -51,7 +51,7 @@ La aplicación guía paso a paso al funcionario en la **clasificación de la sit
 
 ### Opción A — Usar en línea (recomendada)
 
-1. Abra en su navegador: **https://[su-usuario].github.io/ConciencIA/**
+1. Abra en su navegador: **https://alguarito.github.io/Conciencia-/**
 2. La aplicación se carga en unos segundos
 3. Click en **"Iniciar Nuevo Proceso"** y siga las preguntas
 
