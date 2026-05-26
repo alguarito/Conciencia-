@@ -1,8 +1,9 @@
-// === ConciencIA Service Worker v2.0 ===
-// Estrategia: Cache-first con actualización en segundo plano.
-// Permite que la app funcione 100% offline después de la primera visita.
+// === ConciencIA Service Worker v2.1.0-redesign ===
+// Estrategia: Network-first para index.html (siempre fresco),
+// cache-first para assets estáticos (offline funcional).
+// Build: 2026-05-26 · Rediseño Bento Jurídico
 
-const CACHE_NAME = 'conciencia-v2.0.0';
+const CACHE_NAME = 'conciencia-v2.1.0-redesign-20260526';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -45,51 +46,61 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// === FETCH: estrategia cache-first con fallback a red ===
+// === FETCH: network-first para HTML/JSON, cache-first para assets ===
+// Esto previene que los usuarios vean versiones viejas tras un deploy.
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-
-  // Solo manejamos GET (no POST, PUT, etc.)
   if (req.method !== 'GET') return;
-
-  // Esquemas no http (data:, chrome-extension:, etc.)
   if (!req.url.startsWith('http')) return;
 
+  const url = new URL(req.url);
+  const accept = req.headers.get('accept') || '';
+  const esHTML = accept.includes('text/html') || url.pathname.endsWith('.html') || url.pathname === '/' || url.pathname.endsWith('/');
+  const esJSON = url.pathname.endsWith('.json');
+
+  // === NETWORK-FIRST para HTML y JSON (contenido que cambia con cada deploy) ===
+  if (esHTML || esJSON) {
+    event.respondWith(
+      fetch(req).then((resp) => {
+        if (resp && resp.status === 200) {
+          const copia = resp.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copia));
+        }
+        return resp;
+      }).catch(() => {
+        // Sin red: caer al cache (offline mode)
+        return caches.match(req).then((cached) => {
+          if (cached) return cached;
+          if (esHTML) return caches.match('./index.html');
+          return new Response('Sin conexión y recurso no cacheado', { status: 503 });
+        });
+      })
+    );
+    return;
+  }
+
+  // === CACHE-FIRST para assets estáticos (fonts, imágenes, libs CDN) ===
   event.respondWith(
     caches.match(req).then((cached) => {
-      // Si está en cache, devolver de inmediato
       if (cached) {
-        // Actualizar en segundo plano (stale-while-revalidate)
+        // Stale-while-revalidate en segundo plano
         fetch(req).then((nuevoResp) => {
           if (nuevoResp && nuevoResp.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(req, nuevoResp));
           }
-        }).catch(() => {/* sin red, no pasa nada */});
+        }).catch(() => {});
         return cached;
       }
-
-      // No está en cache, ir a la red
       return fetch(req).then((resp) => {
-        // Solo cachear respuestas válidas
         if (!resp || resp.status !== 200) return resp;
-
-        // Cachear los recursos externos relevantes (fonts, CDN)
-        const url = new URL(req.url);
         const cacheable = EXTERNAL_CACHE.some((dom) => url.origin.includes(dom)) ||
                           url.origin === self.location.origin;
-
         if (cacheable) {
           const respCopia = resp.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(req, respCopia));
         }
         return resp;
-      }).catch(() => {
-        // Sin red y sin cache: si pide HTML, mostrar el shell
-        if (req.headers.get('accept')?.includes('text/html')) {
-          return caches.match('./index.html');
-        }
-        return new Response('Sin conexión y recurso no cacheado', { status: 503 });
-      });
+      }).catch(() => new Response('Sin conexión y recurso no cacheado', { status: 503 }));
     })
   );
 });
