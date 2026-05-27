@@ -1676,6 +1676,558 @@ input, textarea, select{
 }
 @keyframes toastIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 @keyframes toastOut { to { opacity:0; transform:translateY(20px); } }
+
+/* ============================================================
+   LAYOUT BENTO JURÍDICO v3 · estructura del mockup J
+   ============================================================ */
+
+html, body{ height:auto !important; overflow:visible !important; }
+body{
+  background:var(--bg-app);
+  min-height:100vh;
+  display:flex; flex-direction:column;
+}
+
+/* ===== Topbar limpio ===== */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--bg-app) 88%, transparent);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-soft);
+  height:64px;
+  display:flex; align-items:center;
+  padding:0 var(--space-6);
+}
+.topbar-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; max-width:1280px; margin:0 auto; gap:var(--space-5);
+}
+.brand{
+  display:flex; align-items:center; gap:var(--space-3);
+  text-decoration:none; color:var(--text);
+}
+.brand-mark{
+  width:36px; height:36px; border-radius:var(--radius-full);
+  background:var(--vino); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; box-shadow:var(--shadow-sm);
+}
+.brand-text{
+  display:flex; flex-direction:column; line-height:1.1;
+}
+.brand-name{
+  font-family:var(--serif); font-size:var(--fs-lg);
+  font-weight:600; letter-spacing:-0.02em; margin:0;
+}
+.brand-sub{
+  font-size:10px; font-variant-caps:all-small-caps;
+  letter-spacing:.06em; color:var(--dorado); font-weight:600;
+  margin-top:1px;
+}
+.nav-main{
+  display:flex; align-items:center; gap:var(--space-5);
+  font-family:var(--sans); font-size:var(--fs-sm); font-weight:600;
+}
+.nav-main a{
+  color:var(--text-muted); text-decoration:none;
+  padding:var(--space-2) 0; transition:color var(--motion-fast);
+}
+.nav-main a:hover{ color:var(--vino); }
+.topbar-actions{
+  display:flex; align-items:center; gap:var(--space-3);
+}
+.modo-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 10px; border:1px solid var(--border-soft);
+  border-radius:var(--radius-full);
+  font-size:var(--fs-xs); font-weight:600;
+  color:var(--text-muted); background:var(--bg-muted);
+  font-variant-caps:all-small-caps; letter-spacing:.04em;
+}
+.modo-dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--success);
+}
+.btn-iniciar-top{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 18px; border-radius:var(--radius-full);
+  background:var(--vino); color:#fff; border:none;
+  font-family:var(--sans); font-weight:700; font-size:var(--fs-sm);
+  letter-spacing:-0.01em; cursor:pointer;
+  transition:all var(--motion-fast) var(--ease-out);
+  min-height:36px;
+}
+.btn-iniciar-top:hover{
+  background:var(--vino-2);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-sm);
+}
+.btn-icon{
+  width:36px; height:36px; border-radius:var(--radius-md);
+  display:flex; align-items:center; justify-content:center;
+  background:transparent; border:1px solid var(--border-soft);
+  color:var(--text-muted); cursor:pointer;
+  transition:all var(--motion-fast);
+}
+.btn-icon:hover{ color:var(--vino); border-color:var(--vino); }
+.btn-icon svg{ width:18px; height:18px; }
+
+/* Mobile: topbar más compacta */
+@media (max-width:780px){
+  .nav-main{ display:none; }
+  .brand-sub{ display:none; }
+}
+
+/* ===== Main app ===== */
+.app{
+  max-width:1280px; margin:0 auto;
+  padding:var(--space-9) var(--space-6) var(--space-10);
+  display:flex; flex-direction:column; gap:var(--space-9);
+  width:100%;
+}
+
+/* ===== HERO ===== */
+.hero{
+  display:flex; flex-direction:column; gap:var(--space-5);
+  padding-top:var(--space-4);
+}
+.hero-eyebrow{
+  font-variant-caps:all-small-caps; letter-spacing:.06em;
+  font-weight:700; font-size:var(--fs-sm); color:var(--vino);
+  margin:0;
+}
+.hero-title{
+  font-family:var(--sans);
+  font-size:clamp(36px, 5.5vw, 64px);
+  font-weight:900; letter-spacing:-0.03em;
+  line-height:0.98;
+  color:var(--text); max-width:18ch;
+  margin:0;
+}
+.hero-title-accent{ color:var(--vino); }
+.hero-lede{
+  font-size:var(--fs-lg); line-height:1.5;
+  color:var(--text-muted); max-width:60ch;
+  margin:0;
+}
+.hero-cta{
+  display:flex; flex-wrap:wrap; gap:var(--space-3);
+  margin-top:var(--space-2);
+}
+
+/* ===== Botones del sistema ===== */
+.btn{
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-3) var(--space-6);
+  border-radius:var(--radius-full);
+  font-family:var(--sans); font-weight:700;
+  font-size:var(--fs-base); letter-spacing:-0.01em;
+  border:1px solid transparent; cursor:pointer;
+  transition:all var(--motion-fast) var(--ease-out);
+  min-height:44px;
+}
+.btn-primary{ background:var(--vino); color:#fff; }
+.btn-primary:hover{ background:var(--vino-2); transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.btn-secondary{
+  background:transparent; color:var(--text);
+  border-color:var(--border);
+}
+.btn-secondary:hover{ background:var(--bg-muted); border-color:var(--vino); color:var(--vino); }
+.btn-ghost{
+  background:transparent; color:var(--text-muted);
+  padding:var(--space-2) var(--space-4); border:none;
+}
+.btn-ghost:hover{ color:var(--vino); background:var(--bg-muted); }
+.btn-sm{ font-size:var(--fs-sm); padding:6px 14px; min-height:32px; }
+.btn-lg{ padding:var(--space-4) var(--space-7); font-size:var(--fs-md); min-height:52px; }
+
+/* ===== Bento grid ===== */
+.bento-grid{
+  display:grid;
+  grid-template-columns:repeat(12, 1fr);
+  gap:var(--space-4);
+}
+.caso-card{ grid-column:span 7; }
+.bento-side{
+  grid-column:span 5;
+  display:flex; flex-direction:column; gap:var(--space-4);
+}
+.metricas-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);
+}
+@media (max-width:880px){
+  .caso-card, .bento-side{ grid-column:span 12; }
+}
+
+/* Cards bento genéricas */
+.caso-card, .metrica-card, .progreso-card, .arbol-section, .expediente-section, .doc-card{
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-xl);
+  padding:var(--space-7);
+  transition:border-color var(--motion-fast);
+}
+
+/* ===== Caso card ===== */
+.caso-card[hidden]{ display:none !important; }
+.caso-card-header{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:var(--space-4);
+}
+.caso-card-id{
+  font-family:var(--mono); font-size:var(--fs-sm);
+  color:var(--text-muted); margin:0 0 var(--space-2);
+}
+.caso-card-nombre{
+  font-family:var(--sans); font-weight:800;
+  font-size:var(--fs-2xl); letter-spacing:-0.02em;
+  line-height:1.15; margin:0 0 var(--space-1); color:var(--text);
+}
+.caso-card-meta{
+  color:var(--text-muted); font-size:var(--fs-base);
+  margin:0 0 var(--space-6);
+}
+.caso-meta-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  gap:var(--space-3) var(--space-5);
+  padding:var(--space-5) 0;
+  border-top:1px solid var(--border-soft);
+  margin:0 0 var(--space-4);
+}
+.caso-meta-grid dt{
+  font-variant-caps:all-small-caps; letter-spacing:.04em;
+  font-size:var(--fs-xs); font-weight:600; color:var(--dorado);
+}
+.caso-meta-grid dd{
+  font-size:var(--fs-base); font-weight:600; margin-top:2px;
+  color:var(--text);
+}
+
+/* ===== Métrica cards ===== */
+.metrica-card{
+  padding:var(--space-5) var(--space-6);
+}
+.metrica-card:hover{ border-color:var(--vino); }
+.metrica-num{
+  font-family:var(--sans); font-weight:900;
+  font-size:48px; letter-spacing:-0.04em; line-height:1;
+  color:var(--text); margin:0;
+}
+.metrica-card .versalitas{ margin-top:var(--space-2); }
+.metrica-info-text{
+  font-size:var(--fs-sm); color:var(--text-muted);
+  line-height:1.5; margin-top:var(--space-2);
+}
+
+/* ===== Progreso card ===== */
+.progreso-card{
+  background:linear-gradient(135deg, var(--vino-dark) 0%, var(--vino) 100%);
+  color:#fff; border:none;
+  padding:var(--space-6) var(--space-7);
+}
+.progreso-card[hidden]{ display:none !important; }
+.progreso-eyebrow{ color:var(--dorado-warm) !important; }
+.progreso-num{
+  font-family:var(--sans); font-weight:800;
+  font-size:var(--fs-xl); letter-spacing:-0.01em;
+  margin:var(--space-2) 0 var(--space-3);
+}
+.progreso-bar{
+  height:6px; background:rgba(255,255,255,.18);
+  border-radius:99px; overflow:hidden;
+}
+.progreso-fill{
+  height:100%; background:#fff;
+  border-radius:99px; transition:width 600ms var(--ease-out);
+}
+
+/* ===== Árbol central ===== */
+.arbol-section{
+  padding:var(--space-8) var(--space-9);
+  min-height:240px;
+}
+.arbol-empty{
+  text-align:center; padding:var(--space-8) 0;
+  display:flex; flex-direction:column; align-items:center; gap:var(--space-4);
+}
+.arbol-empty-title{
+  font-family:var(--serif); font-style:italic;
+  font-size:clamp(28px, 4vw, 44px);
+  font-weight:500; letter-spacing:-0.015em;
+  line-height:1.1; margin:0;
+}
+.arbol-empty-text{
+  color:var(--text-muted); max-width:48ch;
+  font-size:var(--fs-md); line-height:1.55; margin:0;
+}
+.principios-list{
+  display:flex; gap:var(--space-5); flex-wrap:wrap;
+  list-style:none; padding:0; margin:var(--space-5) 0 0;
+  font-size:var(--fs-sm); color:var(--text-muted);
+}
+.principios-list li{ display:flex; align-items:center; gap:6px; }
+.dot{ width:6px; height:6px; border-radius:50%; display:inline-block; }
+.dot-vino{ background:var(--vino); }
+
+/* ===== Expediente section ===== */
+.expediente-section{
+  padding:var(--space-8);
+}
+.section-header{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  flex-wrap:wrap; gap:var(--space-4);
+  margin-bottom:var(--space-6);
+}
+.section-title{
+  font-family:var(--serif); font-weight:600;
+  font-size:var(--fs-2xl); letter-spacing:-0.015em;
+  line-height:1.15; margin:var(--space-1) 0 0;
+}
+.docs-tabs{
+  display:inline-flex; padding:4px;
+  background:var(--bg-muted);
+  border-radius:var(--radius-full);
+  gap:2px;
+}
+.docs-tab{
+  padding:8px 16px; border-radius:var(--radius-full);
+  background:transparent; border:none; cursor:pointer;
+  font-family:var(--sans); font-weight:600; font-size:var(--fs-sm);
+  color:var(--text-muted); letter-spacing:-0.01em;
+  transition:all var(--motion-fast);
+  min-height:32px;
+}
+.docs-tab:hover{ color:var(--text); }
+.docs-tab.active{
+  background:var(--bg-surface); color:var(--vino);
+  box-shadow:var(--shadow-sm);
+}
+
+/* Docs bento grid */
+.docs-bento{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:var(--space-4);
+}
+.docs-empty{
+  grid-column:1/-1; text-align:center;
+  padding:var(--space-9) var(--space-4);
+  color:var(--text-muted);
+}
+.docs-empty-icon{ font-size:36px; display:block; margin-bottom:var(--space-3); opacity:.4; }
+.docs-empty p{ font-size:var(--fs-base); margin:0; }
+.docs-empty-sub{ font-size:var(--fs-sm) !important; margin-top:var(--space-2) !important; color:var(--text-subtle); }
+
+/* Doc card · botón */
+.doc-card{
+  text-align:left; cursor:pointer; padding:var(--space-5);
+  display:flex; flex-direction:column; gap:var(--space-3);
+  font-family:var(--sans);
+  position:relative;
+}
+.doc-card:hover{ border-color:var(--vino); transform:translateY(-2px); }
+.doc-card-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:var(--space-3); }
+.doc-card-icon{ font-size:24px; }
+.doc-card-nombre{
+  font-weight:700; font-size:var(--fs-md); line-height:1.3;
+  color:var(--text); margin:0;
+}
+.doc-card-fund{
+  font-family:var(--mono); font-size:var(--fs-xs);
+  color:var(--text-muted); margin:0;
+}
+.doc-card-foot{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:auto; padding-top:var(--space-3);
+  border-top:1px solid var(--border-soft);
+  font-size:var(--fs-xs);
+}
+.doc-card.completo{ background:rgba(58,107,77,.04); border-color:rgba(58,107,77,.3); }
+.doc-card.completo .doc-card-icon{ color:var(--success); }
+
+/* ===== Doc editor ===== */
+.doc-editor[hidden], .doc-editor:not(.activo){ display:none; }
+.doc-editor.activo{ display:block; }
+.doc-editor-header{
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:var(--space-4); margin-bottom:var(--space-6);
+}
+.doc-editor-back{
+  background:transparent; border:1px solid var(--border);
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-full);
+  font-family:var(--sans); font-weight:600; font-size:var(--fs-sm);
+  color:var(--text-muted); cursor:pointer; transition:all var(--motion-fast);
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:36px;
+}
+.doc-editor-back:hover{ color:var(--vino); border-color:var(--vino); }
+.doc-editor-actions{ display:flex; gap:var(--space-2); flex-wrap:wrap; }
+
+/* ===== Asistente como panel lateral colapsable ===== */
+.asistente-panel{
+  position:fixed; top:80px; right:var(--space-5); bottom:var(--space-5);
+  width:380px; max-width:calc(100vw - var(--space-8));
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-lg);
+  display:flex; flex-direction:column;
+  z-index:40;
+  transform:translateX(calc(100% + var(--space-8)));
+  transition:transform var(--motion-normal) var(--ease-out);
+}
+.asistente-panel.open{ transform:translateX(0); }
+.asistente-header{
+  padding:var(--space-5) var(--space-6);
+  display:flex; justify-content:space-between; align-items:center;
+  border-bottom:1px solid var(--border-soft);
+}
+.asistente-title{
+  font-family:var(--serif); font-weight:600;
+  font-size:var(--fs-lg); margin:var(--space-1) 0 0;
+  letter-spacing:-0.01em;
+}
+.chat-mensajes{
+  flex:1; overflow-y:auto;
+  padding:var(--space-5) var(--space-6);
+  display:flex; flex-direction:column; gap:var(--space-4);
+}
+.mensaje{
+  padding:var(--space-4); border-radius:var(--radius-lg);
+  font-size:var(--fs-sm); line-height:1.55;
+  animation:msgIn var(--motion-normal) var(--ease-out);
+}
+.mensaje-asistente{
+  background:var(--bg-muted); color:var(--text);
+}
+.mensaje-asistente .mensaje-bienvenida{
+  font-family:var(--serif); font-size:var(--fs-lg);
+  font-weight:600; letter-spacing:-0.01em;
+  display:block; margin-bottom:var(--space-2);
+}
+.mensaje-asistente p{ margin:0 0 var(--space-2); }
+.mensaje-asistente p:last-child{ margin-bottom:0; }
+.mensaje-user{
+  background:var(--vino); color:#fff;
+  align-self:flex-end; max-width:85%;
+}
+.mensaje-fundamento{
+  margin-top:var(--space-3); padding-top:var(--space-2);
+  border-top:1px dashed var(--border-soft);
+  font-size:var(--fs-xs); color:var(--text-muted);
+}
+@keyframes msgIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+
+.sugerencias{
+  display:flex; gap:var(--space-2); flex-wrap:wrap;
+  padding:0 var(--space-6) var(--space-3);
+}
+.sugerencia-chip{
+  background:transparent; border:1px solid var(--border-soft);
+  padding:6px 12px; border-radius:var(--radius-full);
+  font-family:var(--sans); font-size:var(--fs-xs);
+  color:var(--text-muted); cursor:pointer;
+  transition:all var(--motion-fast);
+}
+.sugerencia-chip:hover{ border-color:var(--vino); color:var(--vino); }
+
+.chat-input-area{
+  padding:var(--space-4) var(--space-5);
+  border-top:1px solid var(--border-soft);
+}
+.chat-input{
+  width:100%; resize:none;
+  background:var(--bg-muted); color:var(--text);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  padding:var(--space-3) var(--space-4);
+  font-family:var(--sans); font-size:var(--fs-sm); line-height:1.5;
+  min-height:44px; max-height:120px;
+}
+.chat-input:focus-visible{
+  outline:none; border-color:var(--vino);
+  box-shadow:var(--shadow-focus);
+}
+.chat-input-bar{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:var(--space-2);
+}
+.chat-input-bar-info{ font-size:var(--fs-xs); color:var(--text-subtle); }
+.btn-send{
+  width:36px; height:36px; border-radius:var(--radius-full);
+  background:var(--vino); color:#fff; border:none;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all var(--motion-fast);
+}
+.btn-send:hover{ background:var(--vino-2); transform:scale(1.05); }
+.btn-send svg{ width:16px; height:16px; }
+
+/* Botón FAB del asistente */
+.asistente-toggle{
+  position:fixed; bottom:var(--space-6); right:var(--space-6);
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-3) var(--space-5);
+  background:var(--vino); color:#fff; border:none;
+  border-radius:var(--radius-full);
+  font-family:var(--sans); font-weight:700; font-size:var(--fs-sm);
+  cursor:pointer; z-index:30;
+  box-shadow:var(--shadow-lg);
+  transition:all var(--motion-normal) var(--ease-spring);
+  min-height:48px;
+}
+.asistente-toggle:hover{ background:var(--vino-2); transform:translateY(-2px) scale(1.02); }
+.asistente-toggle svg{ width:20px; height:20px; }
+.asistente-toggle.hidden{ display:none; }
+
+@media (max-width:780px){
+  .asistente-panel{
+    top:auto; bottom:0; right:0; left:0;
+    width:100%; max-width:100%;
+    height:75vh; border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+    transform:translateY(100%);
+  }
+  .asistente-panel.open{ transform:translateY(0); }
+  .asistente-toggle-label{ display:none; }
+  .app{ padding:var(--space-6) var(--space-4) var(--space-9); gap:var(--space-7); }
+  .hero-title{ font-size:36px; }
+  .arbol-section, .expediente-section, .caso-card, .metrica-card{
+    padding:var(--space-5);
+  }
+}
+
+/* ===== Reset legacy classes (3-col que ya no existe) ===== */
+.column, .col-header, .col-content, .col-title, .col-sub, .col-tag, .col-tag-num,
+.principios-footer, .principio-chip, .principio-chip-dot, .ruta-empty, .ruta-empty-icon,
+.chat-modo-info, .divider, .docs-list, .docs-empty .docs-empty-icon{
+  all:revert;
+}
+.divider{ display:none !important; }
+
+/* ===== Badges ===== */
+.badge{
+  display:inline-flex; align-items:center;
+  padding:4px 10px; border-radius:var(--radius-full);
+  font-family:var(--mono); font-size:10px;
+  font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.badge-vino{ background:var(--vino-tint); color:var(--vino); }
+.badge-warning{ background:rgba(184,110,31,.10); color:var(--warning); }
+.badge-success{ background:rgba(58,107,77,.10); color:var(--success); }
+.badge-neutral{ background:var(--bg-muted); color:var(--text-muted); }
+
+/* ===== Helpers ===== */
+.text-vino{ color:var(--vino); }
+.text-dorado{ color:var(--dorado); }
+.text-dorado-warm{ color:var(--dorado-warm); }
+.mono{ font-family:var(--mono); }
+.versalitas{
+  font-variant-caps:all-small-caps;
+  letter-spacing:.06em; font-weight:600;
+  font-size:var(--fs-sm); color:var(--vino);
+  margin:0;
+}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
@@ -1688,146 +2240,220 @@ input, textarea, select{
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="brand-mark">SMJ</div>
-    <div class="brand-text">
-      <div class="brand-name">ConciencIA</div>
-      <div class="brand-sub">Asesor del Debido Proceso · I.E. Sor María Juliana</div>
+<!-- ===== TOPBAR LIMPIO (estilo Bento Jurídico) ===== -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <a class="brand" href="#" aria-label="ConciencIA — Inicio">
+      <span class="brand-mark" aria-hidden="true">⚖</span>
+      <span class="brand-text">
+        <h1 class="brand-name">ConciencIA</h1>
+        <span class="brand-sub">I.E. Sor María Juliana</span>
+      </span>
+    </a>
+    <nav class="nav-main" aria-label="Navegación principal">
+      <a href="#hoja-ruta">Hoja de ruta</a>
+      <a href="#expediente">Expediente</a>
+      <a href="#asistente">Asistente</a>
+      <a href="#" onclick="abrirInfo();return false">Manual</a>
+    </nav>
+    <div class="topbar-actions">
+      <span class="modo-badge" id="modo-badge" title="Funciona sin internet">
+        <span class="modo-dot" aria-hidden="true"></span> Offline
+      </span>
+      <div class="theme-switcher" role="radiogroup" aria-label="Tema visual">
+        <button onclick="cambiarTema('editorial')" id="theme-editorial" role="radio" aria-checked="true" title="Tema claro" aria-label="Tema claro">
+          <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </button>
+        <button onclick="cambiarTema('moderno-oscuro')" id="theme-moderno-oscuro" role="radio" aria-checked="false" title="Tema oscuro" aria-label="Tema oscuro">
+          <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+      <button class="btn-icon" title="Configuración" aria-label="Configuración" onclick="abrirConfig()">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="btn-iniciar-top" onclick="iniciarProceso()">
+        <span aria-hidden="true">+</span> Iniciar caso
+      </button>
     </div>
-  </div>
-  <div class="topbar-actions">
-    <span class="modo-badge" id="modo-badge">Modo Offline</span>
-    <div class="theme-switcher" role="radiogroup" aria-label="Tema visual">
-      <button onclick="cambiarTema('editorial')" id="theme-editorial" role="radio" aria-checked="true" title="Tema Editorial · Jurídico" aria-label="Tema Editorial">
-        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      </button>
-      <button onclick="cambiarTema('moderno')" id="theme-moderno" role="radio" aria-checked="false" title="Tema Moderno claro" aria-label="Tema Moderno claro">
-        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
-      </button>
-      <button onclick="cambiarTema('moderno-oscuro')" id="theme-moderno-oscuro" role="radio" aria-checked="false" title="Tema Moderno oscuro" aria-label="Tema Moderno oscuro">
-        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-    </div>
-    <button class="btn-icon" title="Configuración" onclick="abrirConfig()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
-    <button class="btn-icon" title="Información" onclick="abrirInfo()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-    </button>
   </div>
 </header>
 
-<div class="app">
-  <!-- COLUMNA 1: RUTA DEL DEBIDO PROCESO -->
-  <section class="column" id="col-ruta">
-    <div class="col-header">
-      <div class="col-tag"><span class="col-tag-num">I.</span> Ruta del Debido Proceso</div>
-      <h1 class="col-title">Hoja de ruta</h1>
-      <p class="col-sub">Pasos, responsables y documentos del protocolo aplicable</p>
-    </div>
-    <div class="col-content" id="ruta-content">
-      <div class="ruta-empty">
-        <svg class="ruta-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-        </svg>
-        <div>No hay un caso activo</div>
-        <p style="font-size:var(--fs-base); margin-top:8px; color:var(--gris-tenue)">Inicie un nuevo proceso para construir la hoja de ruta del debido proceso aplicable.</p>
-      </div>
-      <button class="btn-iniciar" onclick="iniciarProceso()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Iniciar Nuevo Proceso
+<!-- ===== APP: layout vertical bento ===== -->
+<main class="app" id="app-main">
+
+  <!-- HERO -->
+  <section class="hero" id="hoja-ruta">
+    <p class="hero-eyebrow">Asesor del Debido Proceso · v2.1</p>
+    <h2 class="hero-title">
+      Cada decisión disciplinaria con <span class="hero-title-accent">fundamento</span>.
+    </h2>
+    <p class="hero-lede">
+      Acompañamos a docentes y directivos de la I.E. Sor María Juliana en la aplicación
+      correcta del Manual de Convivencia y el SIE 2025. Documentos institucionales con
+      firma jurídica al instante.
+    </p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" onclick="iniciarProceso()">
+        <span aria-hidden="true">+</span> Iniciar nuevo caso
+      </button>
+      <button class="btn btn-secondary" id="btn-continuar-caso" hidden onclick="continuarCasoActivo()">
+        Continuar caso activo →
       </button>
     </div>
-    <div class="principios-footer">
-      <span class="principio-chip"><span class="principio-chip-dot"></span>Presunción de inocencia</span>
-      <span class="principio-chip"><span class="principio-chip-dot"></span>Derecho a la defensa</span>
-      <span class="principio-chip"><span class="principio-chip-dot"></span>Confidencialidad</span>
-    </div>
   </section>
 
-  <div class="divider" data-col="1"></div>
+  <!-- BENTO 1: Caso activo + métricas + progreso -->
+  <section class="bento-grid">
 
-  <!-- COLUMNA 2: ASISTENTE -->
-  <section class="column" id="col-chat">
-    <div class="col-header">
-      <div class="col-tag"><span class="col-tag-num">II.</span> Asistente</div>
-      <h1 class="col-title">Conversación</h1>
-      <p class="col-sub">Orientación contextual basada en el Manual y el SIE</p>
-    </div>
-    <div class="chat-modo-info">
-      <span class="modo-dot"></span>
-      <span id="chat-modo-text">Modo offline · Respuestas basadas en árbol de decisión</span>
-    </div>
-    <div class="col-content chat-mensajes" id="chat-mensajes" role="log" aria-live="polite" aria-relevant="additions" aria-label="Historial de conversación con el asistente">
-      <div class="mensaje mensaje-asistente">
-        <strong style="font-family:var(--serif); font-size:var(--fs-lg)">Bienvenido(a).</strong><br>
-        Soy su asistente para gestionar el debido proceso disciplinario y académico de la Institución Educativa Sor María Juliana, fundamentado en el Manual de Convivencia y el SIE.
-        <br><br>
-        Puede iniciar un nuevo proceso desde la columna izquierda, o describirme aquí el caso para orientarle.
-        <div class="mensaje-fundamento">📖 Manual de Convivencia · SIE 2025</div>
+    <!-- Card de caso activo (col 7) -->
+    <article class="caso-card" id="caso-card" hidden>
+      <header class="caso-card-header">
+        <span class="versalitas text-dorado">Caso activo</span>
+        <span class="badge badge-vino" id="caso-tipo-badge">EN CURSO</span>
+      </header>
+      <p class="caso-card-id mono" id="caso-card-id">CASO-2026-0000</p>
+      <h3 class="caso-card-nombre" id="caso-card-nombre">Sin caso activo</h3>
+      <p class="caso-card-meta" id="caso-card-meta">—</p>
+      <dl class="caso-meta-grid" id="caso-meta-grid"></dl>
+      <button class="btn btn-ghost btn-sm" onclick="editarDatosCaso()">
+        <span aria-hidden="true">✎</span> Editar datos del caso
+      </button>
+    </article>
+
+    <!-- Stack derecho: métricas + progreso (col 5) -->
+    <div class="bento-side">
+      <div class="metricas-row">
+        <article class="metrica-card">
+          <p class="metrica-num">30</p>
+          <p class="versalitas text-dorado">Protocolos</p>
+        </article>
+        <article class="metrica-card">
+          <p class="metrica-num">124</p>
+          <p class="versalitas text-dorado">Plantillas</p>
+        </article>
       </div>
-    </div>
-    <div class="sugerencias" id="sugerencias">
-      <button class="sugerencia-chip" onclick="enviarPrompt('¿Cómo identifico si una situación es Tipo I, II o III?')">¿Cómo identifico el tipo de situación?</button>
-      <button class="sugerencia-chip" onclick="enviarPrompt('¿Cuáles son los pasos del protocolo Tipo II?')">Pasos del protocolo Tipo II</button>
-      <button class="sugerencia-chip" onclick="enviarPrompt('¿Qué es la justicia restaurativa?')">Justicia restaurativa</button>
-    </div>
-    <div class="chat-input-area">
-      <div class="chat-input-wrapper">
-        <label for="chat-input" class="sr-only">Mensaje al asistente del debido proceso</label>
-        <textarea class="chat-input" id="chat-input" placeholder="Describa la situación o haga una pregunta..." rows="1" aria-describedby="chat-info"></textarea>
-        <div class="chat-input-bar">
-          <span class="chat-input-bar-info" id="chat-info">Modo offline · 0/2000</span>
-          <button class="btn-send" id="btn-send" onclick="enviarMensaje()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
+      <article class="progreso-card" id="progreso-card" hidden>
+        <p class="versalitas progreso-eyebrow">Progreso del caso activo</p>
+        <p class="progreso-num" id="progreso-num">0 / 0 pasos · 0%</p>
+        <div class="progreso-bar">
+          <div class="progreso-fill" id="progreso-fill" style="width:0%"></div>
         </div>
-      </div>
+      </article>
+      <article class="metrica-card metrica-card-info" id="welcome-card">
+        <p class="versalitas text-dorado">¿Cómo funciona?</p>
+        <p class="metrica-info-text">Le hago preguntas paso a paso para clasificar la situación según el Manual. Luego le entrego un protocolo verificable y los documentos firmables al instante.</p>
+      </article>
     </div>
   </section>
 
-  <div class="divider" data-col="2"></div>
-
-  <!-- COLUMNA 3: DOCUMENTOS -->
-  <section class="column" id="col-docs">
-    <div class="col-header">
-      <div class="col-tag"><span class="col-tag-num">III.</span> Documentos</div>
-      <h1 class="col-title">Expediente</h1>
-      <p class="col-sub">Formatos del proceso, edición en tiempo real</p>
+  <!-- ÁRBOL CENTRAL — aquí se renderizan preguntas, alertas, clasificación, protocolo -->
+  <section class="arbol-section" id="ruta-content" aria-label="Hoja de ruta del debido proceso">
+    <div class="arbol-empty">
+      <p class="versalitas text-vino">Comience aquí</p>
+      <h2 class="arbol-empty-title">No hay un caso activo.</h2>
+      <p class="arbol-empty-text">Inicie un nuevo proceso para que el asesor lo guíe por el Manual de Convivencia y el SIE 2025 hasta llegar al protocolo aplicable.</p>
+      <button class="btn btn-primary btn-lg" onclick="iniciarProceso()">
+        <span aria-hidden="true">+</span> Iniciar nuevo caso
+      </button>
+      <ul class="principios-list" aria-label="Principios del debido proceso">
+        <li><span class="dot dot-vino" aria-hidden="true"></span> Presunción de inocencia</li>
+        <li><span class="dot dot-vino" aria-hidden="true"></span> Derecho a la defensa</li>
+        <li><span class="dot dot-vino" aria-hidden="true"></span> Confidencialidad</li>
+      </ul>
     </div>
-    <div id="docs-lista-view">
+  </section>
+
+  <!-- EXPEDIENTE BENTO -->
+  <section class="expediente-section" id="expediente">
+    <header class="section-header">
+      <div>
+        <p class="versalitas text-dorado">Expediente del caso</p>
+        <h2 class="section-title">Documentos a generar</h2>
+      </div>
       <div class="docs-tabs" role="tablist" aria-label="Categorías de documentos">
-        <button type="button" class="docs-tab active" data-tab="requeridos" role="tab" aria-selected="true" aria-controls="docs-list-panel">Requeridos</button>
-        <button type="button" class="docs-tab" data-tab="opcionales" role="tab" aria-selected="false" aria-controls="docs-list-panel">Opcionales</button>
-        <button type="button" class="docs-tab" data-tab="completos" role="tab" aria-selected="false" aria-controls="docs-list-panel">Completos</button>
+        <button type="button" class="docs-tab active" data-tab="requeridos" role="tab" aria-selected="true">Requeridos</button>
+        <button type="button" class="docs-tab" data-tab="opcionales" role="tab" aria-selected="false">Opcionales</button>
+        <button type="button" class="docs-tab" data-tab="completos" role="tab" aria-selected="false">Completados</button>
       </div>
-      <div class="col-content">
-        <div class="docs-list" id="docs-list">
-          <div class="docs-empty">
-            <div style="opacity:.5; margin-bottom:12px">📋</div>
-            <div>Sin documentos por gestionar</div>
-            <p style="font-size:var(--fs-sm); margin-top:8px; color:var(--gris-tenue)">Los formatos aparecerán aquí cuando se clasifique la situación.</p>
-          </div>
+    </header>
+
+    <div id="docs-lista-view">
+      <div class="docs-bento" id="docs-list">
+        <div class="docs-empty">
+          <span class="docs-empty-icon" aria-hidden="true">📂</span>
+          <p>Aún no hay documentos por gestionar.</p>
+          <p class="docs-empty-sub">Aparecerán aquí cuando el asesor clasifique la situación.</p>
         </div>
       </div>
     </div>
+
     <div class="doc-editor" id="doc-editor">
       <div class="doc-editor-header">
         <button class="doc-editor-back" onclick="cerrarEditor()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Volver al expediente
+          <span aria-hidden="true">←</span> Volver al expediente
         </button>
         <div class="doc-editor-actions" id="doc-editor-actions">
-          <button class="btn-doc-action primary" onclick="descargarDocx()" id="btn-descargar-docx">📄 Descargar Word</button>
-          <button class="btn-doc-action secondary" onclick="descargarPDF()" id="btn-descargar-pdf">📑 PDF</button>
-          <button class="btn-doc-action tertiary" id="btn-completar-doc" onclick="marcarDocCompleto()">Marcar como completado</button>
+          <button class="btn btn-primary" onclick="descargarDocx()" id="btn-descargar-docx">
+            <span aria-hidden="true">📄</span> Descargar Word
+          </button>
+          <button class="btn btn-secondary" onclick="descargarPDF()" id="btn-descargar-pdf">
+            <span aria-hidden="true">📑</span> Imprimir / PDF
+          </button>
+          <button class="btn btn-ghost" id="btn-completar-doc" onclick="marcarDocCompleto()">
+            ✓ Marcar como completado
+          </button>
         </div>
       </div>
       <div class="doc-editor-content" id="doc-editor-content"></div>
     </div>
   </section>
-</div>
+
+</main>
+
+<!-- ===== ASISTENTE: panel lateral colapsable ===== -->
+<aside class="asistente-panel" id="asistente-panel" aria-label="Asistente del debido proceso">
+  <header class="asistente-header">
+    <div>
+      <p class="versalitas text-dorado">Asistente · Offline</p>
+      <h2 class="asistente-title">Conversación</h2>
+    </div>
+    <button class="btn-icon" onclick="toggleAsistente()" aria-label="Cerrar asistente" title="Cerrar">
+      <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </header>
+
+  <div class="chat-mensajes" id="chat-mensajes" role="log" aria-live="polite" aria-relevant="additions" aria-label="Historial de conversación">
+    <div class="mensaje mensaje-asistente">
+      <strong class="mensaje-bienvenida">Bienvenido(a).</strong>
+      <p>Soy su asistente para gestionar el debido proceso disciplinario y académico, fundamentado en el Manual de Convivencia y el SIE.</p>
+      <p>Puede iniciar un caso desde el botón <strong>"Iniciar nuevo caso"</strong> o preguntarme aquí.</p>
+      <div class="mensaje-fundamento mono">Manual de Convivencia · SIE 2025</div>
+    </div>
+  </div>
+
+  <div class="sugerencias" id="sugerencias">
+    <button class="sugerencia-chip" onclick="enviarPrompt('¿Cómo identifico si una situación es Tipo I, II o III?')">¿Tipo I, II o III?</button>
+    <button class="sugerencia-chip" onclick="enviarPrompt('¿Cuáles son los pasos del protocolo Tipo II?')">Protocolo Tipo II</button>
+    <button class="sugerencia-chip" onclick="enviarPrompt('¿Qué es la justicia restaurativa?')">Justicia restaurativa</button>
+  </div>
+
+  <div class="chat-input-area">
+    <label for="chat-input" class="sr-only">Mensaje al asistente</label>
+    <textarea class="chat-input" id="chat-input" placeholder="Pregúnteme sobre el caso..." rows="1" aria-describedby="chat-info"></textarea>
+    <div class="chat-input-bar">
+      <span class="chat-input-bar-info mono" id="chat-info">0 / 2000</span>
+      <button class="btn-send" id="btn-send" onclick="enviarMensaje()" aria-label="Enviar mensaje">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<!-- Botón FAB para abrir/cerrar asistente -->
+<button class="asistente-toggle" id="asistente-toggle" onclick="toggleAsistente()" aria-label="Abrir asistente" title="Asistente">
+  <svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="asistente-toggle-label">Asistente</span>
+</button>
 
 <!-- Modal de inicio de caso (NUEVO en v4) -->
 <div class="modal-overlay" id="modal-iniciar-caso">
@@ -2245,54 +2871,123 @@ function seleccionarOpcion(opcion){
 
 // === RENDERIZADO COLUMNA 1 ===
 function renderColumnaRuta(){
+  // Actualizar UI del caso activo (card bento superior)
+  actualizarCasoCard();
   const cont = $('ruta-content');
-  if (!state.nodoActual){cont.innerHTML = renderRutaVacia(); return}
+  if (!cont) return;
+  if (!state.nodoActual){ cont.innerHTML = renderRutaVacia(); return; }
   const nodo = ARBOL.nodos[state.nodoActual];
 
   let html = '';
-  // Info del caso
-  if (state.caso){
-    const c = state.caso;
-    const detalleEstudiante = c.estudianteNombre
-      ? `${escape(c.estudianteNombre)}${c.estudianteGrado ? ` · Grado ${escape(c.estudianteGrado)}${c.estudianteGrupo ? '-' + escape(c.estudianteGrupo) : ''}` : ''}`
-      : 'Estudiante por identificar';
-    const detalleAcudiente = c.acudienteNombre
-      ? `Acudiente: ${escape(c.acudienteNombre)}${c.acudienteTelefono ? ' · ' + escape(c.acudienteTelefono) : ''}`
-      : '';
-    html += `<div class="caso-info">
-      <div class="caso-id">${escape(c.id)} · ${escape(c.fechaApertura)}</div>
-      <div class="caso-titulo">${state.clasificacion ? state.clasificacion.titulo.replace(/[✅🚨]/g,'').trim() : 'Caso en clasificación'}</div>
-      <div class="caso-estudiante">${detalleEstudiante}</div>
-      ${detalleAcudiente ? `<div class="caso-estudiante" style="margin-top:2px">${detalleAcudiente}</div>` : ''}
-      ${renderProgreso()}
-      <button class="btn-editar-caso" onclick="editarDatosCaso()">✎ Editar datos del caso</button>
-    </div>`;
-  }
-
-  // Renderizar según tipo de nodo
-  if (nodo.tipo === 'pregunta') html += renderPregunta(nodo);
-  else if (nodo.tipo === 'alerta') html += renderAlerta(nodo);
-  else if (nodo.tipo === 'informativo') html += renderInformativo(nodo);
-  else if (nodo.tipo === 'clasificacion') html += renderClasificacion(nodo);
-  else if (nodo.tipo === 'protocolo') html += renderProtocolo(nodo);
+  if (nodo.tipo === 'pregunta') html = renderPregunta(nodo);
+  else if (nodo.tipo === 'alerta') html = renderAlerta(nodo);
+  else if (nodo.tipo === 'informativo') html = renderInformativo(nodo);
+  else if (nodo.tipo === 'clasificacion') html = renderClasificacion(nodo);
+  else if (nodo.tipo === 'protocolo') html = renderProtocolo(nodo);
 
   cont.innerHTML = html;
   bindOpciones();
   bindPasos();
 }
 
+// Actualiza la card bento de caso activo + el progreso + botón "Continuar"
+function actualizarCasoCard(){
+  const card = $('caso-card');
+  const progresoCard = $('progreso-card');
+  const welcome = $('welcome-card');
+  const btnContinuar = $('btn-continuar-caso');
+  if (!card) return;
+
+  if (!state.caso){
+    card.hidden = true;
+    if (progresoCard) progresoCard.hidden = true;
+    if (welcome) welcome.hidden = false;
+    if (btnContinuar) btnContinuar.hidden = true;
+    return;
+  }
+
+  const c = state.caso;
+  card.hidden = false;
+  if (welcome) welcome.hidden = true;
+  if (btnContinuar) btnContinuar.hidden = false;
+
+  // Header tipo · badge
+  const badge = $('caso-tipo-badge');
+  if (badge){
+    const tipoMap = {
+      'TIPO_I':   { txt:'TIPO I',   cls:'badge-success' },
+      'TIPO_II':  { txt:'TIPO II',  cls:'badge-warning' },
+      'TIPO_III': { txt:'TIPO III', cls:'badge-vino' }
+    };
+    const tipo = state.clasificacion?.codigo || state.clasificacion?.tipo;
+    const meta = tipoMap[tipo] || { txt:'EN CURSO', cls:'badge-neutral' };
+    badge.textContent = meta.txt;
+    badge.className = `badge ${meta.cls}`;
+  }
+  $('caso-card-id').textContent = `${c.id} · Abierto ${c.fechaApertura || ''}`.trim();
+  $('caso-card-nombre').textContent = c.estudianteNombre || 'Estudiante por identificar';
+  const grupo = c.estudianteGrupo ? '-' + c.estudianteGrupo : '';
+  const meta = [
+    c.estudianteGrado ? `${c.estudianteGrado}${grupo}` : null,
+    c.estudianteJornada || null,
+    c.estudianteInclusion === 'true' || c.estudianteInclusion === true ? 'Con PIAR' : null
+  ].filter(Boolean).join(' · ');
+  $('caso-card-meta').textContent = meta || '—';
+
+  // Meta grid
+  const grid = $('caso-meta-grid');
+  if (grid){
+    const items = [
+      ['Acudiente', c.acudienteNombre || '—'],
+      ['Teléfono', c.acudienteTelefono || '—'],
+      ['Director de grupo', c.directorGrupo || '—'],
+      ['Funcionario', c.funcionarioReporta || state.funcionario || '—']
+    ];
+    grid.innerHTML = items.map(([dt, dd]) =>
+      `<div><dt>${escape(dt)}</dt><dd>${escape(dd)}</dd></div>`
+    ).join('');
+  }
+
+  // Progreso
+  if (progresoCard){
+    if (state.protocoloActual && Array.isArray(state.rutaPasos) && state.rutaPasos.length){
+      const total = state.rutaPasos.length;
+      const comp = state.pasosCompletados.size;
+      const pct = Math.round((comp / total) * 100);
+      progresoCard.hidden = false;
+      $('progreso-num').textContent = `${comp} / ${total} pasos · ${pct}%`;
+      $('progreso-fill').style.width = pct + '%';
+    } else {
+      progresoCard.hidden = true;
+    }
+  }
+}
+
+function continuarCasoActivo(){
+  document.getElementById('ruta-content')?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function renderRutaVacia(){
-  return `<div class="ruta-empty">
-    <svg class="ruta-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-    </svg>
-    <div>No hay un caso activo</div>
-    <p style="font-size:var(--fs-base); margin-top:8px; color:var(--gris-tenue)">Inicie un nuevo proceso para construir la hoja de ruta del debido proceso aplicable.</p>
-  </div>
-  <button class="btn-iniciar" onclick="iniciarProceso()">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Iniciar Nuevo Proceso
-  </button>`;
+  return `<div class="arbol-empty">
+    <p class="versalitas text-vino">Comience aquí</p>
+    <h2 class="arbol-empty-title">No hay un caso activo.</h2>
+    <p class="arbol-empty-text">Inicie un nuevo proceso para que el asesor lo guíe por el Manual de Convivencia y el SIE 2025 hasta llegar al protocolo aplicable.</p>
+    <button class="btn btn-primary btn-lg" onclick="iniciarProceso()"><span aria-hidden="true">+</span> Iniciar nuevo caso</button>
+    <ul class="principios-list" aria-label="Principios del debido proceso">
+      <li><span class="dot dot-vino" aria-hidden="true"></span> Presunción de inocencia</li>
+      <li><span class="dot dot-vino" aria-hidden="true"></span> Derecho a la defensa</li>
+      <li><span class="dot dot-vino" aria-hidden="true"></span> Confidencialidad</li>
+    </ul>
+  </div>`;
+}
+
+// Toggle del asistente panel
+function toggleAsistente(){
+  const panel = $('asistente-panel');
+  const fab = $('asistente-toggle');
+  if (!panel) return;
+  panel.classList.toggle('open');
+  if (fab) fab.classList.toggle('hidden', panel.classList.contains('open'));
 }
 
 function renderProgreso(){
@@ -2517,22 +3212,38 @@ function renderDocumentos(tab){
 
   if (!lista.length){
     cont.innerHTML = `<div class="docs-empty">
-      <div style="opacity:.5; margin-bottom:12px">📋</div>
-      <div>${tab==='completos'?'Aún no hay documentos completados':'Sin documentos en esta categoría'}</div>
+      <span class="docs-empty-icon" aria-hidden="true">📂</span>
+      <p>${tab==='completos'?'Aún no hay documentos completados':'Sin documentos en esta categoría'}</p>
+      <p class="docs-empty-sub">${tab==='completos'?'Aparecerán aquí los documentos que marque como completados.':'Aparecerán aquí cuando el asesor clasifique la situación.'}</p>
     </div>`;
     return;
   }
+
+  // Iconos por categoría
+  const iconMap = {
+    'disciplinario':'⚖️', 'comunicacion':'📨', 'compromiso':'🤝',
+    'sancion':'📜', 'acta_organo_colegiado':'📋', 'remision':'🔁',
+    'informe':'📄', 'resolucion':'🏛️', 'reporte_externo':'🚨',
+    'recurso':'⚖️', 'academico':'📚'
+  };
 
   cont.innerHTML = lista.map(docId => {
     const doc = CATALOGO.catalogo_documentos[docId];
     if (!doc) return '';
     const completo = state.docsCompletos.has(docId);
-    return `<button type="button" class="doc-item ${completo?'completo':''}" onclick="abrirEditorDoc('${docId}')" aria-label="${completo?'Completado: ':''}Editar ${escape(doc.nombre)}">
-      <div class="doc-icon ${completo?'completo':''}" aria-hidden="true">${completo?'✓':'DOC'}</div>
-      <div class="doc-info">
-        <div class="doc-nombre">${escape(doc.nombre)}</div>
-        ${doc.fundamento?`<div class="doc-fundamento"><span aria-hidden="true">📖</span> ${escape(doc.fundamento.slice(0,40))}</div>`:''}
-        <div class="doc-estado ${completo?'completo':''}">${completo?'Completado':`${(doc.campos||[]).length} campos`}</div>
+    const icono = iconMap[doc.categoria] || '📄';
+    const badgeText = completo ? 'COMPLETADO' : (tab === 'opcionales' ? 'OPCIONAL' : 'REQUERIDO');
+    const badgeClass = completo ? 'badge-success' : (tab === 'opcionales' ? 'badge-neutral' : 'badge-vino');
+    return `<button type="button" class="doc-card ${completo?'completo':''}" onclick="abrirEditorDoc('${docId}')" aria-label="${completo?'Completado: ':''}Editar ${escape(doc.nombre)}">
+      <div class="doc-card-header">
+        <span class="doc-card-icon" aria-hidden="true">${completo ? '✓' : icono}</span>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <h3 class="doc-card-nombre">${escape(doc.nombre)}</h3>
+      ${doc.fundamento?`<p class="doc-card-fund">${escape(doc.fundamento)}</p>`:''}
+      <div class="doc-card-foot">
+        <span class="mono" style="color:var(--text-muted)">${(doc.campos||[]).length} campos</span>
+        <span style="color:var(--vino); font-weight:700">Abrir →</span>
       </div>
     </button>`;
   }).join('');
