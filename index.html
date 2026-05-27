@@ -1966,6 +1966,33 @@ input, textarea, select{
 }
 
 /* ============================================================
+   PALETA POR PASO · armoniza con vino+dorado+hueso, contraste AA
+   Cada paso del protocolo recibe un color cíclico (índice mod 8).
+   Tonos terrosos/jewel apagados, evita chocar con estados
+   (rojo vencido / verde completo / vino urgente).
+   ============================================================ */
+:root, [data-theme="editorial"], [data-theme="moderno"]{
+  --paso-c0: #6B1820;  /* vino tinto · idéntico al accent (paso 1) */
+  --paso-c1: #A0522D;  /* terracotta */
+  --paso-c2: #5A7C5B;  /* verde botánico */
+  --paso-c3: #1E3A5F;  /* azul cobalto profundo */
+  --paso-c4: #B8862A;  /* mostaza */
+  --paso-c5: #6B3E5C;  /* ciruela */
+  --paso-c6: #7A8450;  /* oliva */
+  --paso-c7: #3F6184;  /* cobalto suave */
+}
+[data-theme="moderno-oscuro"], [data-theme="oscuro"]{
+  --paso-c0: #E55C6A;
+  --paso-c1: #D17B4F;
+  --paso-c2: #8FB694;
+  --paso-c3: #6A95C3;
+  --paso-c4: #E3B968;
+  --paso-c5: #B07D9A;
+  --paso-c6: #B2BC85;
+  --paso-c7: #87A8C7;
+}
+
+/* ============================================================
    TIMELINE V2 · Pasos del protocolo con documentos integrados
    ============================================================ */
 .timeline-v2{
@@ -2007,25 +2034,31 @@ input, textarea, select{
 .paso-circulo{
   width:40px; height:40px;
   border-radius:50%;
-  background:var(--bg-surface);
-  border:2px solid var(--border);
+  /* Default · usa el color único del paso (cíclico de la paleta) */
+  background:var(--paso-color, var(--vino));
+  border:2px solid var(--paso-color, var(--vino));
+  color:#fff;
   display:flex; align-items:center; justify-content:center;
   font-family:var(--sans); font-weight:800; font-size:var(--fs-md);
-  color:var(--text-muted);
   flex-shrink:0;
   z-index:2;
+  box-shadow:0 2px 6px color-mix(in srgb, var(--paso-color, var(--vino)) 28%, transparent);
 }
+/* Estados especiales tienen prioridad sobre el color del paso */
 .paso-v2.completado .paso-circulo{
   background:var(--success); border-color:var(--success); color:#fff;
+  box-shadow:0 2px 6px rgba(58,107,77,.28);
 }
 .paso-v2.plazo-vencido:not(.completado) .paso-circulo{
   background:var(--danger); border-color:var(--danger); color:#fff;
+  box-shadow:0 2px 6px rgba(185,28,28,.28);
 }
 .paso-v2.plazo-pronto:not(.completado) .paso-circulo{
   background:var(--warning); border-color:var(--warning); color:#fff;
 }
-.paso-v2.urgente:not(.completado) .paso-circulo{
-  background:var(--vino); border-color:var(--vino); color:#fff;
+/* "Urgente" mantiene el color del paso pero con borde adicional vino */
+.paso-v2.urgente:not(.completado):not(.plazo-vencido):not(.plazo-pronto) .paso-circulo{
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--vino) 25%, transparent);
 }
 .paso-check{ font-size:18px; }
 
@@ -2081,21 +2114,40 @@ input, textarea, select{
 .paso-doc-card{
   background:var(--bg-muted);
   border:1px solid var(--border-soft);
+  /* Borde izquierdo grueso del COLOR del paso · refuerza asociación visual */
+  border-left:4px solid var(--paso-color, var(--vino));
   border-radius:var(--radius-lg);
   padding:var(--space-4) var(--space-5);
   transition:all var(--motion-fast) var(--ease-out);
 }
 .paso-doc-card:hover:not(.doc-editor-abierto){
-  border-color:var(--vino);
+  border-color:color-mix(in srgb, var(--paso-color, var(--vino)) 50%, var(--border));
+  border-left-color:var(--paso-color, var(--vino));
 }
 .paso-doc-card.doc-completo{
   background:rgba(58,107,77,.04);
   border-color:rgba(58,107,77,.3);
+  /* Mantiene el color del paso en el borde izquierdo, pero opaco */
+  border-left-color:color-mix(in srgb, var(--paso-color, var(--vino)) 60%, var(--success));
 }
 .paso-doc-card.doc-editor-abierto{
   background:var(--bg-surface);
-  border-color:var(--vino); border-width:1.5px;
-  box-shadow:0 0 0 3px rgba(107,24,32,0.08);
+  border-color:color-mix(in srgb, var(--paso-color, var(--vino)) 70%, var(--border));
+  border-left-width:5px;
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--paso-color, var(--vino)) 12%, transparent);
+}
+
+/* Mini-tag "Paso N" arriba del nombre del documento */
+.paso-doc-tag{
+  display:inline-block;
+  font-family:var(--sans);
+  font-size:var(--fs-xs); font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--paso-color, var(--vino));
+  background:color-mix(in srgb, var(--paso-color, var(--vino)) 10%, transparent);
+  padding:2px 8px; border-radius:var(--radius-full);
+  margin-bottom:4px;
 }
 .paso-doc-card-head{
   display:flex; gap:var(--space-3); align-items:flex-start;
@@ -4496,6 +4548,7 @@ function renderProtocolo(nodo){
             <div class="paso-doc-card-head">
               <span class="paso-doc-icon" aria-hidden="true">${completo?'✓':iconoCateg}</span>
               <div class="paso-doc-info">
+                <span class="paso-doc-tag">Paso ${paso.numero}</span>
                 <h4 class="paso-doc-nombre">${escape(doc.nombre)}</h4>
                 ${doc.fundamento ? `<p class="paso-doc-fundamento">${escape(doc.fundamento)}</p>` : ''}
               </div>
@@ -4513,7 +4566,11 @@ function renderProtocolo(nodo){
           </article>`;
         }).join('');
 
-    html += `<div class="${clases.join(' ')}" data-paso-idx="${i}">
+    // Color único del paso (cíclico cada 8) · refuerza asociación paso ↔ doc
+    const colorIdx = i % 8;
+    const styleAttr = `style="--paso-color: var(--paso-c${colorIdx})"`;
+
+    html += `<div class="${clases.join(' ')}" data-paso-idx="${i}" ${styleAttr}>
       <div class="paso-rail">
         <div class="paso-circulo">
           ${completado ? '<span class="paso-check">✓</span>' : `<span class="paso-num">${paso.numero}</span>`}
