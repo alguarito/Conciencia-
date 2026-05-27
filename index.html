@@ -732,13 +732,7 @@ input, textarea, select{font-family:inherit; color:inherit}
   display:flex; padding:0 16px; border-bottom:1px solid var(--gris-papel);
   background:var(--hueso-osc); overflow-x:auto;
 }
-.docs-tab{
-  padding:10px 14px; font-size:var(--fs-sm); font-family:var(--mono); letter-spacing:.5px;
-  color:var(--tinta-suave); border-bottom:2px solid transparent;
-  cursor:pointer; transition:all .15s; white-space:nowrap; text-transform:uppercase;
-}
-.docs-tab:hover{color:var(--tinta)}
-.docs-tab.active{color:var(--vino); border-bottom-color:var(--vino); font-weight:600}
+/* .docs-tab estilos legacy ELIMINADOS · ahora se definen en bloque Bento al final */
 .docs-list{padding:14px 16px; display:flex; flex-direction:column; gap:8px}
 .doc-item{
   border:1px solid var(--gris-papel); background:var(--hueso); padding:12px 14px;
@@ -2222,11 +2216,71 @@ body{
 .text-dorado{ color:var(--dorado); }
 .text-dorado-warm{ color:var(--dorado-warm); }
 .mono{ font-family:var(--mono); }
+/* Versalitas robustas · uppercase + tracking simula small caps para todas las fuentes */
 .versalitas{
-  font-variant-caps:all-small-caps;
-  letter-spacing:.06em; font-weight:600;
-  font-size:var(--fs-sm); color:var(--vino);
+  text-transform:uppercase !important;
+  letter-spacing:.08em !important;
+  font-weight:700 !important;
+  font-size:var(--fs-xs) !important;
+  font-family:var(--sans) !important;
+  color:var(--vino);
   margin:0;
+  /* Si la fuente soporta versalitas reales, usarlas */
+  font-variant-caps:all-small-caps;
+  font-feature-settings:"smcp" 1, "c2sc" 1;
+}
+.versalitas.text-dorado, p.versalitas.text-dorado{ color:var(--dorado) !important; }
+.versalitas.text-dorado-warm{ color:var(--dorado-warm) !important; }
+
+/* Fix tabs del expediente · asegurar consistencia y pill activa correcta */
+.docs-tabs{
+  display:inline-flex !important;
+  padding:4px !important;
+  background:var(--bg-muted) !important;
+  border-radius:var(--radius-full) !important;
+  gap:2px !important;
+  border:1px solid var(--border-soft);
+}
+.docs-tab{
+  padding:7px 16px !important;
+  border-radius:var(--radius-full) !important;
+  background:transparent !important;
+  border:none !important;
+  cursor:pointer !important;
+  font-family:var(--sans) !important;
+  font-weight:600 !important;
+  font-size:var(--fs-sm) !important;
+  color:var(--text-muted) !important;
+  letter-spacing:-0.01em !important;
+  text-transform:none !important;
+  font-variant-caps:normal !important;
+  transition:all var(--motion-fast) !important;
+  min-height:32px !important;
+  line-height:1.2 !important;
+}
+.docs-tab:hover{ color:var(--text) !important; }
+.docs-tab.active{
+  background:var(--bg-surface) !important;
+  color:var(--vino) !important;
+  box-shadow:var(--shadow-sm) !important;
+  border-bottom:none !important;
+}
+
+/* Reset agresivo de clases legacy que sobreviven y rompen el bento */
+.col-tag, .col-tag-num, .col-title, .col-sub, .col-header, .col-content,
+.caso-info, .caso-id, .caso-titulo, .caso-estudiante, .caso-progreso, .caso-progreso-bar,
+.caso-progreso-texto, .ruta-empty, .ruta-empty-icon, .principios-footer,
+.principio-chip, .principio-chip-dot, .modo-badge .modo-dot{
+  all:unset !important;
+}
+.column, .app > .column{ all:unset !important; display:block !important; }
+.divider{ display:none !important; }
+
+/* Re-aplicar el modo-dot que sí queremos en el badge */
+.modo-badge .modo-dot{
+  display:inline-block !important;
+  width:6px; height:6px; border-radius:50% !important;
+  background:var(--success) !important;
 }
 </style>
 <link rel="manifest" href="manifest.webmanifest">
