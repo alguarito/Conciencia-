@@ -3286,6 +3286,32 @@ body{
         </div>
       </div>
 
+      <!-- ===== Sección: Notificaciones de plazos ===== -->
+      <div class="config-section">
+        <div class="config-section-head">
+          <p class="versalitas text-vino">Notificaciones · alarmas de plazos</p>
+          <label class="toggle-switch">
+            <input type="checkbox" id="notif-toggle" onchange="toggleNotificaciones()">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            <span class="toggle-label" id="notif-toggle-label">Desactivadas</span>
+          </label>
+        </div>
+        <p class="campo-help">
+          Reciba alertas del navegador cuando un paso obligatorio del Manual esté <strong>vencido</strong> o
+          <strong>por vencer</strong> en cualquiera de sus casos abiertos. Funcionan aunque la pestaña esté
+          en segundo plano · sin servidor · sin costo. Una misma alarma no se repite en menos de 24 h.
+        </p>
+        <p class="campo-help" id="notif-status" style="margin-top:var(--space-2); font-weight:500"></p>
+        <div style="display:flex; gap:var(--space-2); margin-top:var(--space-3)">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="verificarAlarmasYNotificar()">
+            Probar ahora
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm" onclick="limpiarHistorialNotifManual()">
+            Re-mostrar todas las alarmas
+          </button>
+        </div>
+      </div>
+
       <!-- ===== Sección: Modo de operación IA ===== -->
       <div class="config-section">
         <div class="config-section-head">
@@ -5060,6 +5086,9 @@ function abrirConfig(){
   // Cargar valores actuales en el formulario
   $('input-funcionario').value = state.funcionario || '';
   $('select-cargo').value = state.cargo || 'Docente';
+  // Notificaciones: refrescar UI (permiso puede haber cambiado externamente)
+  notifState.permisoConcedido = (typeof Notification !== 'undefined') && Notification.permission === 'granted';
+  actualizarUIToggleNotif();
   // IA: cargar estado
   $('ia-enabled-toggle').checked = iaState.enabled;
   $('ia-toggle-label').textContent = iaState.enabled ? 'Activado' : 'Desactivado';
@@ -5597,6 +5626,250 @@ document.addEventListener('input', e => {
     renderListaCasos();
   }
 });
+
+// ============================================================
+// NOTIFICACIONES DEL NAVEGADOR · Fase D
+// Usa Notification API + Service Worker para alertar al docente
+// sobre plazos vencidos o por vencer. Funciona sin servidor.
+// ============================================================
+const NOTIF_STORAGE_KEY = 'conciencia:notif:v1';
+const NOTIF_HISTORIAL_KEY = 'conciencia:notif:historial:v1';
+const NOTIF_INTERVALO_MS = 5 * 60 * 1000;   // chequear cada 5 minutos
+const NOTIF_REPETIR_HORAS = 24;             // no repetir la misma alarma en <24h
+
+let _cronNotifTimer = null;
+
+const notifState = {
+  habilitado: false,        // toggle del usuario en Configuración
+  permisoConcedido: false   // Notification.permission === 'granted'
+};
+
+function cargarConfigNotif(){
+  try {
+    const raw = localStorage.getItem(NOTIF_STORAGE_KEY);
+    if (raw){
+      const s = JSON.parse(raw);
+      notifState.habilitado = !!s.habilitado;
+    }
+    notifState.permisoConcedido = (typeof Notification !== 'undefined') && Notification.permission === 'granted';
+  } catch(e){}
+}
+function guardarConfigNotif(){
+  try { localStorage.setItem(NOTIF_STORAGE_KEY, JSON.stringify({ habilitado: notifState.habilitado })); }
+  catch(e){}
+}
+cargarConfigNotif();
+
+// Historial · cuándo se notificó por última vez cada alarma
+// Estructura: { 'casoId|pasoIdx|tipo': timestampMs }
+function leerHistorialNotif(){
+  try { return JSON.parse(localStorage.getItem(NOTIF_HISTORIAL_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function guardarHistorialNotif(h){
+  try { localStorage.setItem(NOTIF_HISTORIAL_KEY, JSON.stringify(h)); } catch(e){}
+}
+
+// ============================================================
+// Permiso · pide al navegador autorización para notificar
+// ============================================================
+async function solicitarPermisoNotificaciones(){
+  if (!('Notification' in window)){
+    mostrarToastIA('Este navegador no soporta notificaciones', 'error');
+    return false;
+  }
+  if (Notification.permission === 'granted'){
+    notifState.permisoConcedido = true;
+    return true;
+  }
+  if (Notification.permission === 'denied'){
+    mostrarToastIA('Notificaciones bloqueadas · habilítelas en Ajustes del navegador', 'error');
+    return false;
+  }
+  try {
+    const resultado = await Notification.requestPermission();
+    notifState.permisoConcedido = resultado === 'granted';
+    return notifState.permisoConcedido;
+  } catch(e){
+    console.warn('Error al pedir permiso de notificaciones:', e);
+    return false;
+  }
+}
+
+// ============================================================
+// Disparar una notificación · usa SW si disponible (más robusto)
+// ============================================================
+async function mostrarNotificacionNavegador({ titulo, body, tag, casoId, urgencia = 'normal' }){
+  if (!notifState.permisoConcedido) return;
+  const opts = {
+    body,
+    icon: 'icons/LOGOSMJ.png',
+    badge: 'icons/icon-192.png',
+    tag: tag || ('conciencia-' + Date.now()),
+    requireInteraction: urgencia === 'alta',  // alarmas vencidas requieren click
+    data: { casoId, urgencia, ts: Date.now() }
+  };
+  try {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.ready){
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification(titulo, opts);
+    } else {
+      new Notification(titulo, opts);
+    }
+  } catch(e){
+    console.warn('No se pudo mostrar notificación:', e);
+  }
+}
+
+// ============================================================
+// Verificar todos los casos y disparar notifications
+// Reglas:
+//   - Solo casos abiertos o en-espera (no cerrados)
+//   - Por cada paso obligatorio: si está vencido → notif urgente
+//     si está pronto a vencer (≤1 día) → notif normal
+//   - Una alarma se repite solo 1 vez cada 24h (key en historial)
+// ============================================================
+function verificarAlarmasYNotificar(){
+  if (!notifState.habilitado || !notifState.permisoConcedido) return;
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+  const historial = leerHistorialNotif();
+  const ahora = Date.now();
+  const ventana = NOTIF_REPETIR_HORAS * 3600 * 1000;
+  let nuevasNotifs = 0;
+
+  (state.casos || []).forEach(caso => {
+    const estado = caso.estado || 'abierto';
+    if (estado === 'cerrado') return;
+
+    const pasos = caso.rutaPasos || [];
+    const completados = new Set(caso.pasosCompletados || []);
+    const nombreEstudiante = caso.estudianteNombre || 'Estudiante';
+
+    pasos.forEach((paso, idx) => {
+      if (completados.has(idx)) return;
+      if (!paso.plazo_dias) return;
+      if (paso.obligatorio === false) return;
+
+      const plazo = calcularPlazoPaso(paso, caso.fechaApertura);
+      if (plazo.estadoPlazo !== 'rojo' && plazo.estadoPlazo !== 'amarillo') return;
+
+      // Una alarma por (caso, paso, estadoPlazo) cada 24h
+      const key = `${caso.id}|${idx}|${plazo.estadoPlazo}`;
+      const ultimaVez = historial[key];
+      if (ultimaVez && (ahora - ultimaVez) < ventana) return;
+
+      // Construir título y mensaje
+      let titulo, body;
+      if (plazo.estadoPlazo === 'rojo'){
+        const diasVencido = Math.abs(plazo.diasRestantes);
+        titulo = `⚠️ Plazo vencido · ${caso.id}`;
+        body = `${nombreEstudiante}: "${paso.titulo}" venció hace ${diasVencido} día${diasVencido>1?'s':''}.`;
+      } else {
+        const dias = plazo.diasRestantes;
+        titulo = `🟡 Próximo a vencer · ${caso.id}`;
+        body = `${nombreEstudiante}: "${paso.titulo}" ${dias === 0 ? 'vence hoy' : dias === 1 ? 'vence mañana' : 'vence en ' + dias + ' días'}.`;
+      }
+      mostrarNotificacionNavegador({
+        titulo, body,
+        tag: 'conciencia-' + caso.id + '-' + idx,
+        casoId: caso.id,
+        urgencia: plazo.estadoPlazo === 'rojo' ? 'alta' : 'normal'
+      });
+      historial[key] = ahora;
+      nuevasNotifs++;
+    });
+  });
+
+  if (nuevasNotifs > 0){
+    guardarHistorialNotif(historial);
+    console.log(`🔔 ${nuevasNotifs} notificación(es) de plazo disparadas`);
+  }
+}
+
+// ============================================================
+// Cron periódico · solo activo con app abierta
+// ============================================================
+function iniciarCronNotificaciones(){
+  detenerCronNotificaciones();
+  if (!notifState.habilitado || !notifState.permisoConcedido) return;
+  _cronNotifTimer = setInterval(verificarAlarmasYNotificar, NOTIF_INTERVALO_MS);
+}
+function detenerCronNotificaciones(){
+  if (_cronNotifTimer){
+    clearInterval(_cronNotifTimer);
+    _cronNotifTimer = null;
+  }
+}
+
+// ============================================================
+// Toggle desde la UI · pide permiso si hace falta
+// ============================================================
+async function toggleNotificaciones(){
+  if (notifState.habilitado){
+    // Apagar
+    notifState.habilitado = false;
+    guardarConfigNotif();
+    detenerCronNotificaciones();
+    mostrarToastIA('Notificaciones desactivadas', 'info');
+    actualizarUIToggleNotif();
+    return;
+  }
+  // Encender · pedir permiso si hace falta
+  const ok = await solicitarPermisoNotificaciones();
+  if (!ok){
+    actualizarUIToggleNotif();
+    return;
+  }
+  notifState.habilitado = true;
+  guardarConfigNotif();
+  iniciarCronNotificaciones();
+  // Verificación inmediata
+  verificarAlarmasYNotificar();
+  // Notif de confirmación
+  mostrarNotificacionNavegador({
+    titulo: 'Notificaciones activadas',
+    body: 'Le avisaré aquí cuando un caso tenga pasos vencidos o por vencer.',
+    tag: 'conciencia-bienvenida'
+  });
+  mostrarToastIA('Notificaciones activadas · le avisaremos sobre plazos', 'info');
+  actualizarUIToggleNotif();
+}
+
+function actualizarUIToggleNotif(){
+  const toggle = document.getElementById('notif-toggle');
+  const label  = document.getElementById('notif-toggle-label');
+  const status = document.getElementById('notif-status');
+  if (toggle) toggle.checked = notifState.habilitado;
+  if (label)  label.textContent = notifState.habilitado ? 'Activadas' : 'Desactivadas';
+  if (status){
+    const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+    let texto = '';
+    if (perm === 'unsupported') texto = '⚠️ Su navegador no soporta notificaciones.';
+    else if (perm === 'denied') texto = '⚠️ Notificaciones bloqueadas · revise los ajustes del navegador y permita notificaciones para este sitio.';
+    else if (perm === 'granted' && notifState.habilitado) texto = '✓ Activas · le avisaremos sobre plazos vencidos o por vencer (mínimo 24 h entre repeticiones).';
+    else if (perm === 'granted') texto = 'Permiso concedido. Active el toggle arriba para empezar a recibir alertas.';
+    else texto = 'Al activar el toggle se le pedirá permiso al navegador.';
+    status.textContent = texto;
+  }
+}
+
+// Escuchar mensajes del Service Worker (notificationclick → abrir caso)
+if ('serviceWorker' in navigator){
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data?.action === 'abrir-caso' && event.data.casoId){
+      if (typeof abrirCaso === 'function') abrirCaso(event.data.casoId);
+    }
+  });
+}
+
+// Botón "Re-mostrar todas las alarmas" · borra el historial y dispara verif
+function limpiarHistorialNotifManual(){
+  if (!confirm('¿Limpiar historial de notificaciones?\nSe volverán a mostrar las alarmas activas como si fuera la primera vez.')) return;
+  try { localStorage.removeItem(NOTIF_HISTORIAL_KEY); } catch(e){}
+  mostrarToastIA('Historial limpiado', 'info');
+  verificarAlarmasYNotificar();
+}
 
 function aplicarSugerenciaIA(nodoId){
   cerrarModal('modal-clasificador-ia');
@@ -6864,6 +7137,25 @@ window.addEventListener('load', () => {
       window._saveTimer = setTimeout(guardarEstado, 800);
     }
   });
+
+  // Fase D · Notificaciones · arranque del cron + verificación inicial
+  if (notifState.habilitado && notifState.permisoConcedido){
+    console.log('🔔 Notificaciones activas · iniciando cron');
+    // Pequeño delay para que la UI inicial termine de pintarse
+    setTimeout(() => {
+      verificarAlarmasYNotificar();
+      iniciarCronNotificaciones();
+    }, 1500);
+  }
+  // Soporte para abrir un caso específico desde el query param (cuando el SW
+  // abre la ventana tras un notificationclick: ?caso=CASO-XXXX)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const casoParam = params.get('caso');
+    if (casoParam && state.casos.find(c => c.id === casoParam)){
+      setTimeout(() => abrirCaso(casoParam), 2000);
+    }
+  } catch(e){}
 });
 
 // ============================================================

@@ -1,9 +1,9 @@
-// === ConciencIA Service Worker v2.1.0-redesign ===
+// === ConciencIA Service Worker v3.0.0-multicaso-notif ===
 // Estrategia: Network-first para index.html (siempre fresco),
-// cache-first para assets estáticos (offline funcional).
-// Build: 2026-05-26 · Rediseño Bento Jurídico
+// cache-first para assets estáticos. Notificaciones locales.
+// Build: 2026-05-27 · Multi-caso + Fase D notificaciones
 
-const CACHE_NAME = 'conciencia-v2.1.0-redesign-20260526';
+const CACHE_NAME = 'conciencia-v3.0.0-notif-20260527';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -110,4 +110,39 @@ self.addEventListener('message', (event) => {
   if (event.data?.action === 'skipWaiting') {
     self.skipWaiting();
   }
+});
+
+// ============================================================
+// NOTIFICACIONES · Fase D
+// Click en una notificación enfoca la pestaña existente de ConciencIA
+// (o la abre si está cerrada). Si la notificación tiene un casoId,
+// la app lo abre automáticamente al recibir el mensaje.
+// ============================================================
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const casoId = event.notification.data?.casoId;
+  const targetUrl = self.registration.scope; // root del scope (app)
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientes) => {
+      // Buscar una pestaña existente de la app
+      for (const client of clientes) {
+        if (client.url.startsWith(targetUrl)) {
+          // Avisarle a la pestaña que se abra el caso (si aplica)
+          if (casoId) client.postMessage({ action: 'abrir-caso', casoId });
+          return client.focus();
+        }
+      }
+      // No hay pestaña abierta · abrir una nueva
+      if (self.clients.openWindow) {
+        const url = casoId ? targetUrl + '?caso=' + encodeURIComponent(casoId) : targetUrl;
+        return self.clients.openWindow(url);
+      }
+    })
+  );
+});
+
+// Telemetría opcional · cuando el usuario cierra la notificación sin click
+self.addEventListener('notificationclose', (event) => {
+  // En el futuro: contar dismisses para no spammear al docente
 });
