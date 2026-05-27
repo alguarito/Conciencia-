@@ -1904,26 +1904,36 @@ body{
   line-height:1.5; margin-top:var(--space-2);
 }
 
-/* ===== Progreso card ===== */
+/* ===== Progreso card · fondo vino tinto gradient (override agresivo) ===== */
 .progreso-card{
-  background:linear-gradient(135deg, var(--vino-dark) 0%, var(--vino) 100%);
-  color:#fff; border:none;
-  padding:var(--space-6) var(--space-7);
+  background:linear-gradient(135deg, var(--vino-dark, #5A1318) 0%, var(--vino, #6B1820) 100%) !important;
+  color:#fff !important;
+  border:none !important;
+  padding:var(--space-6) var(--space-7) !important;
+  border-radius:var(--radius-xl) !important;
+  box-shadow:0 4px 16px rgba(107,24,32,.18);
 }
 .progreso-card[hidden]{ display:none !important; }
-.progreso-eyebrow{ color:var(--dorado-warm) !important; }
-.progreso-num{
+.progreso-card .versalitas,
+.progreso-card .progreso-eyebrow{
+  color:var(--dorado-warm, #F5C77E) !important;
+}
+.progreso-card .progreso-num{
   font-family:var(--sans); font-weight:800;
   font-size:var(--fs-xl); letter-spacing:-0.01em;
+  color:#fff !important;
   margin:var(--space-2) 0 var(--space-3);
 }
-.progreso-bar{
-  height:6px; background:rgba(255,255,255,.18);
+.progreso-card .progreso-bar{
+  height:6px;
+  background:rgba(255,255,255,.20) !important;
   border-radius:99px; overflow:hidden;
 }
-.progreso-fill{
-  height:100%; background:#fff;
-  border-radius:99px; transition:width 600ms var(--ease-out);
+.progreso-card .progreso-fill{
+  height:100%;
+  background:#fff !important;
+  border-radius:99px;
+  transition:width 600ms var(--ease-out);
 }
 
 /* ===== Árbol central ===== */
