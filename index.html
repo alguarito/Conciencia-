@@ -1965,6 +1965,149 @@ input, textarea, select{
   font-size:var(--fs-base);
 }
 
+/* ============================================================
+   MIS CASOS · Expediente digital institucional
+   ============================================================ */
+.mis-casos-section{
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-xl);
+  padding:var(--space-7) var(--space-8);
+}
+.mis-casos-controles{
+  display:flex; gap:var(--space-3); align-items:center; flex-wrap:wrap;
+}
+.mis-casos-buscador{
+  position:relative;
+  display:flex; align-items:center;
+  background:var(--bg-muted); border:1px solid var(--border-soft);
+  border-radius:var(--radius-full); padding:6px 14px 6px 12px;
+  gap:6px; min-width:260px;
+  transition:border-color var(--motion-fast);
+}
+.mis-casos-buscador:focus-within{ border-color:var(--vino); }
+.mis-casos-buscador input{
+  background:transparent; border:none; outline:none;
+  font:inherit; flex:1; padding:4px 0;
+  color:var(--text); font-size:var(--fs-sm);
+}
+.mis-casos-filtros{
+  display:inline-flex; padding:4px;
+  background:var(--bg-muted);
+  border-radius:var(--radius-full); gap:2px;
+}
+
+#mis-casos-alarma-banner{ margin:var(--space-4) 0; }
+.mis-casos-banner{
+  padding:var(--space-3) var(--space-5);
+  border-radius:var(--radius-lg);
+  font-size:var(--fs-sm); line-height:1.5;
+}
+.banner-vencido{ background:var(--danger-soft); color:var(--danger); border:1px solid var(--danger); }
+.banner-pronto { background:var(--warning-soft); color:var(--warning); border:1px solid var(--warning); }
+.banner-ok     { background:var(--success-soft); color:var(--success); border:1px solid var(--success); }
+
+.mis-casos-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+  gap:var(--space-4);
+}
+.mis-casos-empty{
+  grid-column:1/-1; text-align:center;
+  padding:var(--space-8); color:var(--text-muted);
+}
+
+/* Card de cada caso */
+.mis-caso-card{
+  display:flex; flex-direction:column; gap:var(--space-3);
+  padding:var(--space-5);
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  transition:all var(--motion-fast) var(--ease-out);
+}
+.mis-caso-card:hover{
+  border-color:var(--vino); transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+}
+.mis-caso-card.activo{
+  border-color:var(--vino); border-width:1.5px;
+  box-shadow:0 0 0 3px rgba(107,24,32,.10);
+}
+.mis-caso-card.tiene-vencidos{
+  border-color:var(--danger);
+  box-shadow:0 0 0 3px rgba(185,28,28,.08);
+}
+
+.mis-caso-head{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:var(--space-3);
+}
+.mis-caso-id{
+  font-size:var(--fs-xs); color:var(--text-muted);
+  margin:0 0 4px;
+}
+.mis-caso-nombre{
+  font-family:var(--sans); font-weight:700;
+  font-size:var(--fs-lg); letter-spacing:-0.015em;
+  margin:0; line-height:1.2;
+  color:var(--text);
+}
+.mis-caso-meta{
+  font-size:var(--fs-sm); color:var(--text-muted);
+  margin:2px 0 0;
+}
+
+.caso-alarma{
+  padding:var(--space-2) var(--space-3);
+  border-radius:var(--radius-md);
+  font-size:var(--fs-sm);
+}
+.caso-alarma.rojo    { background:var(--danger-soft); color:var(--danger); }
+.caso-alarma.amarillo{ background:var(--warning-soft); color:var(--warning); }
+
+.mis-caso-progreso{
+  font-size:var(--fs-sm); color:var(--text-muted);
+}
+.mis-caso-progreso-info{
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:6px;
+}
+.mis-caso-progreso-info strong{ color:var(--text); }
+.mini-bar{
+  height:5px; background:var(--bg-muted);
+  border-radius:99px; overflow:hidden;
+}
+.mini-bar-fill{
+  height:100%; background:var(--vino);
+  border-radius:99px; transition:width 400ms var(--ease-out);
+}
+
+.caso-proximo{
+  padding:var(--space-3); background:var(--bg-muted);
+  border-radius:var(--radius-md); border-left:3px solid var(--dorado);
+}
+.caso-proximo p{
+  margin:4px 0 6px; font-size:var(--fs-sm); font-weight:600;
+  color:var(--text);
+}
+.caso-vence{
+  display:inline-block;
+  font-size:var(--fs-xs); font-weight:600;
+  padding:3px 8px; border-radius:99px;
+}
+.vence-verde   { background:rgba(58,107,77,.10); color:var(--success); }
+.vence-amarillo{ background:var(--warning-soft); color:var(--warning); }
+.vence-rojo    { background:var(--danger-soft); color:var(--danger); }
+.vence-sinplazo{ background:var(--bg-muted); color:var(--text-muted); }
+
+.mis-caso-actions{
+  display:flex; gap:var(--space-2); flex-wrap:wrap;
+  padding-top:var(--space-3);
+  border-top:1px solid var(--border-soft);
+}
+.mis-caso-actions .btn{ font-size:var(--fs-sm); padding:6px 12px; min-height:32px; }
+.mis-caso-actions .danger-hover:hover{ background:var(--danger-soft); color:var(--danger); }
+
 /* Fallback de clasificación · respuesta no estructurada */
 .clasif-ia-fallback{
   padding:var(--space-5);
@@ -2848,6 +2991,32 @@ body{
     </div>
   </section>
 
+  <!-- MIS CASOS · expediente digital de la institución -->
+  <section class="mis-casos-section" id="mis-casos-section" hidden>
+    <header class="section-header">
+      <div>
+        <p class="versalitas text-dorado">Mis casos</p>
+        <h2 class="section-title">Expediente institucional</h2>
+      </div>
+      <div class="mis-casos-controles">
+        <div class="mis-casos-buscador">
+          <span aria-hidden="true">🔎</span>
+          <input id="mis-casos-busqueda" type="search" placeholder="Buscar por estudiante o N.º de caso…" aria-label="Buscar caso">
+        </div>
+        <div class="mis-casos-filtros" role="tablist" aria-label="Filtrar casos">
+          <button type="button" class="docs-tab active" data-filtro="todos"     role="tab" aria-selected="true">Todos</button>
+          <button type="button" class="docs-tab"        data-filtro="abierto"   role="tab" aria-selected="false">Abiertos</button>
+          <button type="button" class="docs-tab"        data-filtro="en-espera" role="tab" aria-selected="false">En espera</button>
+          <button type="button" class="docs-tab"        data-filtro="cerrado"   role="tab" aria-selected="false">Cerrados</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="mis-casos-alarma-banner"></div>
+
+    <div id="mis-casos-grid" class="mis-casos-grid"></div>
+  </section>
+
   <!-- BENTO 1: Caso activo + métricas + progreso -->
   <section class="bento-grid">
 
@@ -3347,6 +3516,14 @@ const CATALOGO = {"$schema":"http://json-schema.org/draft-07/schema#","version":
 
 // === ESTADO GLOBAL ===
 const state = {
+  // === Multi-caso v3 ===
+  // casos[] guarda TODOS los expedientes; el caso activo se "carga" al
+  // buffer (caso, rutaPasos, etc.) para que las 50 referencias existentes
+  // sigan funcionando sin cambios. Al cambiar de caso se sincroniza.
+  casos: [],
+  casoActivoId: null,
+
+  // === Buffer del caso activo (espejo del item de casos[]) ===
   caso: null,
   rutaPasos: [],
   nodoActual: null,
@@ -3367,57 +3544,197 @@ const $ = id => document.getElementById(id);
 const escape = s => String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // ============================================================
-// UX-003 · Persistencia local del caso activo (no envía a servidor)
+// UX-003 · Persistencia local · Sistema multi-caso v3
 // Cumple Ley 1581 de 2012 (datos solo en navegador del usuario)
 // ============================================================
-const STORAGE_KEY = 'conciencia:state:v2';
+const STORAGE_KEY = 'conciencia:state:v2';                    // legacy single-caso
+const CASOS_STORAGE_KEY = 'conciencia:casos:v3';              // array de expedientes
+const CASO_ACTIVO_STORAGE_KEY = 'conciencia:caso-activo:v3';  // id del caso en edición
+const CONFIG_STORAGE_KEY = 'conciencia:config:v3';            // funcionario, cargo, etc
 
+// ─── Sincronización buffer ↔ array ──────────────────────────
+// Copia el buffer (state.caso, state.rutaPasos, etc.) al item del array
+function sincronizarBufferACaso(){
+  if (!state.casoActivoId) return;
+  const idx = state.casos.findIndex(c => c.id === state.casoActivoId);
+  if (idx < 0) return;
+  state.casos[idx] = {
+    ...state.casos[idx],
+    ...(state.caso || {}),
+    rutaPasos: state.rutaPasos || [],
+    nodoActual: state.nodoActual,
+    protocoloActual: state.protocoloActual,
+    clasificacion: state.clasificacion,
+    docsValores: state.docsValores || {},
+    docsCompletos: [...(state.docsCompletos || [])],
+    pasosCompletados: [...(state.pasosCompletados || [])],
+    historialNodos: state.historialNodos || [],
+    ultimoUpdate: new Date().toISOString()
+  };
+}
+
+// Copia un caso del array al buffer (lo "abre" en edición)
+function sincronizarCasoABuffer(id){
+  const c = state.casos.find(c => c.id === id);
+  if (!c) return false;
+  state.casoActivoId = id;
+  // El "caso" en sí (datos del estudiante) sin los campos de proceso
+  const { rutaPasos, nodoActual, protocoloActual, clasificacion,
+          docsValores, docsCompletos, pasosCompletados, historialNodos,
+          estado, ultimoUpdate, ...datosCaso } = c;
+  state.caso = datosCaso;
+  state.rutaPasos = rutaPasos || [];
+  state.nodoActual = nodoActual;
+  state.protocoloActual = protocoloActual;
+  state.clasificacion = clasificacion;
+  state.docsValores = docsValores || {};
+  state.docsCompletos = new Set(docsCompletos || []);
+  state.pasosCompletados = new Set(pasosCompletados || []);
+  state.historialNodos = historialNodos || [];
+  return true;
+}
+
+// Limpia el buffer (cuando no hay caso activo)
+function limpiarBuffer(){
+  state.casoActivoId = null;
+  state.caso = null;
+  state.rutaPasos = [];
+  state.nodoActual = null;
+  state.protocoloActual = null;
+  state.clasificacion = null;
+  state.docsValores = {};
+  state.docsCompletos = new Set();
+  state.pasosCompletados = new Set();
+  state.historialNodos = [];
+}
+
+// ─── API pública multi-caso ─────────────────────────────────
+function abrirCaso(id){
+  sincronizarBufferACaso();      // guardar el actual primero
+  if (!sincronizarCasoABuffer(id)) return false;
+  guardarEstado();
+  renderColumnaRuta();
+  if (state.protocoloActual){
+    const nodoProto = ARBOL.nodos[state.protocoloActual];
+    if (nodoProto) cargarDocumentosDelProtocolo(nodoProto);
+  } else {
+    renderDocumentos('requeridos');
+  }
+  if (typeof renderListaCasos === 'function') renderListaCasos();
+  return true;
+}
+
+function cerrarVistaCaso(){
+  sincronizarBufferACaso();
+  limpiarBuffer();
+  guardarEstado();
+  renderColumnaRuta();
+  renderDocumentos('requeridos');
+  if (typeof renderListaCasos === 'function') renderListaCasos();
+}
+
+function eliminarCaso(id){
+  state.casos = state.casos.filter(c => c.id !== id);
+  if (state.casoActivoId === id) limpiarBuffer();
+  guardarEstado();
+  if (typeof renderListaCasos === 'function') renderListaCasos();
+  renderColumnaRuta();
+}
+
+function cambiarEstadoCasoArray(id, nuevoEstado){
+  const c = state.casos.find(c => c.id === id);
+  if (!c) return;
+  c.estado = nuevoEstado;
+  c.ultimoUpdate = new Date().toISOString();
+  guardarEstado();
+  if (typeof renderListaCasos === 'function') renderListaCasos();
+  if (id === state.casoActivoId) renderColumnaRuta();
+}
+
+// ─── Persistencia ───────────────────────────────────────────
 function guardarEstado(){
-  if (!state.caso) return; // solo persistir cuando hay caso activo
   try {
-    const snapshot = {
-      caso: state.caso,
-      rutaPasos: state.rutaPasos,
-      nodoActual: state.nodoActual,
-      protocoloActual: state.protocoloActual,
-      clasificacion: state.clasificacion,
-      docsValores: state.docsValores,
-      docsCompletos: [...state.docsCompletos],
-      pasosCompletados: [...state.pasosCompletados],
-      historialNodos: state.historialNodos || [],
+    sincronizarBufferACaso();
+    localStorage.setItem(CASOS_STORAGE_KEY, JSON.stringify(state.casos));
+    if (state.casoActivoId){
+      localStorage.setItem(CASO_ACTIVO_STORAGE_KEY, state.casoActivoId);
+    } else {
+      localStorage.removeItem(CASO_ACTIVO_STORAGE_KEY);
+    }
+    localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify({
       funcionario: state.funcionario,
-      cargo: state.cargo,
-      savedAt: new Date().toISOString()
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-  } catch(e){ console.warn('No se pudo guardar:', e); }
+      cargo: state.cargo
+    }));
+  } catch(e){ console.warn('No se pudo guardar estado multi-caso:', e); }
 }
 
 function restaurarEstado(){
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return false;
-    const s = JSON.parse(raw);
-    if (!s || !s.caso) return false;
-    Object.assign(state, {
-      caso: s.caso,
-      rutaPasos: s.rutaPasos || [],
-      nodoActual: s.nodoActual,
-      protocoloActual: s.protocoloActual,
-      clasificacion: s.clasificacion,
-      docsValores: s.docsValores || {},
-      docsCompletos: new Set(s.docsCompletos || []),
-      pasosCompletados: new Set(s.pasosCompletados || []),
-      historialNodos: s.historialNodos || [],
-      funcionario: s.funcionario || state.funcionario,
-      cargo: s.cargo || state.cargo
-    });
-    return true;
+    // Restaurar config global
+    const cfgRaw = localStorage.getItem(CONFIG_STORAGE_KEY);
+    if (cfgRaw){
+      const cfg = JSON.parse(cfgRaw);
+      state.funcionario = cfg.funcionario || state.funcionario;
+      state.cargo = cfg.cargo || state.cargo;
+    }
+
+    // Migración del esquema viejo v2 (single caso) al nuevo v3 (array)
+    if (!localStorage.getItem(CASOS_STORAGE_KEY)){
+      const oldRaw = localStorage.getItem(STORAGE_KEY);
+      if (oldRaw){
+        try {
+          const old = JSON.parse(oldRaw);
+          if (old.caso && old.caso.id){
+            const migrado = {
+              ...old.caso,
+              estado: 'abierto',
+              rutaPasos: old.rutaPasos || [],
+              nodoActual: old.nodoActual,
+              protocoloActual: old.protocoloActual,
+              clasificacion: old.clasificacion,
+              docsValores: old.docsValores || {},
+              docsCompletos: old.docsCompletos || [],
+              pasosCompletados: old.pasosCompletados || [],
+              historialNodos: old.historialNodos || [],
+              ultimoUpdate: old.savedAt || new Date().toISOString(),
+              fechaApertura: old.caso.fechaApertura || old.savedAt?.slice(0,10) || new Date().toISOString().slice(0,10)
+            };
+            state.casos = [migrado];
+            state.casoActivoId = migrado.id;
+            console.log('✅ Caso v2 migrado al sistema multi-caso v3');
+            // Persistir migración y borrar el viejo
+            localStorage.setItem(CASOS_STORAGE_KEY, JSON.stringify(state.casos));
+            localStorage.setItem(CASO_ACTIVO_STORAGE_KEY, migrado.id);
+            localStorage.removeItem(STORAGE_KEY);
+            sincronizarCasoABuffer(migrado.id);
+            if (old.funcionario) state.funcionario = old.funcionario;
+            if (old.cargo) state.cargo = old.cargo;
+            return true;
+          }
+        } catch(e){ console.warn('Migración v2→v3 falló:', e); }
+      }
+    }
+
+    // Carga normal v3
+    const raw = localStorage.getItem(CASOS_STORAGE_KEY);
+    if (raw){
+      state.casos = JSON.parse(raw) || [];
+    }
+    const activoId = localStorage.getItem(CASO_ACTIVO_STORAGE_KEY);
+    if (activoId && state.casos.find(c => c.id === activoId)){
+      sincronizarCasoABuffer(activoId);
+      return true;
+    }
+    return false;
   } catch(e){ console.warn('No se pudo restaurar:', e); return false; }
 }
 
 function limpiarEstadoPersistido(){
-  try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(CASOS_STORAGE_KEY);
+    localStorage.removeItem(CASO_ACTIVO_STORAGE_KEY);
+  } catch(e){}
 }
 
 // Avisar si hay cambios sin guardar al cerrar pestaña
@@ -3526,21 +3843,29 @@ function confirmarIniciarCaso(){
     return;
   }
 
-  // Crear el caso completo (modo nuevo)
-  state.caso = {
+  // Crear el caso completo en el array multi-caso (Fase A v3)
+  // Antes de crear uno nuevo, guardar el que estuviera activo
+  sincronizarBufferACaso();
+  const nuevoCaso = {
     id: generarCasoId(),
     fechaApertura: new Date().toISOString().slice(0,10),
     funcionarioReporta: state.funcionario || 'Docente',
     rolFuncionario: state.cargo || 'Docente',
-    ...datos
+    estado: 'abierto',
+    ultimoUpdate: new Date().toISOString(),
+    ...datos,
+    rutaPasos: [],
+    nodoActual: null,
+    protocoloActual: null,
+    clasificacion: null,
+    docsValores: {},
+    docsCompletos: [],
+    pasosCompletados: [],
+    historialNodos: []
   };
-  state.rutaPasos = [];
-  state.protocoloActual = null;
-  state.clasificacion = null;
-  state.docsValores = {};
-  state.docsCompletos.clear();
-  state.pasosCompletados.clear();
-  state.nodoActual = null;
+  state.casos.push(nuevoCaso);
+  sincronizarCasoABuffer(nuevoCaso.id);
+  guardarEstado();
 
   cerrarModal('modal-iniciar-caso');
   // Mensaje de bienvenida del asistente
@@ -5039,18 +5364,260 @@ Comienza tu respuesta directamente con el carácter { y termina con }.`;
   }
 }
 
+// ============================================================
+// MIS CASOS · Vista de expediente institucional (Fase B + C)
+// ============================================================
+const ESTADO_LABELS = {
+  'abierto':   { txt:'Abierto',   cls:'badge-warning' },
+  'en-espera': { txt:'En espera', cls:'badge-neutral' },
+  'cerrado':   { txt:'Cerrado',   cls:'badge-success' }
+};
+
+const filtroMisCasos = { estado: 'todos', busqueda: '' };
+
+// Fase C · cálculo de plazos por paso
+// Devuelve { fechaLimite (YYYY-MM-DD), diasRestantes (int), estadoPlazo ('verde'|'amarillo'|'rojo'|'sinplazo') }
+function calcularPlazoPaso(paso, fechaApertura){
+  if (!paso.plazo_dias || !fechaApertura){
+    return { fechaLimite:null, diasRestantes:null, estadoPlazo:'sinplazo' };
+  }
+  const apertura = new Date(fechaApertura + 'T00:00:00');
+  const limite   = new Date(apertura);
+  limite.setDate(limite.getDate() + paso.plazo_dias);
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const msPorDia = 86400000;
+  const diasRestantes = Math.ceil((limite - hoy) / msPorDia);
+  let estadoPlazo = 'verde';
+  if (diasRestantes < 0) estadoPlazo = 'rojo';
+  else if (diasRestantes <= Math.max(1, Math.floor(paso.plazo_dias * 0.25))) estadoPlazo = 'amarillo';
+  return {
+    fechaLimite: limite.toISOString().slice(0,10),
+    diasRestantes,
+    estadoPlazo
+  };
+}
+
+// Análisis agregado de un caso · resumen para la card
+function calcularEstadoCaso(c){
+  const pasos = c.rutaPasos || [];
+  const completados = new Set(c.pasosCompletados || []);
+  const total = pasos.length;
+  const completos = pasos.filter((_, i) => completados.has(i)).length;
+  const pct = total ? Math.round((completos/total)*100) : 0;
+
+  // Próximo paso obligatorio pendiente
+  let proximo = null;
+  let pasosVencidos = 0, pasosPronto = 0;
+  for (let i = 0; i < pasos.length; i++){
+    const p = pasos[i];
+    if (completados.has(i)) continue;
+    const plazo = calcularPlazoPaso(p, c.fechaApertura);
+    if (plazo.estadoPlazo === 'rojo')     pasosVencidos++;
+    else if (plazo.estadoPlazo === 'amarillo') pasosPronto++;
+    if (!proximo && p.obligatorio !== false){
+      proximo = { idx: i, paso: p, plazo };
+    }
+  }
+
+  return { total, completos, pct, proximo, pasosVencidos, pasosPronto };
+}
+
+// Resumen global · cuántos casos tienen alarma
+function resumenAlarmasGlobal(){
+  let casosConVencidos = 0, casosConPronto = 0, totalAbiertos = 0;
+  (state.casos || []).forEach(c => {
+    if (c.estado === 'cerrado') return;
+    totalAbiertos++;
+    const r = calcularEstadoCaso(c);
+    if (r.pasosVencidos > 0) casosConVencidos++;
+    else if (r.pasosPronto > 0) casosConPronto++;
+  });
+  return { casosConVencidos, casosConPronto, totalAbiertos };
+}
+
+function renderListaCasos(){
+  const section = document.getElementById('mis-casos-section');
+  const grid    = document.getElementById('mis-casos-grid');
+  const banner  = document.getElementById('mis-casos-alarma-banner');
+  if (!section || !grid) return;
+
+  const casos = state.casos || [];
+  if (!casos.length){
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+
+  // Filtros
+  const q = (filtroMisCasos.busqueda || '').toLowerCase().trim();
+  let visibles = casos.filter(c => {
+    if (filtroMisCasos.estado !== 'todos' && (c.estado || 'abierto') !== filtroMisCasos.estado) return false;
+    if (q){
+      const blob = [c.id, c.estudianteNombre, c.estudianteDocumento, c.estudianteGrado, c.estudianteGrupo, c.acudienteNombre]
+        .filter(Boolean).join(' ').toLowerCase();
+      if (!blob.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Orden: vencidos primero, luego por última actualización descendente
+  visibles.sort((a,b) => {
+    const ra = calcularEstadoCaso(a);
+    const rb = calcularEstadoCaso(b);
+    if (rb.pasosVencidos !== ra.pasosVencidos) return rb.pasosVencidos - ra.pasosVencidos;
+    return (b.ultimoUpdate || '').localeCompare(a.ultimoUpdate || '');
+  });
+
+  // Banner de alarmas
+  const alarmas = resumenAlarmasGlobal();
+  if (banner){
+    if (alarmas.casosConVencidos > 0){
+      banner.innerHTML = `<div class="mis-casos-banner banner-vencido">
+        <strong>⚠️ ${alarmas.casosConVencidos} caso${alarmas.casosConVencidos>1?'s':''} con pasos vencidos.</strong>
+        Atienda lo más pronto posible para evitar consecuencias jurídicas.
+      </div>`;
+    } else if (alarmas.casosConPronto > 0){
+      banner.innerHTML = `<div class="mis-casos-banner banner-pronto">
+        <strong>🟡 ${alarmas.casosConPronto} caso${alarmas.casosConPronto>1?'s':''} con plazos por vencer pronto.</strong>
+      </div>`;
+    } else if (alarmas.totalAbiertos > 0){
+      banner.innerHTML = `<div class="mis-casos-banner banner-ok">
+        <strong>✓ ${alarmas.totalAbiertos} caso${alarmas.totalAbiertos>1?'s':''} en curso, sin alarmas.</strong>
+      </div>`;
+    } else {
+      banner.innerHTML = '';
+    }
+  }
+
+  if (!visibles.length){
+    grid.innerHTML = `<div class="mis-casos-empty">
+      <p>No hay casos que coincidan con el filtro.</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = visibles.map(c => {
+    const r = calcularEstadoCaso(c);
+    const estado = c.estado || 'abierto';
+    const lbl = ESTADO_LABELS[estado] || ESTADO_LABELS.abierto;
+    const esActivo = c.id === state.casoActivoId;
+    const fechaAp = c.fechaApertura
+      ? new Date(c.fechaApertura + 'T00:00:00').toLocaleDateString('es-CO', { day:'numeric', month:'short', year:'numeric' })
+      : '—';
+    const detalleEstudiante = c.estudianteNombre || 'Estudiante por identificar';
+    const grupoTxt = c.estudianteGrado ? c.estudianteGrado + (c.estudianteGrupo ? '-' + c.estudianteGrupo : '') : '';
+    const tipoClasif = c.clasificacion?.codigo || c.clasificacion?.tipo || null;
+
+    let alarmaHTML = '';
+    if (r.pasosVencidos > 0){
+      alarmaHTML = `<div class="caso-alarma rojo">
+        <strong>🔴 ${r.pasosVencidos} paso${r.pasosVencidos>1?'s':''} vencido${r.pasosVencidos>1?'s':''}</strong>
+      </div>`;
+    } else if (r.pasosPronto > 0){
+      alarmaHTML = `<div class="caso-alarma amarillo">
+        <strong>🟡 ${r.pasosPronto} plazo${r.pasosPronto>1?'s':''} por vencer</strong>
+      </div>`;
+    }
+
+    let proximoHTML = '';
+    if (r.proximo){
+      const pp = r.proximo.plazo;
+      const venceTxt = pp.diasRestantes === null
+        ? 'sin plazo'
+        : pp.diasRestantes < 0   ? `vencido hace ${-pp.diasRestantes} día${-pp.diasRestantes>1?'s':''}`
+        : pp.diasRestantes === 0 ? 'vence hoy'
+        : pp.diasRestantes === 1 ? 'vence mañana'
+        : `vence en ${pp.diasRestantes} días`;
+      proximoHTML = `<div class="caso-proximo">
+        <span class="versalitas text-dorado">Próximo paso</span>
+        <p>${escape(r.proximo.paso.titulo || '(sin título)')}</p>
+        <span class="caso-vence vence-${pp.estadoPlazo}">⏰ ${escape(venceTxt)}</span>
+      </div>`;
+    }
+
+    return `<article class="mis-caso-card ${esActivo?'activo':''} ${r.pasosVencidos>0?'tiene-vencidos':''}">
+      <header class="mis-caso-head">
+        <div>
+          <p class="mis-caso-id mono">${escape(c.id)} · ${escape(fechaAp)}</p>
+          <h3 class="mis-caso-nombre">${escape(detalleEstudiante)}</h3>
+          <p class="mis-caso-meta">${escape(grupoTxt || 'Sin grado')}${tipoClasif?' · ' + escape(tipoClasif):''}</p>
+        </div>
+        <span class="badge ${lbl.cls}">${esActivo?'ACTIVO · ':''}${lbl.txt.toUpperCase()}</span>
+      </header>
+
+      ${alarmaHTML}
+
+      <div class="mis-caso-progreso">
+        <div class="mis-caso-progreso-info">
+          <span>Progreso del protocolo</span>
+          <strong>${r.completos} / ${r.total || '—'} pasos · ${r.pct}%</strong>
+        </div>
+        <div class="mini-bar">
+          <div class="mini-bar-fill" style="width:${r.pct}%"></div>
+        </div>
+      </div>
+
+      ${proximoHTML}
+
+      <footer class="mis-caso-actions">
+        <button class="btn btn-primary btn-sm" onclick="abrirCaso('${c.id}')">
+          ${esActivo ? 'Continuar →' : 'Abrir caso →'}
+        </button>
+        ${estado !== 'cerrado'
+          ? `<button class="btn btn-secondary btn-sm" onclick="cambiarEstadoCasoArray('${c.id}','${estado==='abierto'?'en-espera':'abierto'}')">${estado==='abierto'?'⏸ En espera':'▶ Reabrir'}</button>
+             <button class="btn btn-ghost btn-sm" onclick="cambiarEstadoCasoArray('${c.id}','cerrado')">✓ Cerrar</button>`
+          : `<button class="btn btn-secondary btn-sm" onclick="cambiarEstadoCasoArray('${c.id}','abierto')">↺ Reabrir</button>`}
+        <button class="btn btn-ghost btn-sm danger-hover" onclick="confirmarEliminarCaso('${c.id}')" title="Eliminar caso">🗑</button>
+      </footer>
+    </article>`;
+  }).join('');
+}
+
+function confirmarEliminarCaso(id){
+  const c = state.casos.find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`¿Eliminar el caso ${c.id} de ${c.estudianteNombre || 'estudiante'}?\nEsta acción no se puede deshacer.`)) return;
+  eliminarCaso(id);
+}
+
+// Wiring · filtros + búsqueda
+document.addEventListener('click', e => {
+  const tab = e.target.closest('.mis-casos-filtros .docs-tab');
+  if (!tab) return;
+  document.querySelectorAll('.mis-casos-filtros .docs-tab').forEach(t => {
+    t.classList.remove('active'); t.setAttribute('aria-selected', 'false');
+  });
+  tab.classList.add('active'); tab.setAttribute('aria-selected', 'true');
+  filtroMisCasos.estado = tab.dataset.filtro;
+  renderListaCasos();
+});
+document.addEventListener('input', e => {
+  if (e.target?.id === 'mis-casos-busqueda'){
+    filtroMisCasos.busqueda = e.target.value;
+    renderListaCasos();
+  }
+});
+
 function aplicarSugerenciaIA(nodoId){
   cerrarModal('modal-clasificador-ia');
-  // Si no hay caso, iniciar uno mínimo automático
+  // Si no hay caso, iniciar uno mínimo automático en el array multi-caso
   if (!state.caso){
-    state.caso = {
+    sincronizarBufferACaso();
+    const nuevoCaso = {
       id: generarCasoId(),
-      fechaApertura: new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' }),
+      fechaApertura: new Date().toISOString().slice(0,10),
       estudianteNombre: 'Por identificar',
       acudienteNombre: 'Por identificar',
       acudienteTelefono: 'Por identificar',
-      funcionarioReporta: state.funcionario || 'Docente'
+      funcionarioReporta: state.funcionario || 'Docente',
+      estado: 'abierto',
+      ultimoUpdate: new Date().toISOString(),
+      rutaPasos: [], nodoActual: null, protocoloActual: null, clasificacion: null,
+      docsValores: {}, docsCompletos: [], pasosCompletados: [], historialNodos: []
     };
+    state.casos.push(nuevoCaso);
+    sincronizarCasoABuffer(nuevoCaso.id);
+    guardarEstado();
   }
   navegarA(nodoId);
 }
@@ -6263,15 +6830,31 @@ window.addEventListener('load', () => {
     console.log('✅ Librería docx.js cargada — generación de Word habilitada');
   }
 
-  // UX-003 · restaurar caso si había uno guardado
-  if (restaurarEstado()){
-    console.log('✅ Caso restaurado desde almacenamiento local');
-    renderColumnaRuta();
-    renderDocumentos('requeridos');
-    agregarMensajeAsistente({
-      texto: `Bienvenido de nuevo. He restaurado el caso <strong>${escape(state.caso?.id || '')}</strong> con todo su progreso. Puede continuar donde lo dejó o iniciar uno nuevo.`,
-      fundamento: 'Ley 1581 de 2012 — datos almacenados solo en este dispositivo'
-    });
+  // UX-003 · restaurar casos guardados (multi-caso v3 con migración v2)
+  restaurarEstado();
+  const totalCasos = (state.casos || []).length;
+  if (totalCasos > 0){
+    console.log(`✅ ${totalCasos} caso(s) restaurado(s) desde almacenamiento local`);
+    renderListaCasos();
+    if (state.casoActivoId){
+      renderColumnaRuta();
+      renderDocumentos('requeridos');
+      const r = calcularEstadoCaso(state.casos.find(c => c.id === state.casoActivoId) || {});
+      const alarma = r.pasosVencidos > 0
+        ? ` ⚠️ Hay <strong>${r.pasosVencidos} paso(s) vencido(s)</strong>, conviene atenderlos.`
+        : r.pasosPronto > 0
+        ? ` 🟡 Hay ${r.pasosPronto} plazo(s) por vencer pronto.`
+        : '';
+      agregarMensajeAsistente({
+        texto: `Bienvenido de nuevo. He restaurado el caso <strong>${escape(state.caso?.id || '')}</strong>.${alarma}<br><br>Tiene <strong>${totalCasos} caso${totalCasos>1?'s':''}</strong> en su expediente. Ver lista arriba.`,
+        fundamento: 'Ley 1581 de 2012 — datos almacenados solo en este dispositivo'
+      });
+    } else {
+      agregarMensajeAsistente({
+        texto: `Tiene <strong>${totalCasos} caso${totalCasos>1?'s':''}</strong> en su expediente. Vea la lista de "Mis casos" arriba y haga click en uno para continuar, o inicie uno nuevo.`,
+        fundamento: null
+      });
+    }
   }
 
   // UX-003 · autosave de campos del editor de documentos al cambiar inputs
