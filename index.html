@@ -1687,6 +1687,153 @@ input, textarea, select{
   border-left:3px solid var(--danger);
 }
 
+/* ===== ✨ Mejorar con IA · botón y menú flotante ===== */
+.textarea-wrap{ position:relative; }
+.btn-ia-mejorar{
+  position:absolute; top:8px; right:8px;
+  width:32px; height:32px; border-radius:var(--radius-md);
+  background:linear-gradient(135deg, var(--dorado) 0%, var(--vino) 100%);
+  color:#fff; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+  box-shadow:0 2px 6px rgba(107,24,32,.18);
+  transition:all var(--motion-fast) var(--ease-out);
+  opacity:.7;
+}
+.btn-ia-mejorar:hover{
+  opacity:1; transform:scale(1.08);
+  box-shadow:0 4px 10px rgba(107,24,32,.28);
+}
+.btn-ia-mejorar:focus-visible{
+  outline:3px solid var(--focus-ring); outline-offset:2px;
+}
+
+.ia-mejorar-menu{
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-lg);
+  padding:var(--space-2);
+  min-width:280px;
+  z-index:150;
+  animation:menuIn var(--motion-fast) var(--ease-out);
+}
+@keyframes menuIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+.ia-mejorar-menu-head{
+  padding:var(--space-2) var(--space-3) var(--space-3);
+  border-bottom:1px solid var(--border-soft);
+  margin-bottom:var(--space-2);
+}
+.ia-mejorar-opcion{
+  width:100%; display:flex; gap:var(--space-3);
+  padding:var(--space-3); border:none; background:transparent;
+  text-align:left; cursor:pointer; border-radius:var(--radius-md);
+  font-family:var(--sans);
+  align-items:flex-start;
+  transition:background var(--motion-fast);
+}
+.ia-mejorar-opcion:hover{ background:var(--bg-muted); }
+.ia-mejorar-icon{
+  font-size:20px; flex-shrink:0;
+  width:32px; text-align:center;
+}
+.ia-mejorar-label{
+  font-weight:700; font-size:var(--fs-sm); color:var(--text);
+}
+.ia-mejorar-desc{
+  font-size:var(--fs-xs); color:var(--text-muted);
+  margin-top:2px; line-height:1.4;
+}
+
+/* Indicador "procesando con IA" debajo del textarea */
+.ia-procesando{
+  margin-top:var(--space-2);
+  padding:var(--space-2) var(--space-3);
+  background:linear-gradient(135deg, rgba(139,111,63,.10) 0%, rgba(107,24,32,.08) 100%);
+  border-left:3px solid var(--dorado);
+  border-radius:var(--radius-md);
+  font-size:var(--fs-sm); color:var(--text-muted);
+  display:flex; align-items:center; gap:var(--space-2);
+}
+.ia-procesando-ok{
+  background:rgba(58,107,77,.10);
+  border-left-color:var(--success);
+  color:var(--success);
+}
+.ia-procesando-error{
+  background:rgba(185,28,28,.08);
+  border-left-color:var(--danger);
+  color:var(--danger);
+}
+.ia-procesando-dots{
+  display:inline-flex; gap:3px;
+}
+.ia-procesando-dots span{
+  width:5px; height:5px; border-radius:50%;
+  background:var(--dorado);
+  animation:dotBounce 1.4s infinite ease-in-out both;
+}
+.ia-procesando-dots span:nth-child(1){ animation-delay:-0.32s; }
+.ia-procesando-dots span:nth-child(2){ animation-delay:-0.16s; }
+@keyframes dotBounce {
+  0%, 80%, 100% { transform:scale(0.6); opacity:.5; }
+  40% { transform:scale(1); opacity:1; }
+}
+
+/* Botón ✨ del hero · Describir caso con IA */
+.btn-ia-hero{
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-3) var(--space-6);
+  border-radius:var(--radius-full);
+  background:linear-gradient(135deg, var(--dorado) 0%, var(--vino) 100%);
+  color:#fff; border:none;
+  font-family:var(--sans); font-weight:700; font-size:var(--fs-base);
+  letter-spacing:-0.01em; cursor:pointer;
+  transition:all var(--motion-fast) var(--ease-out);
+  min-height:44px;
+  box-shadow:0 4px 14px rgba(107,24,32,.2);
+}
+.btn-ia-hero:hover{
+  transform:translateY(-2px) scale(1.02);
+  box-shadow:0 6px 20px rgba(107,24,32,.3);
+}
+
+/* Resultado del clasificador IA */
+.clasif-ia-resultado-card{
+  background:linear-gradient(135deg, rgba(139,111,63,.04) 0%, rgba(107,24,32,.02) 100%);
+  border:1px solid var(--dorado);
+  border-radius:var(--radius-xl);
+  padding:var(--space-6);
+  margin-top:var(--space-4);
+}
+.clasif-ia-head{
+  display:flex; gap:var(--space-3); align-items:center;
+  margin-bottom:var(--space-4);
+}
+.clasif-ia-titulo{
+  font-family:var(--serif); font-style:italic;
+  font-weight:500; font-size:var(--fs-xl);
+  line-height:1.3; margin:0 0 var(--space-5);
+  color:var(--text);
+}
+.clasif-ia-bloque{
+  background:var(--bg-surface);
+  border-radius:var(--radius-md);
+  padding:var(--space-4);
+  margin-bottom:var(--space-3);
+}
+.clasif-ia-bloque ul{
+  margin:var(--space-2) 0 0 var(--space-5);
+  font-size:var(--fs-sm); line-height:1.7;
+}
+.clasif-ia-warning{
+  background:rgba(184,110,31,.08);
+  border-left:3px solid var(--warning);
+  color:var(--warning);
+}
+.clasif-ia-warning .versalitas{ color:var(--warning) !important; }
+.clasif-ia-warning p:last-child{ color:var(--text-muted); margin-top:var(--space-2); }
+
 /* Mensaje IA en chat con tag distintivo */
 .mensaje-ia{
   border-left:3px solid var(--dorado);
@@ -2559,6 +2706,9 @@ body{
       <button class="btn btn-secondary" id="btn-continuar-caso" hidden onclick="continuarCasoActivo()">
         Continuar caso activo →
       </button>
+      <button class="btn btn-ia-hero" id="btn-clasificar-ia" onclick="abrirClasificadorIA()" hidden>
+        <span aria-hidden="true">✨</span> Describir caso con IA
+      </button>
     </div>
   </section>
 
@@ -2904,6 +3054,30 @@ body{
       <button class="btn btn-ghost" onclick="cerrarModal('modal-config')">Cancelar</button>
       <button class="btn btn-secondary" id="btn-test-ia" onclick="testIA()" style="display:none">Probar conexión</button>
       <button class="btn btn-primary" onclick="guardarConfig()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Describir caso con IA para clasificación asistida -->
+<div class="modal-overlay" id="modal-clasificador-ia">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h2 class="modal-titulo">✨ Describir caso con IA</h2>
+      <div class="modal-sub">Cuente lo que ocurrió en sus propias palabras · la IA propondrá la clasificación más probable</div>
+    </div>
+    <div class="modal-body">
+      <div class="campo-form">
+        <label class="campo-label" for="clasif-ia-input">¿Qué ocurrió?</label>
+        <textarea class="campo-textarea" id="clasif-ia-input" rows="6" placeholder="Ej: Durante el descanso de las 10:30, dos estudiantes de 9°B tuvieron un altercado verbal que terminó en empujones. Una de las estudiantes refiere haber recibido golpes en el brazo. La docente intervino y los separó. No hay lesiones visibles."></textarea>
+        <div class="campo-help">Describa hechos · contexto · personas involucradas. No incluya nombres reales si no quiere (la IA igual anonimiza si está activado).</div>
+      </div>
+      <div id="clasif-ia-resultado" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="cerrarModal('modal-clasificador-ia')">Cancelar</button>
+      <button class="btn btn-primary" id="btn-clasif-ia-analizar" onclick="analizarConIA()">
+        <span aria-hidden="true">✨</span> Analizar con IA
+      </button>
     </div>
   </div>
 </div>
@@ -3870,9 +4044,13 @@ function renderCampo(c, valores, prellenados){
   const etiqueta = c.etiqueta || c.id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   if (c.tipo === 'textarea')
-    return `<div class="campo-form">
+    return `<div class="campo-form" data-mejorar-ia="1">
       <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
-      <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>${prefillOrigen}${help}${errorDiv}
+      <div class="textarea-wrap">
+        <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>
+        ${iaState.enabled ? `<button type="button" class="btn-ia-mejorar" onclick="abrirMenuMejorar(this,'${inputId}','${escape(etiqueta)}')" aria-label="Mejorar con IA" title="Mejorar con IA"><span aria-hidden="true">✨</span></button>` : ''}
+      </div>
+      ${prefillOrigen}${help}${errorDiv}
     </div>`;
   if (c.tipo === 'select' && c.opciones)
     return `<div class="campo-form">
@@ -4103,6 +4281,137 @@ async function enviarMensajeIA(texto){
              `Puede revisar la configuración en ⚙️ o volver al modo offline desactivando el toggle.`,
       fundamento: 'Modo IA · error'
     });
+  }
+}
+
+// ============================================================
+// ✨ MEJORAR TEXTO CON IA · botón en cada textarea del editor
+// ============================================================
+const MEJORAR_PROMPTS = {
+  pulir: {
+    label: 'Pulir redacción',
+    icon: '✨',
+    desc: 'Mejora gramática, claridad y ortografía sin cambiar el significado',
+    instruccion: 'Pule la redacción del siguiente texto: corrige errores de gramática, ortografía y acentuación, mejora la claridad y cohesión. NO cambies el contenido ni añadas información. Mantén el mismo tono y nivel de detalle. Devuelve SOLO el texto corregido sin explicaciones.'
+  },
+  formal: {
+    label: 'Hacer más formal',
+    icon: '📜',
+    desc: 'Tono jurídico-institucional apropiado para documentos oficiales',
+    instruccion: 'Reescribe el siguiente texto con tono jurídico-institucional formal, apropiado para un documento oficial de una institución educativa colombiana (acta, citación, resolución). Usa lenguaje culto, voz pasiva donde aporte, evita coloquialismos. NO inventes información que no esté en el texto. Devuelve SOLO el texto reescrito sin explicaciones.'
+  },
+  resumir: {
+    label: 'Resumir',
+    icon: '📝',
+    desc: 'Versión más corta manteniendo lo esencial',
+    instruccion: 'Resume el siguiente texto en un 50% de su extensión, conservando todos los hechos relevantes y el orden cronológico. Devuelve SOLO el resumen sin explicaciones.'
+  },
+  expandir: {
+    label: 'Expandir',
+    icon: '📖',
+    desc: 'Más detallado, agrega contexto pertinente',
+    instruccion: 'Expande el siguiente texto añadiendo más detalle descriptivo y contexto pertinente al ámbito disciplinario escolar. NO inventes hechos nuevos. Mantén el mismo nivel de formalidad. Devuelve SOLO el texto expandido sin explicaciones.'
+  }
+};
+
+function abrirMenuMejorar(btnEl, inputId, etiqueta){
+  // Si ya hay un menú abierto, lo cierro
+  document.querySelectorAll('.ia-mejorar-menu').forEach(m => m.remove());
+
+  const textarea = $(inputId);
+  if (!textarea || !textarea.value.trim()){
+    agregarMensajeAsistente({texto: `Escriba primero algo en el campo <strong>"${escape(etiqueta)}"</strong> y luego use ✨ para mejorarlo con IA.`});
+    if (!$('asistente-panel').classList.contains('open')) toggleAsistente();
+    return;
+  }
+
+  const menu = document.createElement('div');
+  menu.className = 'ia-mejorar-menu';
+  menu.innerHTML = `
+    <div class="ia-mejorar-menu-head">
+      <span class="versalitas text-dorado">✨ Mejorar con IA</span>
+    </div>
+    ${Object.entries(MEJORAR_PROMPTS).map(([k, p]) => `
+      <button type="button" class="ia-mejorar-opcion" data-accion="${k}">
+        <span class="ia-mejorar-icon" aria-hidden="true">${p.icon}</span>
+        <div>
+          <div class="ia-mejorar-label">${escape(p.label)}</div>
+          <div class="ia-mejorar-desc">${escape(p.desc)}</div>
+        </div>
+      </button>
+    `).join('')}
+  `;
+
+  // Posicionar el menú cerca del botón
+  const rect = btnEl.getBoundingClientRect();
+  menu.style.position = 'absolute';
+  menu.style.top = (window.scrollY + rect.bottom + 4) + 'px';
+  menu.style.right = (window.innerWidth - rect.right) + 'px';
+  document.body.appendChild(menu);
+
+  // Bind acciones
+  menu.querySelectorAll('.ia-mejorar-opcion').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const accion = opt.dataset.accion;
+      menu.remove();
+      ejecutarMejora(inputId, accion, etiqueta);
+    });
+  });
+
+  // Cerrar al click fuera
+  setTimeout(() => {
+    document.addEventListener('click', function cerrarMenu(e){
+      if (!menu.contains(e.target) && e.target !== btnEl){
+        menu.remove();
+        document.removeEventListener('click', cerrarMenu);
+      }
+    });
+  }, 50);
+}
+
+async function ejecutarMejora(inputId, accion, etiqueta){
+  const textarea = $(inputId);
+  if (!textarea) return;
+  const original = textarea.value.trim();
+  if (!original) return;
+  const prompt = MEJORAR_PROMPTS[accion];
+
+  // UI: deshabilitar temporalmente + indicador
+  const form = textarea.closest('.campo-form');
+  const indicator = document.createElement('div');
+  indicator.className = 'ia-procesando';
+  indicator.innerHTML = `<span class="ia-procesando-dots"><span></span><span></span><span></span></span> ${escape(prompt.label)} con IA…`;
+  form.appendChild(indicator);
+  textarea.disabled = true;
+
+  try {
+    const systemPrompt = 'Eres asistente de redacción jurídica para el sector educativo colombiano. ' + prompt.instruccion;
+    const resultado = await llamarIA({
+      systemPrompt,
+      userPrompt: original
+    });
+
+    // Reemplazar el contenido del textarea con la versión mejorada
+    textarea.value = resultado.trim();
+
+    // Guardar en docsValores si estamos en editor de doc
+    if (state.docActivo){
+      const campoId = textarea.dataset.campo;
+      if (!state.docsValores[state.docActivo]) state.docsValores[state.docActivo] = {};
+      state.docsValores[state.docActivo][campoId] = textarea.value;
+      guardarEstado?.();
+    }
+
+    // Feedback breve
+    indicator.className = 'ia-procesando ia-procesando-ok';
+    indicator.innerHTML = `<span aria-hidden="true">✓</span> ${escape(prompt.label)} aplicado · puede deshacer con Cmd+Z o editar directamente`;
+    setTimeout(() => indicator.remove(), 4500);
+  } catch(err){
+    indicator.className = 'ia-procesando ia-procesando-error';
+    indicator.innerHTML = `<span aria-hidden="true">✗</span> Error: ${escape(err.message)}`;
+    setTimeout(() => indicator.remove(), 6000);
+  } finally {
+    textarea.disabled = false;
   }
 }
 
@@ -4361,9 +4670,154 @@ function actualizarBadgeModo(){
     badge.classList.remove('modo-ia-on');
     badge.title = 'Funciona sin internet';
   }
+  // Mostrar/ocultar botón "Describir caso con IA" en el hero
+  const btnClasif = $('btn-clasificar-ia');
+  if (btnClasif) btnClasif.hidden = !(iaState.enabled && iaState.apiKey);
 }
 // Al cargar
 setTimeout(actualizarBadgeModo, 100);
+
+// ============================================================
+// CLASIFICADOR IA · describir caso en lenguaje natural
+// ============================================================
+function abrirClasificadorIA(){
+  if (!iaState.enabled || !iaState.apiKey){
+    abrirConfig();
+    return;
+  }
+  $('clasif-ia-input').value = '';
+  $('clasif-ia-resultado').style.display = 'none';
+  $('clasif-ia-resultado').innerHTML = '';
+  $('btn-clasif-ia-analizar').disabled = false;
+  $('btn-clasif-ia-analizar').innerHTML = '<span aria-hidden="true">✨</span> Analizar con IA';
+  abrirModalA11y('modal-clasificador-ia');
+}
+
+// Construye la lista de nodos disponibles del árbol para que la IA elija
+function construirCatalogoNodos(){
+  const nodos = ARBOL.nodos;
+  // Solo nodos que son "endpoint" útil (clasificación, alerta, protocolo)
+  const tipos = ['clasificacion', 'alerta', 'protocolo'];
+  return Object.entries(nodos)
+    .filter(([id, n]) => tipos.includes(n.tipo))
+    .map(([id, n]) => `- ${id}: ${(n.titulo || '').replace(/\n/g,' ')}${n.descripcion ? ' · ' + String(n.descripcion).slice(0,60) : ''}`)
+    .join('\n');
+}
+
+async function analizarConIA(){
+  const texto = $('clasif-ia-input').value.trim();
+  if (!texto){
+    $('clasif-ia-input').focus();
+    return;
+  }
+  const btn = $('btn-clasif-ia-analizar');
+  const resBox = $('clasif-ia-resultado');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="ia-procesando-dots" style="display:inline-flex;margin-right:6px"><span></span><span></span><span></span></span> Analizando…';
+
+  resBox.style.display = 'block';
+  resBox.innerHTML = `<div class="ia-procesando"><span class="ia-procesando-dots"><span></span><span></span><span></span></span> Clasificando el caso con IA…</div>`;
+
+  const systemPrompt = `Eres ConciencIA, asesor del debido proceso de la I.E. Sor María Juliana (Cartago, Valle del Cauca, Colombia). Tu tarea: analizar la descripción de una situación escolar y proponer la clasificación según el Manual de Convivencia.
+
+Categorías:
+- TIPO_I · Falta leve · conducta esporádica SIN daño físico, sin recurrencia (Art. 39: inasistencia, llegar tarde, uniforme, agresión verbal puntual). Competencia: cualquier docente.
+- TIPO_II · Falta grave · agresión escolar real, ciberacoso, recurrencia de faltas leves (Art. 40). Competencia: Coordinador.
+- TIPO_III · Posible delito · violencia sexual, lesiones, armas, drogas (Ley 599/2000). Competencia: Rector + Policía Nacional + ICBF.
+
+ACADEMICO · si es sobre calificaciones, plan de mejoramiento, promoción (SIE 2025).
+RECLAMACION_ACADEMICA · si el estudiante/acudiente impugna una nota.
+JUSTICIA_RESTAURATIVA · si la situación es ideal para mediación (sin daño grave).
+PQRS · si es petición, queja, reclamo o sugerencia.
+
+Responde EXACTAMENTE en JSON válido con esta estructura:
+{
+  "clasificacion": "TIPO_I | TIPO_II | TIPO_III | ACADEMICO | RECLAMACION_ACADEMICA | JUSTICIA_RESTAURATIVA | PQRS",
+  "razonamiento": "1-2 frases · por qué encaja en esa categoría · cita artículo del Manual si aplica",
+  "ruta_arbol": "id del nodo del árbol más apropiado para iniciar (de la lista abajo)",
+  "acciones_inmediatas": ["acción 1", "acción 2"],
+  "advertencias": "lo que el docente debe tener en cuenta · si hay riesgo grave o se necesita escalar"
+}
+
+Nodos disponibles del árbol (ids exactos):
+${construirCatalogoNodos()}
+
+Si la situación es Tipo III: SIEMPRE incluye "Notificar a Policía Nacional inmediatamente" en acciones_inmediatas y advertencias claras.`;
+
+  try {
+    const respuesta = await llamarIA({ systemPrompt, userPrompt: texto });
+
+    // Intentar parsear JSON · puede venir envuelto en ```json
+    let json = respuesta.trim().replace(/^```json\s*/i, '').replace(/```\s*$/i, '');
+    let analisis;
+    try { analisis = JSON.parse(json); }
+    catch(e){
+      // Si la IA no devolvió JSON puro, mostramos texto crudo
+      resBox.innerHTML = `<div class="ia-procesando ia-procesando-error">La IA no devolvió un JSON válido. Respuesta:</div><div class="mensaje mensaje-asistente mensaje-ia"><div class="mensaje-cuerpo">${formatearMarkdownSimple(escape(respuesta))}</div></div>`;
+      btn.disabled = false;
+      btn.innerHTML = '<span aria-hidden="true">✨</span> Analizar otra vez';
+      return;
+    }
+
+    // Render del resultado
+    const tipoLabels = {
+      TIPO_I: { txt:'Tipo I · Falta leve',  cls:'badge-success' },
+      TIPO_II: { txt:'Tipo II · Falta grave', cls:'badge-warning' },
+      TIPO_III: { txt:'Tipo III · Posible delito', cls:'badge-vino' },
+      ACADEMICO: { txt:'Académico', cls:'badge-neutral' },
+      RECLAMACION_ACADEMICA: { txt:'Reclamación académica', cls:'badge-neutral' },
+      JUSTICIA_RESTAURATIVA: { txt:'Justicia restaurativa', cls:'badge-success' },
+      PQRS: { txt:'PQRS', cls:'badge-neutral' }
+    };
+    const tipo = tipoLabels[analisis.clasificacion] || { txt: analisis.clasificacion, cls:'badge-neutral' };
+
+    const acciones = (analisis.acciones_inmediatas || []).map(a => `<li>${escape(a)}</li>`).join('');
+    const nodoExiste = analisis.ruta_arbol && ARBOL.nodos[analisis.ruta_arbol];
+
+    resBox.innerHTML = `
+      <div class="clasif-ia-resultado-card">
+        <div class="clasif-ia-head">
+          <span class="badge ${tipo.cls}">${escape(tipo.txt)}</span>
+          <span class="versalitas text-dorado">Sugerencia IA</span>
+        </div>
+        <h3 class="clasif-ia-titulo">${escape(analisis.razonamiento || 'Análisis completado')}</h3>
+        ${acciones ? `<div class="clasif-ia-bloque">
+          <p class="versalitas text-vino">Acciones inmediatas</p>
+          <ul>${acciones}</ul>
+        </div>` : ''}
+        ${analisis.advertencias ? `<div class="clasif-ia-bloque clasif-ia-warning">
+          <p class="versalitas">⚠️ Advertencias</p>
+          <p>${escape(analisis.advertencias)}</p>
+        </div>` : ''}
+        ${nodoExiste ? `<button class="btn btn-primary" onclick="aplicarSugerenciaIA('${escape(analisis.ruta_arbol)}')">
+          Aplicar sugerencia · ir a ${escape(ARBOL.nodos[analisis.ruta_arbol].titulo || analisis.ruta_arbol)} →
+        </button>` : `<p class="campo-help">⚠️ La IA propuso un nodo (${escape(analisis.ruta_arbol)}) que no existe en el árbol. Continúe manualmente.</p>`}
+      </div>
+    `;
+    btn.disabled = false;
+    btn.innerHTML = '<span aria-hidden="true">✨</span> Analizar otra vez';
+  } catch(err){
+    resBox.innerHTML = `<div class="ia-procesando ia-procesando-error"><strong>Error al analizar:</strong> ${escape(err.message)}</div>`;
+    btn.disabled = false;
+    btn.innerHTML = '<span aria-hidden="true">✨</span> Reintentar';
+  }
+}
+
+function aplicarSugerenciaIA(nodoId){
+  cerrarModal('modal-clasificador-ia');
+  // Si no hay caso, iniciar uno mínimo automático
+  if (!state.caso){
+    state.caso = {
+      id: generarCasoId(),
+      fechaApertura: new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' }),
+      estudianteNombre: 'Por identificar',
+      acudienteNombre: 'Por identificar',
+      acudienteTelefono: 'Por identificar',
+      funcionarioReporta: state.funcionario || 'Docente'
+    };
+  }
+  navegarA(nodoId);
+}
 
 // === INICIO ===
 // ============================================================
