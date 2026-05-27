@@ -1963,6 +1963,23 @@ input, textarea, select{
   font-size:var(--fs-base);
 }
 
+/* Fallback de clasificación · respuesta no estructurada */
+.clasif-ia-fallback{
+  padding:var(--space-5);
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  margin-top:var(--space-3);
+}
+.clasif-ia-fallback .clasif-ia-head{
+  display:flex; gap:var(--space-2); align-items:center;
+  margin-bottom:var(--space-2);
+}
+.clasif-ia-fallback .mensaje{
+  margin-top:var(--space-3);
+  max-height:400px; overflow-y:auto;
+}
+
 /* ============================================================
    IA GATEWAY · Lista de proveedores en modal de configuración
    ============================================================ */
@@ -4919,7 +4936,13 @@ RECLAMACION_ACADEMICA · si el estudiante/acudiente impugna una nota.
 JUSTICIA_RESTAURATIVA · si la situación es ideal para mediación (sin daño grave).
 PQRS · si es petición, queja, reclamo o sugerencia.
 
-Responde EXACTAMENTE en JSON válido con esta estructura:
+REGLAS DE FORMATO (críticas):
+- Responde ÚNICAMENTE el objeto JSON, nada antes ni después.
+- NO uses bloques de código markdown (sin \`\`\`json ni \`\`\`).
+- NO uses comillas tipográficas curvas. Solo comillas dobles rectas ASCII (").
+- NO incluyas comentarios ni texto explicativo fuera del JSON.
+
+Estructura EXACTA del JSON:
 {
   "clasificacion": "TIPO_I | TIPO_II | TIPO_III | ACADEMICO | RECLAMACION_ACADEMICA | JUSTICIA_RESTAURATIVA | PQRS",
   "razonamiento": "1-2 frases · por qué encaja en esa categoría · cita artículo del Manual si aplica",
@@ -4931,7 +4954,9 @@ Responde EXACTAMENTE en JSON válido con esta estructura:
 Nodos disponibles del árbol (ids exactos):
 ${construirCatalogoNodos()}
 
-Si la situación es Tipo III: SIEMPRE incluye "Notificar a Policía Nacional inmediatamente" en acciones_inmediatas y advertencias claras.`;
+Si la situación es Tipo III: SIEMPRE incluye "Notificar a Policía Nacional inmediatamente" en acciones_inmediatas y advertencias claras.
+
+Comienza tu respuesta directamente con el carácter { y termina con }.`;
 
   try {
     const resultado = await llamarIA({
@@ -4943,13 +4968,25 @@ Si la situación es Tipo III: SIEMPRE incluye "Notificar a Policía Nacional inm
     });
     const respuesta = resultado.texto || '';
 
-    // Intentar parsear JSON · puede venir envuelto en ```json
-    let json = respuesta.trim().replace(/^```json\s*/i, '').replace(/```\s*$/i, '');
-    let analisis;
-    try { analisis = JSON.parse(json); }
-    catch(e){
-      // Si la IA no devolvió JSON puro, mostramos texto crudo
-      resBox.innerHTML = `<div class="ia-procesando ia-procesando-error">La IA no devolvió un JSON válido. Respuesta:</div><div class="mensaje mensaje-asistente mensaje-ia"><div class="mensaje-cuerpo">${formatearMarkdownSimple(escape(respuesta))}</div></div>`;
+    // Parser robusto · ver función auxiliar abajo
+    const analisis = extraerJSONdeIA(respuesta);
+    if (!analisis){
+      // Fallback graceful · mostrar la respuesta cruda formateada como mensaje útil
+      resBox.innerHTML = `
+        <div class="clasif-ia-fallback">
+          <div class="clasif-ia-head">
+            <span class="badge badge-neutral">Análisis IA</span>
+            <span class="versalitas text-dorado">Respuesta no estructurada</span>
+          </div>
+          <p class="campo-help" style="margin:var(--space-2) 0">
+            La IA respondió pero no en el formato esperado. Aquí su análisis para que lo lea manualmente:
+          </p>
+          <div class="mensaje mensaje-asistente mensaje-ia"><div class="mensaje-cuerpo">${formatearMarkdownSimple(escape(respuesta))}</div></div>
+          <button class="btn btn-secondary" style="margin-top:var(--space-3)" onclick="sugerirClasificacionIA()">
+            <span aria-hidden="true">↻</span> Reintentar con formato estricto
+          </button>
+        </div>
+      `;
       btn.disabled = false;
       btn.innerHTML = '<span aria-hidden="true">✨</span> Analizar otra vez';
       return;
@@ -6735,6 +6772,53 @@ async function probarConexionIA(){
   const cfg = iaState.providers.find(p => p.activo && p.apiKey);
   if (!cfg) return { ok: false, error: 'Sin proveedores configurados.' };
   return probarConexionIAcfg(cfg);
+}
+
+// ============================================================
+// extraerJSONdeIA · Parser tolerante de respuestas IA
+// Tolera: ```json...```, comillas tipográficas, texto antes/después
+// del JSON, comas finales, escapes mal formados.
+// ============================================================
+function extraerJSONdeIA(texto){
+  if (!texto || typeof texto !== 'string') return null;
+  let raw = texto.trim();
+
+  // 1) Quitar wrappers de bloque de código markdown
+  raw = raw.replace(/^```(?:json|JSON)?\s*\n?/, '').replace(/\n?```\s*$/, '');
+
+  // 2) Si hay texto antes del primer { o después del último }, recortarlo
+  const primeraLlave = raw.indexOf('{');
+  const ultimaLlave  = raw.lastIndexOf('}');
+  if (primeraLlave > 0 || (ultimaLlave > -1 && ultimaLlave < raw.length - 1)){
+    if (primeraLlave > -1 && ultimaLlave > primeraLlave){
+      raw = raw.slice(primeraLlave, ultimaLlave + 1);
+    }
+  }
+
+  // 3) Normalizar comillas tipográficas a rectas (sin tocar las que están dentro de strings... pero
+  //    como el output del modelo es JSON crudo, no debe haber comillas literales que queramos preservar)
+  raw = raw
+    .replace(/[“”„‟]/g, '"')   // " " „ ‟ → "
+    .replace(/[‘’‚‛]/g, "'");  // ' ' ‚ ‛ → '
+
+  // 4) Intento directo
+  try { return JSON.parse(raw); } catch(e1){}
+
+  // 5) Limpieza adicional · trailing commas, comentarios //, valores undefined
+  let limpio = raw
+    .replace(/\/\/[^\n]*/g, '')          // comentarios de una línea
+    .replace(/,\s*([}\]])/g, '$1')       // trailing commas
+    .replace(/:\s*undefined/g, ': null'); // undefined → null
+
+  try { return JSON.parse(limpio); } catch(e2){}
+
+  // 6) Último recurso: buscar el primer objeto balanceado
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (match){
+    try { return JSON.parse(match[0]); } catch(e3){}
+  }
+
+  return null;
 }
 
 // ============================================================
