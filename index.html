@@ -1691,6 +1691,30 @@ body{
   display:flex; align-items:center; gap:var(--space-3);
   text-decoration:none; color:var(--text);
 }
+/* Logo institucional (escudo SMJ) · prioridad sobre el fallback */
+.brand-logo-wrap{
+  display:flex; align-items:center; justify-content:center;
+  width:48px; height:48px;
+  flex-shrink:0;
+}
+.brand-logo{
+  width:100%; height:100%;
+  object-fit:contain;
+  display:block;
+  /* Sombra muy sutil para separar del topbar sin recortar la silueta */
+  filter:drop-shadow(0 1px 2px rgba(26,22,20,.10));
+  transition:transform var(--motion-fast) var(--ease-out);
+}
+.brand:hover .brand-logo{ transform:scale(1.05); }
+/* Fallback si el archivo del logo no carga */
+.brand-logo-fallback{
+  display:none;
+  width:36px; height:36px; border-radius:var(--radius-full);
+  background:var(--vino); color:#fff;
+  align-items:center; justify-content:center;
+  font-size:16px; box-shadow:var(--shadow-sm);
+}
+/* Compat con el viejo brand-mark si alguna parte aún lo invoca */
 .brand-mark{
   width:36px; height:36px; border-radius:var(--radius-full);
   background:var(--vino); color:#fff;
@@ -2297,8 +2321,11 @@ body{
 <!-- ===== TOPBAR LIMPIO (estilo Bento Jurídico) ===== -->
 <header class="topbar" role="banner">
   <div class="topbar-inner">
-    <a class="brand" href="#" aria-label="ConciencIA — Inicio">
-      <span class="brand-mark" aria-hidden="true">⚖</span>
+    <a class="brand" href="#" aria-label="ConciencIA — I.E. Sor María Juliana">
+      <span class="brand-logo-wrap" aria-hidden="true">
+        <img class="brand-logo" src="icons/LOGOSMJ.png" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <span class="brand-logo-fallback" aria-hidden="true">⚖</span>
+      </span>
       <span class="brand-text">
         <h1 class="brand-name">ConciencIA</h1>
         <span class="brand-sub">I.E. Sor María Juliana</span>
