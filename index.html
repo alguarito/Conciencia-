@@ -1687,6 +1687,19 @@ input, textarea, select{
   border-left:3px solid var(--danger);
 }
 
+/* Mensaje IA en chat con tag distintivo */
+.mensaje-ia{
+  border-left:3px solid var(--dorado);
+  background:linear-gradient(135deg, rgba(139,111,63,.06) 0%, rgba(139,111,63,.02) 100%);
+}
+.mensaje-bienvenida-tag{
+  display:inline-block;
+  margin-bottom:var(--space-2);
+}
+.mensaje-cuerpo{ line-height:1.55; }
+.mensaje-cuerpo ul{ margin:var(--space-2) 0 var(--space-2) var(--space-5); }
+.mensaje-cuerpo li{ margin-bottom:var(--space-1); }
+
 /* Modo IA · badge en topbar */
 .modo-badge.modo-ia-on{
   background:var(--vino) !important;
@@ -3975,22 +3988,133 @@ function enviarMensaje(){
   input.value = '';
   input.style.height = 'auto';
   $('btn-send').classList.remove('activo');
-  $('chat-info').textContent = 'Modo offline · 0/2000';
+  $('chat-info').textContent = (iaState.enabled ? 'Modo IA' : 'Modo offline') + ' · 0/2000';
 
-  // Mostrar typing
+  // Si el modo IA está activo y hay key configurada → llamar API
+  if (iaState.enabled && iaState.apiKey){
+    return enviarMensajeIA(texto);
+  }
+  // Si no, modo offline determinístico (como antes)
+  return enviarMensajeOffline(texto);
+}
+
+function enviarMensajeOffline(texto){
   const cont = $('chat-mensajes');
   const typing = document.createElement('div');
   typing.className = 'chat-typing';
   typing.innerHTML = `<span class="chat-typing-dots"><span></span><span></span><span></span></span> Consultando el árbol...`;
   cont.appendChild(typing);
   cont.scrollTop = cont.scrollHeight;
-
   setTimeout(() => {
     typing.remove();
-    // Búsqueda determinística en el árbol
     const respuesta = buscarRespuestaOffline(texto);
     agregarMensajeAsistente(respuesta);
   }, 600 + Math.random() * 400);
+}
+
+// === Construye system prompt con contexto del Manual + caso activo ===
+function construirSystemPromptChat(){
+  let s = `Eres ConciencIA, asesor del debido proceso de la Institución Educativa Sor María Juliana de Cartago, Valle del Cauca, Colombia.
+
+Tu rol: orientar a docentes, directores de grupo, coordinadores, orientadores y rectores sobre la aplicación correcta del Manual de Convivencia y el Sistema Institucional de Evaluación (SIE 2025).
+
+Normativa que conoces y citas:
+- Constitución Política Art. 29 (debido proceso)
+- Ley 1098 de 2006 (Código de Infancia y Adolescencia)
+- Ley 1620 de 2013 (Sistema Nacional de Convivencia Escolar)
+- Decreto 1965 de 2013 (reglamenta Ley 1620)
+- Decreto 1075 de 2015 (sector educativo)
+- Decreto 1421 de 2017 (PIAR · inclusión)
+- Ley 1755 de 2015 (Derecho de Petición)
+- Ley 1581 de 2012 (protección de datos)
+- Ley 599 de 2000 (Código Penal)
+- Manual de Convivencia I.E. Sor María Juliana 2025 (Resolución No. 03/2025)
+- SIE 2025 de la I.E. Sor María Juliana
+
+Clasificación que la institución usa (Manual Cap. VIII):
+- Tipo I · Falta leve · conducta esporádica sin daño físico · cualquier docente
+- Tipo II · Falta grave · agresión escolar, ciberacoso, recurrencia · coordinador
+- Tipo III · Posible delito · rector + Policía Nacional + ICBF
+
+Estilo:
+- Español de Colombia · trato de "usted" · tono institucional pero cálido
+- Respuestas concretas y accionables · NO te disculpes
+- Cita siempre el artículo o ley cuando aplique
+- Si no estás seguro, dilo y propón consultar al Comité de Convivencia
+- Máximo 200 palabras por respuesta · usa listas con guiones cuando ayuden
+- NUNCA inventes artículos o números de leyes que no existan
+`;
+
+  // Si hay caso activo, dar contexto (anonimizado se hace en llamarIA)
+  if (state.caso){
+    s += `\n\nCASO ACTIVO actualmente abierto en la plataforma:\n`;
+    s += `- ID: ${state.caso.id}\n`;
+    if (state.caso.estudianteGrado) s += `- Estudiante en grado ${state.caso.estudianteGrado}${state.caso.estudianteGrupo ? '-' + state.caso.estudianteGrupo : ''}\n`;
+    if (state.clasificacion?.titulo) s += `- Clasificación actual: ${state.clasificacion.titulo}\n`;
+    if (state.nodoActual){
+      const nodo = ARBOL.nodos[state.nodoActual];
+      if (nodo) s += `- Etapa actual del árbol: ${nodo.titulo || nodo.id}\n`;
+    }
+  }
+
+  return s;
+}
+
+async function enviarMensajeIA(texto){
+  const cont = $('chat-mensajes');
+  // Mostrar typing
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.innerHTML = `<span class="chat-typing-dots"><span></span><span></span><span></span></span> Pensando con IA...`;
+  cont.appendChild(typing);
+  cont.scrollTop = cont.scrollHeight;
+
+  // Burbuja de respuesta donde se va a streaming
+  const burbuja = document.createElement('div');
+  burbuja.className = 'mensaje mensaje-asistente mensaje-ia';
+  burbuja.innerHTML = `<span class="mensaje-bienvenida-tag versalitas text-dorado">Modo IA · ${escape(IA_ADAPTERS[iaState.provider]?.nombre || iaState.provider)}</span><div class="mensaje-cuerpo"></div>`;
+
+  try {
+    const systemPrompt = construirSystemPromptChat();
+    let primeroChunk = true;
+    let acumulado = '';
+
+    await llamarIA({
+      systemPrompt,
+      userPrompt: texto,
+      onChunk: (chunk, todo) => {
+        if (primeroChunk){
+          typing.remove();
+          cont.appendChild(burbuja);
+          primeroChunk = false;
+        }
+        acumulado = todo;
+        burbuja.querySelector('.mensaje-cuerpo').innerHTML = formatearMarkdownSimple(escape(todo));
+        cont.scrollTop = cont.scrollHeight;
+      }
+    });
+
+    // Guardar en historial
+    state.historialChat.push({ user: texto, asistente: acumulado, fundamento: '', ts: Date.now(), modo: 'ia' });
+  } catch(err){
+    typing.remove();
+    agregarMensajeAsistente({
+      texto: `<strong>No pude completar la consulta con IA.</strong><br>${escape(err.message)}<br><br>` +
+             `Puede revisar la configuración en ⚙️ o volver al modo offline desactivando el toggle.`,
+      fundamento: 'Modo IA · error'
+    });
+  }
+}
+
+// Formato markdown muy simple para respuestas de IA (bold, italic, listas)
+function formatearMarkdownSimple(html){
+  return html
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[^]+?<\/li>)+/g, m => `<ul>${m}</ul>`)
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
 }
 
 function buscarRespuestaOffline(query){
