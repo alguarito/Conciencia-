@@ -183,13 +183,14 @@ body, .column, .modal, .topbar, .doc-item, .pregunta-card, .clasif-card,
   transition: background-color .25s ease, border-color .25s ease, color .25s ease;
 }
 *{margin:0; padding:0; box-sizing:border-box}
-html, body{height:100vh; overflow:hidden}
+/* html/body height/overflow se controlan al final del CSS (bento layout) */
 body{
-  font-family:var(--sans); font-size:var(--fs-md); color:var(--tinta);
-  background:var(--hueso);
+  font-family:var(--sans); font-size:var(--fs-base); color:var(--text);
+  background:var(--bg-app);
   background-image:
     radial-gradient(circle at 15% 8%, rgba(184,153,104,.04) 0%, transparent 35%),
     radial-gradient(circle at 92% 92%, rgba(107,24,32,.03) 0%, transparent 40%);
+  min-height:100vh;
 }
 button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit}
 input, textarea, select{font-family:inherit; color:inherit}
@@ -239,18 +240,7 @@ input, textarea, select{font-family:inherit; color:inherit}
 .btn-icon svg{width:18px; height:18px}
 
 /* === LAYOUT 3 COLUMNAS === */
-.app{
-  display:grid;
-  grid-template-columns:var(--col1) 4px var(--col2) 4px var(--col3);
-  height:calc(100vh - 64px);
-  position:relative;
-}
-.column{
-  background:var(--hueso); display:flex; flex-direction:column;
-  border-right:1px solid var(--gris-papel);
-  overflow:hidden; min-width:280px;
-}
-.column:last-child{border-right:none}
+/* .app y .column legacy ELIMINADOS · ahora se redefinen al final como layout bento vertical */
 .divider{
   background:var(--gris-papel); cursor:col-resize;
   position:relative; transition:background .15s;
