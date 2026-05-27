@@ -1564,6 +1564,48 @@ input, textarea, select{
   line-height:1.1;
 }
 
+/* Microtexto que indica de qué documento previo se tomó el valor */
+.campo-origen{
+  display:flex; align-items:center; gap:6px;
+  font-size:var(--fs-xs);
+  font-style:italic;
+  color:var(--dorado);
+  margin-top:6px;
+  padding:6px 10px;
+  background:rgba(139,111,63,.08);
+  border-left:2px solid var(--dorado);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  line-height:1.4;
+}
+.campo-origen strong{
+  font-style:normal; font-weight:600;
+  color:var(--vino);
+}
+/* Tag "auto" del campo prellenado */
+.campo-prefill-tag{
+  display:inline-block;
+  margin-left:8px;
+  padding:1px 8px;
+  background:var(--dorado);
+  color:#fff;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.08em;
+  border-radius:var(--radius-full);
+  text-transform:uppercase;
+  vertical-align:middle;
+  cursor:help;
+}
+/* Input prefilled · borde dorado tenue para distinguirlo */
+.campo-input.prefilled, .campo-textarea.prefilled, .campo-select.prefilled{
+  border-color:var(--dorado) !important;
+  background:rgba(139,111,63,.04);
+}
+.campo-input.prefilled:focus, .campo-textarea.prefilled:focus, .campo-select.prefilled:focus{
+  border-color:var(--vino) !important;
+  background:#fff;
+}
+
 /* === COMPONENTES NUEVOS DEL REDISEÑO === */
 
 /* UX-001 · botón Atrás del árbol */
@@ -3409,9 +3451,10 @@ function actualizarBotonCompletar(){
   }
 }
 
-// Mapa de auto-rellenado: claves del caso → patrones de id de campo del documento
+// ============================================================
+// AUTORELLENO · NIVEL 1 · datos básicos del caso → campos del documento
+// ============================================================
 const AUTORELLENO_MAP = [
-  // [patrón regex del id del campo, función que devuelve el valor desde state]
   [/^fecha$|^fecha_emision$|^fecha_apertura$|^fecha_presentacion$|^fecha_reporte$|^fecha_elaboracion$/, () => new Date().toISOString().slice(0,10)],
   [/^estudiante$|estudiante_nombre|^nombre_estudiante$/, () => state.caso?.estudianteNombre],
   [/estudiante_documento|^documento_estudiante$|^documento$/, () => state.caso?.estudianteDocumento],
@@ -3430,31 +3473,139 @@ const AUTORELLENO_MAP = [
   }]
 ];
 
+// ============================================================
+// AUTORELLENO · NIVEL 2 · semántico entre documentos del expediente
+// Cuando un campo del tema X se llena en CUALQUIER documento,
+// se ofrece a los campos del MISMO tema en documentos siguientes.
+// El docente solo escribe la narración una vez.
+// ============================================================
+const AUTORELLENO_SEMANTICO = {
+  // El hecho central · descripción / narración / motivo
+  hecho_descripcion: [
+    'descripcion_hecho', 'narracion_libre', 'hechos_probados',
+    'motivo', 'motivo_citacion', 'motivo_remision',
+    'antecedentes', 'presentacion_caso'
+  ],
+  // Cuándo ocurrió
+  hecho_fecha: [
+    'fecha_hecho', 'fecha_incidente', 'fecha_falta',
+    'fecha_ocurrencia', 'fecha_situacion'
+  ],
+  hecho_hora: ['hora_hecho', 'hora_incidente'],
+  hecho_lugar: ['lugar_hecho', 'lugar_incidente'],
+
+  // Quiénes
+  testigos: ['testigos', 'testigos_presentes'],
+  asistentes: ['asistentes', 'asistentes_comite', 'asistentes_reunion'],
+
+  // Versión del estudiante
+  version_estudiante: ['version_estudiante', 'narracion_libre', 'respuestas_estudiante'],
+
+  // Manifestación del acudiente
+  manifestacion_acudiente: ['manifestacion_acudiente', 'declaracion_acudiente'],
+
+  // Pruebas
+  pruebas: ['pruebas_solicitadas', 'pruebas_practicadas', 'diligencias_practicadas'],
+
+  // Compromisos / acuerdos
+  compromiso: [
+    'compromiso', 'compromisos_estudiante', 'compromisos_adquiridos',
+    'compromisos', 'compromisos_especificos', 'acciones_restaurativas'
+  ],
+  consecuencias: ['consecuencias_incumplimiento', 'consecuencias'],
+
+  // Análisis del caso (Comité, Coordinación, Resolución)
+  analisis: ['analisis_situacion', 'considerandos', 'conclusiones'],
+
+  // Recursos legales aplicables
+  recursos: ['recursos_procedentes', 'recursos_disponibles']
+};
+
+// Construye el mapa inverso · campo_id → tema
+const CAMPO_A_TEMA = (() => {
+  const map = {};
+  Object.entries(AUTORELLENO_SEMANTICO).forEach(([tema, campos]) => {
+    campos.forEach(c => { map[c] = tema; });
+  });
+  return map;
+})();
+
+// Busca un valor existente en otros documentos del expediente
+// que pertenezca al mismo tema semántico que el campo actual.
+// Devuelve { valor, origen: 'doc-id' } o null
+function buscarValorSemantico(campoId, currentDocId){
+  const tema = CAMPO_A_TEMA[campoId];
+  if (!tema) return null;
+  const camposEquivalentes = AUTORELLENO_SEMANTICO[tema];
+
+  // Recorrer todos los documentos previos del expediente
+  for (const [docId, vals] of Object.entries(state.docsValores || {})){
+    if (docId === currentDocId) continue;
+    for (const candidato of camposEquivalentes){
+      if (vals[candidato] && String(vals[candidato]).trim().length > 0){
+        return {
+          valor: vals[candidato],
+          origen: docId,
+          campoOrigen: candidato
+        };
+      }
+    }
+  }
+  return null;
+}
+
 function aplicarAutoRelleno(doc, valores){
-  const prellenados = new Set();
+  // Estructura nueva: Map<campoId, { origen?: string, origenNombre?: string }>
+  const prellenados = new Map();
   if (!state.caso) return prellenados;
+
   (doc.campos || []).forEach(campo => {
-    // No sobreescribir lo que el usuario ya escribió
-    if (valores[campo.id]) return;
-    // No prerellenar firmas, booleanos o textareas largos
-    if (['firma','firmas_multiples','boolean','textarea'].includes(campo.tipo)) return;
-    // Buscar coincidencia en el mapa
+    // Respeta lo que el usuario ya escribió en ESTE documento
+    if (valores[campo.id] && String(valores[campo.id]).trim().length > 0) return;
+    // No tocar firmas o booleanos
+    if (['firma','firmas_multiples','boolean'].includes(campo.tipo)) return;
+
+    // NIVEL 1 · datos básicos del caso (siempre prioritarios)
+    let aplicado = false;
     for (const [regex, fn] of AUTORELLENO_MAP){
       if (regex.test(campo.id)){
         const valor = fn();
         if (valor){
           valores[campo.id] = valor;
-          prellenados.add(campo.id);
+          prellenados.set(campo.id, { origen: 'caso', origenNombre: 'Datos del caso' });
+          aplicado = true;
           break;
         }
       }
+    }
+    if (aplicado) return;
+
+    // NIVEL 2 · semántico entre documentos del expediente
+    // Solo aplica a campos de texto/textarea/fecha/hora (no checkbox/firma)
+    if (!['texto','textarea','fecha','hora','datetime','select'].includes(campo.tipo)) return;
+    const hallazgo = buscarValorSemantico(campo.id, doc.id);
+    if (hallazgo){
+      valores[campo.id] = hallazgo.valor;
+      const docOrigen = CATALOGO.catalogo_documentos?.[hallazgo.origen];
+      prellenados.set(campo.id, {
+        origen: hallazgo.origen,
+        origenNombre: docOrigen?.nombre || hallazgo.origen,
+        campoOrigen: hallazgo.campoOrigen
+      });
     }
   });
   return prellenados;
 }
 
 function renderCampo(c, valores, prellenados){
-  prellenados = prellenados || new Set();
+  // prellenados es Map<campoId, {origen, origenNombre, campoOrigen?}>
+  // Aceptar Set legacy para compatibilidad
+  if (prellenados instanceof Set){
+    const m = new Map();
+    prellenados.forEach(id => m.set(id, { origen: 'caso', origenNombre: 'Datos del caso' }));
+    prellenados = m;
+  }
+  prellenados = prellenados || new Map();
   const v = valores[c.id] || c.default || '';
   const inputId = `campo-${c.id}`;
   const errorId = `err-${inputId}`;
@@ -3465,21 +3616,26 @@ function renderCampo(c, valores, prellenados){
   const describedBy = [helpId, errorId].filter(Boolean).join(' ');
   const ariaDescribed = describedBy ? `aria-describedby="${describedBy}"` : '';
   const help = c.min_chars ? `<div class="campo-help" id="${helpId}">Mínimo ${c.min_chars} caracteres</div>` : '';
-  const esPrefilled = prellenados.has(c.id);
+  const prefillInfo = prellenados.get(c.id);
+  const esPrefilled = !!prefillInfo;
   const claseExtra = esPrefilled ? 'prefilled' : '';
-  const tagPrefill = esPrefilled ? `<span class="campo-prefill-tag">auto</span>` : '';
+  const tagPrefill = esPrefilled ? `<span class="campo-prefill-tag" title="Tomado de ${escape(prefillInfo.origenNombre)}">auto</span>` : '';
+  // Microtexto que indica el origen del auto-rellenado (solo si viene de otro documento)
+  const prefillOrigen = (esPrefilled && prefillInfo.origen !== 'caso')
+    ? `<div class="campo-origen"><span aria-hidden="true">⤴</span> Tomado de <strong>${escape(prefillInfo.origenNombre)}</strong> · editable</div>`
+    : '';
   const errorDiv = `<div class="campo-error" id="${errorId}" aria-live="polite"></div>`;
   const etiqueta = c.etiqueta || c.id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
   if (c.tipo === 'textarea')
     return `<div class="campo-form">
       <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
-      <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>${help}${errorDiv}
+      <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>${prefillOrigen}${help}${errorDiv}
     </div>`;
   if (c.tipo === 'select' && c.opciones)
     return `<div class="campo-form">
       <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
-      <select id="${inputId}" class="campo-select ${claseExtra}" data-campo="${c.id}" ${ariaReq} ${ariaDescribed}>${c.opciones.map(o=>`<option ${v===o?'selected':''}>${escape(o)}</option>`).join('')}</select>${errorDiv}
+      <select id="${inputId}" class="campo-select ${claseExtra}" data-campo="${c.id}" ${ariaReq} ${ariaDescribed}>${c.opciones.map(o=>`<option ${v===o?'selected':''}>${escape(o)}</option>`).join('')}</select>${prefillOrigen}${errorDiv}
     </div>`;
   if (c.tipo === 'firma' || c.tipo === 'firmas_multiples')
     return `<div class="campo-form">
@@ -3494,9 +3650,22 @@ function renderCampo(c, valores, prellenados){
   const tipo = c.tipo === 'fecha' ? 'date' : c.tipo === 'hora' ? 'time' : c.tipo === 'datetime' ? 'datetime-local' : c.tipo === 'numero' ? 'number' : c.tipo === 'email' ? 'email' : 'text';
   return `<div class="campo-form">
     <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
-    <input id="${inputId}" type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}" ${ariaReq} ${ariaDescribed}>${help}${errorDiv}
+    <input id="${inputId}" type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}" ${ariaReq} ${ariaDescribed}>${prefillOrigen}${help}${errorDiv}
   </div>`;
 }
+
+// Cuando el usuario edita un campo auto-rellenado, se vuelve manual:
+// quitamos la indicación de origen y el estilo prefilled.
+document.addEventListener('input', e => {
+  if (!e.target.matches('.campo-input, .campo-textarea, .campo-select')) return;
+  const form = e.target.closest('.campo-form');
+  if (!form) return;
+  if (e.target.classList.contains('prefilled')){
+    e.target.classList.remove('prefilled');
+    form.querySelector('.campo-prefill-tag')?.remove();
+    form.querySelector('.campo-origen')?.remove();
+  }
+});
 
 function cerrarEditor(){
   $('doc-editor').classList.remove('activo');
