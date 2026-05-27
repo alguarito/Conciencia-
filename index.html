@@ -6063,8 +6063,10 @@ const IA_MODELOS = {
     { id: 'gpt-4.1',           nombre: 'GPT-4.1 · razonamiento avanzado' }
   ],
   google: [
-    { id: 'gemini-2.0-flash',  nombre: 'Gemini 2.0 Flash · rápido (recomendado)' },
-    { id: 'gemini-2.0-pro',    nombre: 'Gemini 2.0 Pro · mejor calidad' }
+    { id: 'gemini-2.5-flash',      nombre: 'Gemini 2.5 Flash · rápido (recomendado)' },
+    { id: 'gemini-2.5-flash-lite', nombre: 'Gemini 2.5 Flash Lite · más económico' },
+    { id: 'gemini-2.5-pro',        nombre: 'Gemini 2.5 Pro · mejor calidad' },
+    { id: 'gemini-2.0-flash',      nombre: 'Gemini 2.0 Flash · estable (anterior)' }
   ],
   custom: []
 };
@@ -6266,8 +6268,29 @@ async function llamarIA({ systemPrompt, userPrompt, onChunk, anonimizar = true }
 
   if (!resp.ok){
     const errTxt = await resp.text().catch(()=>'');
-    const detalle = errTxt.length < 400 ? errTxt : errTxt.slice(0, 400) + '…';
-    throw new Error(`HTTP ${resp.status}: ${detalle || resp.statusText}`);
+    // Mensajes amigables para errores comunes
+    let mensaje;
+    if (resp.status === 401 || resp.status === 403){
+      mensaje = 'API key inválida o sin permisos. Revise la key en ⚙️ Configuración.';
+    } else if (resp.status === 429){
+      // Detectar si es cuota gratuita de Gemini o rate limit
+      if (errTxt.includes('free_tier') || errTxt.includes('free quota')){
+        mensaje = 'Cuota gratuita agotada hoy. Espere a mañana, active billing en su cuenta del proveedor, o cambie a otro proveedor en ⚙️ Configuración.';
+      } else {
+        mensaje = 'Demasiadas solicitudes seguidas (rate limit). Espere unos segundos y reintente.';
+      }
+    } else if (resp.status === 404){
+      mensaje = 'Modelo no encontrado. El modelo seleccionado puede no estar disponible para su key. Cambie en ⚙️ Configuración.';
+    } else if (resp.status === 500 || resp.status === 502 || resp.status === 503){
+      mensaje = `El proveedor (${IA_ADAPTERS[iaState.provider]?.nombre}) está temporalmente fuera de servicio. Reintente en un momento.`;
+    } else {
+      const detalle = errTxt.length < 300 ? errTxt : errTxt.slice(0, 300) + '…';
+      mensaje = `HTTP ${resp.status}: ${detalle || resp.statusText}`;
+    }
+    const err = new Error(mensaje);
+    err.status = resp.status;
+    err.raw = errTxt;
+    throw err;
   }
 
   // Sin streaming
