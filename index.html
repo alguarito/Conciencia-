@@ -1966,6 +1966,263 @@ input, textarea, select{
 }
 
 /* ============================================================
+   TIMELINE V2 · Pasos del protocolo con documentos integrados
+   ============================================================ */
+.timeline-v2{
+  display:flex; flex-direction:column; gap:var(--space-6);
+  padding:var(--space-6) var(--space-7);
+  position:relative;
+}
+.paso-v2{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:var(--space-5);
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-xl);
+  padding:var(--space-6) var(--space-7);
+  transition:all var(--motion-fast) var(--ease-out);
+  position:relative;
+}
+.paso-v2.completado{
+  background:rgba(58,107,77,0.04);
+  border-color:rgba(58,107,77,0.3);
+}
+.paso-v2.plazo-vencido{
+  border-color:var(--danger);
+  box-shadow:0 0 0 3px rgba(185,28,28,0.08);
+}
+.paso-v2.plazo-pronto{
+  border-color:var(--warning);
+}
+.paso-v2.urgente:not(.completado){
+  border-left:4px solid var(--vino);
+}
+
+/* Riel izquierdo · número del paso */
+.paso-rail{
+  display:flex; flex-direction:column; align-items:center;
+  position:relative;
+}
+.paso-circulo{
+  width:40px; height:40px;
+  border-radius:50%;
+  background:var(--bg-surface);
+  border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--sans); font-weight:800; font-size:var(--fs-md);
+  color:var(--text-muted);
+  flex-shrink:0;
+  z-index:2;
+}
+.paso-v2.completado .paso-circulo{
+  background:var(--success); border-color:var(--success); color:#fff;
+}
+.paso-v2.plazo-vencido:not(.completado) .paso-circulo{
+  background:var(--danger); border-color:var(--danger); color:#fff;
+}
+.paso-v2.plazo-pronto:not(.completado) .paso-circulo{
+  background:var(--warning); border-color:var(--warning); color:#fff;
+}
+.paso-v2.urgente:not(.completado) .paso-circulo{
+  background:var(--vino); border-color:var(--vino); color:#fff;
+}
+.paso-check{ font-size:18px; }
+
+/* Línea vertical que conecta los pasos */
+.paso-v2:not(:last-child) .paso-rail::after{
+  content:'';
+  position:absolute;
+  top:46px; bottom:-32px;
+  left:50%; transform:translateX(-50%);
+  width:2px;
+  background:var(--border-soft);
+}
+
+/* Cuerpo del paso */
+.paso-body{ min-width:0; }
+.paso-header{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:var(--space-3);
+  margin-bottom:var(--space-3);
+}
+.paso-titulo-v2{
+  font-family:var(--sans); font-weight:700;
+  font-size:var(--fs-lg); letter-spacing:-0.015em;
+  margin:0 0 4px; color:var(--text); line-height:1.25;
+}
+.paso-resp-v2{
+  font-size:var(--fs-sm); color:var(--text-muted);
+  margin:0; line-height:1.4;
+}
+.paso-desc-v2{
+  font-size:var(--fs-sm); color:var(--text-muted);
+  margin:0 0 var(--space-4); line-height:1.5;
+}
+
+/* Badge de estado a la derecha del header */
+.paso-status-badge{
+  display:inline-flex; align-items:center;
+  padding:4px 10px; border-radius:var(--radius-full);
+  font-size:var(--fs-xs); font-weight:700;
+  white-space:nowrap; flex-shrink:0;
+}
+.status-completo{ background:rgba(58,107,77,.12); color:var(--success); }
+.status-vencido { background:var(--danger-soft); color:var(--danger); }
+.status-pronto  { background:var(--warning-soft); color:var(--warning); }
+.status-urgente { background:var(--accent-soft); color:var(--vino); }
+.status-pendiente{ background:var(--bg-muted); color:var(--text-muted); }
+
+/* Cards de documento dentro del paso */
+.paso-docs-v2{
+  display:flex; flex-direction:column;
+  gap:var(--space-3);
+}
+.paso-doc-card{
+  background:var(--bg-muted);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-lg);
+  padding:var(--space-4) var(--space-5);
+  transition:all var(--motion-fast) var(--ease-out);
+}
+.paso-doc-card:hover:not(.doc-editor-abierto){
+  border-color:var(--vino);
+}
+.paso-doc-card.doc-completo{
+  background:rgba(58,107,77,.04);
+  border-color:rgba(58,107,77,.3);
+}
+.paso-doc-card.doc-editor-abierto{
+  background:var(--bg-surface);
+  border-color:var(--vino); border-width:1.5px;
+  box-shadow:0 0 0 3px rgba(107,24,32,0.08);
+}
+.paso-doc-card-head{
+  display:flex; gap:var(--space-3); align-items:flex-start;
+}
+.paso-doc-icon{
+  font-size:28px; line-height:1; flex-shrink:0;
+  width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-md);
+}
+.paso-doc-card.doc-completo .paso-doc-icon{
+  background:var(--success); color:#fff;
+  border-color:var(--success);
+}
+.paso-doc-info{
+  flex:1; min-width:0;
+}
+.paso-doc-nombre{
+  margin:0; font-size:var(--fs-md); font-weight:700;
+  color:var(--text); letter-spacing:-0.01em;
+  line-height:1.3;
+}
+.paso-doc-fundamento{
+  margin:2px 0 0; font-size:var(--fs-xs);
+  font-family:var(--mono); color:var(--text-muted);
+}
+
+/* Status del documento (a la derecha del header) */
+.paso-doc-status{
+  font-size:var(--fs-xs); font-weight:600;
+  padding:3px 8px; border-radius:var(--radius-full);
+  white-space:nowrap; flex-shrink:0;
+}
+.paso-doc-status.completo  { background:rgba(58,107,77,.12); color:var(--success); }
+.paso-doc-status.pendiente { background:var(--bg-surface); color:var(--text-muted); }
+.paso-doc-status.enprogreso{ background:var(--warning-soft); color:var(--warning); }
+
+/* Mini barra de progreso del documento */
+.paso-doc-mini-bar{
+  height:4px; background:var(--bg-surface);
+  border-radius:99px; overflow:hidden;
+  margin-top:var(--space-3);
+}
+.paso-doc-mini-fill{
+  height:100%; background:var(--warning);
+  border-radius:99px;
+  transition:width 400ms var(--ease-out);
+}
+.paso-doc-card.doc-completo .paso-doc-mini-fill{ background:var(--success); }
+
+.paso-doc-actions{
+  display:flex; gap:var(--space-2); margin-top:var(--space-3);
+}
+
+/* Paso sin documentos · solo botón manual */
+.paso-sin-docs{
+  background:var(--bg-surface);
+  border:1px dashed var(--border);
+  border-radius:var(--radius-md);
+  padding:var(--space-3) var(--space-4);
+  display:flex; justify-content:space-between; align-items:center;
+  gap:var(--space-3); flex-wrap:wrap;
+}
+.paso-sin-docs p{
+  margin:0; font-size:var(--fs-sm); color:var(--text-muted); flex:1;
+}
+
+/* Editor inline expandido dentro del paso */
+.paso-doc-editor-host{
+  margin-top:var(--space-4);
+  padding-top:var(--space-4);
+  border-top:1px solid var(--border-soft);
+  animation:expandEditor var(--motion-normal) var(--ease-out);
+}
+@keyframes expandEditor{
+  from { opacity:0; transform:translateY(-8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.paso-doc-editor-inline{
+  background:var(--bg-surface);
+  border-radius:var(--radius-md);
+  padding:var(--space-4);
+}
+.paso-doc-editor-actions{
+  display:flex; gap:var(--space-2);
+  margin-bottom:var(--space-4); flex-wrap:wrap;
+  padding-bottom:var(--space-3);
+  border-bottom:1px solid var(--border-soft);
+}
+
+/* Criterios de cierre del protocolo */
+.paso-cierre{
+  margin:var(--space-6) var(--space-7) var(--space-7);
+  padding:var(--space-5);
+  background:var(--bg-muted);
+  border:1px dashed var(--border);
+  border-radius:var(--radius-lg);
+}
+.paso-cierre ul{
+  margin:var(--space-3) 0 0;
+  padding-left:var(--space-5);
+  font-size:var(--fs-sm); color:var(--text-muted); line-height:1.6;
+}
+
+/* Sección "Documentos opcionales" (cuando aplica) */
+.docs-opcionales-section{
+  background:var(--bg-surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius-xl);
+  padding:var(--space-7) var(--space-8);
+}
+
+/* Responsive · en pantallas pequeñas el grid se compacta */
+@media (max-width:680px){
+  .paso-v2{
+    grid-template-columns:36px 1fr;
+    padding:var(--space-5);
+    gap:var(--space-4);
+  }
+  .paso-circulo{ width:32px; height:32px; font-size:var(--fs-sm); }
+  .paso-header{ flex-direction:column; gap:var(--space-2); }
+  .paso-status-badge{ align-self:flex-start; }
+}
+
+/* ============================================================
    MIS CASOS · Expediente digital institucional
    ============================================================ */
 .mis-casos-section{
@@ -3078,50 +3335,28 @@ body{
     </div>
   </section>
 
-  <!-- EXPEDIENTE BENTO -->
-  <section class="expediente-section" id="expediente">
+  <!-- Documentos OPCIONALES (no asociados a un paso obligatorio) -->
+  <!-- Aparecen solo si el protocolo tiene documentos_opcionales declarados -->
+  <section class="docs-opcionales-section" id="docs-opcionales-section" hidden>
     <header class="section-header">
       <div>
-        <p class="versalitas text-dorado">Expediente del caso</p>
-        <h2 class="section-title">Documentos a generar</h2>
-      </div>
-      <div class="docs-tabs" role="tablist" aria-label="Categorías de documentos">
-        <button type="button" class="docs-tab active" data-tab="requeridos" role="tab" aria-selected="true">Requeridos</button>
-        <button type="button" class="docs-tab" data-tab="opcionales" role="tab" aria-selected="false">Opcionales</button>
-        <button type="button" class="docs-tab" data-tab="completos" role="tab" aria-selected="false">Completados</button>
+        <p class="versalitas text-dorado">Adicionales</p>
+        <h2 class="section-title">Documentos opcionales</h2>
       </div>
     </header>
-
-    <div id="docs-lista-view">
-      <div class="docs-bento" id="docs-list">
-        <div class="docs-empty">
-          <span class="docs-empty-icon" aria-hidden="true">📂</span>
-          <p>Aún no hay documentos por gestionar.</p>
-          <p class="docs-empty-sub">Aparecerán aquí cuando el asesor clasifique la situación.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="doc-editor" id="doc-editor">
-      <div class="doc-editor-header">
-        <button class="doc-editor-back" onclick="cerrarEditor()">
-          <span aria-hidden="true">←</span> Volver al expediente
-        </button>
-        <div class="doc-editor-actions" id="doc-editor-actions">
-          <button class="btn btn-primary" onclick="descargarDocx()" id="btn-descargar-docx">
-            <span aria-hidden="true">📄</span> Descargar Word
-          </button>
-          <button class="btn btn-secondary" onclick="descargarPDF()" id="btn-descargar-pdf">
-            <span aria-hidden="true">📑</span> Imprimir / PDF
-          </button>
-          <button class="btn btn-ghost" id="btn-completar-doc" onclick="marcarDocCompleto()">
-            ✓ Marcar como completado
-          </button>
-        </div>
-      </div>
-      <div class="doc-editor-content" id="doc-editor-content"></div>
-    </div>
+    <div class="docs-bento" id="docs-opcionales-list"></div>
   </section>
+
+  <!-- Contenedores legacy ocultos (los referencia código viejo durante la transición) -->
+  <div id="docs-lista-view" hidden>
+    <div id="docs-list" hidden></div>
+  </div>
+  <div class="doc-editor" id="doc-editor" hidden>
+    <div class="doc-editor-header">
+      <div class="doc-editor-actions" id="doc-editor-actions"></div>
+    </div>
+    <div class="doc-editor-content" id="doc-editor-content"></div>
+  </div>
 
 </main>
 
@@ -4178,64 +4413,133 @@ function renderProtocolo(nodo){
     ${nodo.advertencia ? `<div style="margin-top:8px; font-size:var(--fs-sm); color:var(--rojo-alerta); font-style:italic">⚠ ${escape(nodo.advertencia)}</div>` : ''}
   </div>`;
 
-  html += `<div class="timeline">`;
+  html += `<div class="timeline timeline-v2">`;
   nodo.pasos.forEach((paso, i) => {
-    const completado = state.pasosCompletados.has(i);
-    const urgente = paso.urgencia === 'critica' || paso.urgencia === 'alta';
-    const obl = paso.obligatorio;
+    // Auto-completado: el paso se considera "completo" cuando TODOS sus
+    // documentos obligatorios están firmados/marcados como completados.
+    // Pasos sin documentos requieren marcado manual (botón "✓ Hecho").
+    const docs = (paso.documentos_generar || []);
+    const docsCompletos = docs.filter(d => state.docsCompletos.has(d)).length;
+    const todosDocsListos = docs.length > 0 && docsCompletos === docs.length;
+    const marcadoManual = state.pasosCompletados.has(i);
+    const completado = todosDocsListos || marcadoManual;
 
-    // Construir clases de la card
-    const clases = ['paso'];
+    // Cálculo de plazo del paso (usado para badge cromático)
+    const plazo = state.caso?.fechaApertura
+      ? calcularPlazoPaso(paso, state.caso.fechaApertura)
+      : { estadoPlazo: 'sinplazo' };
+    const urgente = paso.urgencia === 'critica' || paso.urgencia === 'alta';
+    const obl = paso.obligatorio !== false;
+
+    // Construir clases
+    const clases = ['paso paso-v2'];
     if (completado) clases.push('completado');
     if (urgente) clases.push('urgente');
     if (obl) clases.push('es-obligatorio');
+    if (plazo.estadoPlazo === 'rojo') clases.push('plazo-vencido');
+    else if (plazo.estadoPlazo === 'amarillo') clases.push('plazo-pronto');
 
-    // Chip obligatorio (más visible)
-    const chipObl = obl ? `<span class="chip-obligatorio">Obligatorio</span>` : '';
+    // Badge de estado del paso (a la derecha del header)
+    let statusBadge;
+    if (completado){
+      statusBadge = '<span class="paso-status-badge status-completo">✓ Completo</span>';
+    } else if (plazo.estadoPlazo === 'rojo'){
+      const d = Math.abs(plazo.diasRestantes);
+      statusBadge = `<span class="paso-status-badge status-vencido">🔴 Vencido hace ${d} día${d>1?'s':''}</span>`;
+    } else if (plazo.estadoPlazo === 'amarillo'){
+      const d = plazo.diasRestantes;
+      const txt = d === 0 ? 'Vence hoy' : d === 1 ? 'Vence mañana' : `Vence en ${d} días`;
+      statusBadge = `<span class="paso-status-badge status-pronto">🟡 ${txt}</span>`;
+    } else if (urgente){
+      statusBadge = `<span class="paso-status-badge status-urgente">⚠ ${escape(paso.urgencia)}</span>`;
+    } else {
+      statusBadge = '<span class="paso-status-badge status-pendiente">⏳ Pendiente</span>';
+    }
 
-    // Chip de urgencia
-    const chipUrgencia = paso.urgencia
-      ? `<span class="chip-urgente chip-urgencia-${paso.urgencia}">${paso.urgencia}</span>`
-      : '';
+    // Plazo legible
+    const plazoTxt = paso.plazo_dias
+      ? `${paso.plazo_dias} día${paso.plazo_dias>1?'s':''}`
+      : paso.plazo_horas ? `${paso.plazo_horas} h` : 'sin plazo';
 
-    // Plazo: en rojo si es urgente
-    const claseRojo = urgente ? 'chip-plazo-rojo' : '';
-    const plazoHtml = paso.plazo_dias
-      ? `<span class="paso-meta-item ${claseRojo}">⏱ ${paso.plazo_dias} día${paso.plazo_dias>1?'s':''}</span>`
-      : paso.plazo_horas
-        ? `<span class="paso-meta-item ${claseRojo}">⏱ ${paso.plazo_horas} h</span>`
-        : '';
+    // Cards de documentos asociados (la pieza nueva)
+    const docsHTML = docs.length === 0
+      ? `<div class="paso-sin-docs">
+          <p>Este paso no requiere documentos. Cuando esté hecho, márcalo manualmente.</p>
+          ${!completado
+            ? `<button class="btn btn-secondary btn-sm" onclick="togglePasoCompleto(${i})">✓ Marcar como hecho</button>`
+            : `<button class="btn btn-ghost btn-sm" onclick="togglePasoCompleto(${i})">↺ Desmarcar</button>`}
+        </div>`
+      : docs.map(docId => {
+          const doc = CATALOGO.catalogo_documentos[docId];
+          if (!doc) return '';
+          const completo = state.docsCompletos.has(docId);
+          const vals = state.docsValores[docId] || {};
+          const totalCampos = (doc.campos || []).filter(c => c.tipo !== 'firma' && c.tipo !== 'firmas_multiples').length;
+          const camposLlenos = Object.values(vals).filter(v => v && String(v).trim()).length;
+          const pct = totalCampos ? Math.round((camposLlenos / totalCampos) * 100) : 0;
+          const editorAbierto = state.docActivo === docId;
+          let statusDoc;
+          if (completo){
+            statusDoc = '<span class="paso-doc-status completo">✓ Completado · firmado</span>';
+          } else if (camposLlenos === 0){
+            statusDoc = '<span class="paso-doc-status pendiente">⏳ Sin iniciar</span>';
+          } else {
+            statusDoc = `<span class="paso-doc-status enprogreso">✎ ${camposLlenos}/${totalCampos} campos · ${pct}%</span>`;
+          }
+          const iconoCateg = ({
+            'disciplinario':'⚖️', 'comunicacion':'📨', 'compromiso':'🤝',
+            'sancion':'📜', 'acta_organo_colegiado':'📋', 'remision':'🔁',
+            'informe':'📄', 'resolucion':'🏛️', 'reporte_externo':'🚨',
+            'recurso':'⚖️', 'academico':'📚'
+          })[doc.categoria] || '📄';
+          return `<article class="paso-doc-card ${completo?'doc-completo':''} ${editorAbierto?'doc-editor-abierto':''}" id="paso-doc-${docId}">
+            <div class="paso-doc-card-head">
+              <span class="paso-doc-icon" aria-hidden="true">${completo?'✓':iconoCateg}</span>
+              <div class="paso-doc-info">
+                <h4 class="paso-doc-nombre">${escape(doc.nombre)}</h4>
+                ${doc.fundamento ? `<p class="paso-doc-fundamento">${escape(doc.fundamento)}</p>` : ''}
+              </div>
+              ${statusDoc}
+            </div>
+            ${!completo && camposLlenos > 0 ? `<div class="paso-doc-mini-bar"><div class="paso-doc-mini-fill" style="width:${pct}%"></div></div>` : ''}
+            <div class="paso-doc-actions">
+              ${editorAbierto
+                ? `<button class="btn btn-ghost btn-sm" onclick="cerrarEditorInline()">▲ Contraer editor</button>`
+                : `<button class="btn ${completo?'btn-secondary':'btn-primary'} btn-sm" onclick="abrirEditorDoc('${docId}')">
+                     ${completo ? '👁 Ver / re-editar' : (camposLlenos > 0 ? '✎ Continuar' : '✎ Llenar ahora')}
+                   </button>`}
+            </div>
+            ${editorAbierto ? '<div class="paso-doc-editor-host" id="paso-doc-editor-host"></div>' : ''}
+          </article>`;
+        }).join('');
 
     html += `<div class="${clases.join(' ')}" data-paso-idx="${i}">
-      <div class="paso-circulo"><span class="paso-num">${paso.numero}</span></div>
-      <div class="paso-titulo">${escape(paso.titulo)}${chipObl}</div>
-      <div class="paso-resp">${escape(paso.responsable||'')}</div>
-      <div class="paso-meta">
-        ${plazoHtml}
-        ${chipUrgencia}
-        ${paso.fundamento ? `<span class="paso-meta-item">📖 ${escape(paso.fundamento)}</span>` : ''}
+      <div class="paso-rail">
+        <div class="paso-circulo">
+          ${completado ? '<span class="paso-check">✓</span>' : `<span class="paso-num">${paso.numero}</span>`}
+        </div>
       </div>
-      <div class="paso-desc">${escape(paso.descripcion||'')}</div>
-      ${paso.documentos_generar && paso.documentos_generar.length ? `<div class="paso-docs">${paso.documentos_generar.map(d=>{
-        const doc = CATALOGO.catalogo_documentos[d];
-        return doc?`<button type="button" class="paso-doc-chip" onclick="abrirEditorDoc('${d}')" aria-label="Editar ${escape(doc.nombre)}"><span aria-hidden="true">📄</span> ${escape(doc.nombre.length>30?doc.nombre.slice(0,30)+'…':doc.nombre)}</button>`:'';
-      }).join('')}</div>` : ''}
-      <div class="paso-checkbox">
-        <input type="checkbox" id="chk-${i}" ${completado?'checked':''} onchange="togglePasoCompleto(${i})">
-        <label for="chk-${i}">Marcar como completado</label>
+      <div class="paso-body">
+        <header class="paso-header">
+          <div>
+            <h3 class="paso-titulo-v2">${escape(paso.titulo)}</h3>
+            <p class="paso-resp-v2"><em>${escape(paso.responsable||'')}</em> · <span class="mono">${escape(plazoTxt)}</span>${paso.fundamento?` · <span class="mono">${escape(paso.fundamento)}</span>`:''}</p>
+          </div>
+          ${statusBadge}
+        </header>
+        ${paso.descripcion ? `<p class="paso-desc-v2">${escape(paso.descripcion)}</p>` : ''}
+        <div class="paso-docs-v2">
+          ${docsHTML}
+        </div>
       </div>
     </div>`;
   });
   html += `</div>`;
 
   if (nodo.cierre){
-    html += `<div style="padding:8px 20px 24px">
-      <div style="border:1px dashed var(--gris-tenue); border-radius:2px; padding:12px; background:var(--hueso-osc)">
-        <div style="font-size:var(--fs-xs); font-family:var(--mono); letter-spacing:1.5px; color:var(--vino); text-transform:uppercase; font-weight:700; margin-bottom:6px">Criterios de cierre</div>
-        <ul style="font-size:var(--fs-sm); line-height:1.5; color:var(--tinta-suave); padding-left:16px">
-          ${nodo.cierre.criterios.map(c=>`<li>${escape(c)}</li>`).join('')}
-        </ul>
-      </div>
+    html += `<div class="paso-cierre">
+      <p class="versalitas text-vino">Criterios de cierre</p>
+      <ul>${nodo.cierre.criterios.map(c=>`<li>${escape(c)}</li>`).join('')}</ul>
     </div>`;
   }
   return html;
@@ -4345,48 +4649,69 @@ function abrirEditorDoc(docId){
   const doc = CATALOGO.catalogo_documentos[docId];
   if (!doc) return;
   state.docActivo = docId;
-  $('docs-lista-view').style.display = 'none';
-  const ed = $('doc-editor');
-  ed.classList.add('activo');
+
+  // Re-render del protocolo para que la card del paso muestre el editor expandido inline
+  renderColumnaRuta();
 
   // Auto-rellenar campos comunes desde los datos del caso
   if (!state.docsValores[docId]) state.docsValores[docId] = {};
   const valores = state.docsValores[docId];
   const camposPrellenados = aplicarAutoRelleno(doc, valores);
 
-  const enc = METADATA.configuracion_documentos.encabezado_estandar;
-  const cont = $('doc-editor-content');
-  cont.innerHTML = `
-    <div class="validacion-banner" id="validacion-banner" tabindex="-1"></div>
-    <div class="doc-encabezado">
-      <img class="doc-encabezado-logo" src="icons/LOGOSMJ.png" alt="Escudo I.E. Sor María Juliana"
-           onerror="this.style.display='none'">
-      <div class="doc-encabezado-nombre">${escape(enc.linea_1)}</div>
-      <div class="doc-encabezado-lema">${escape(enc.linea_2)}</div>
-      <div class="doc-encabezado-direccion">${escape(enc.linea_3)} · ${escape(enc.linea_4)}</div>
+  // Buscar el host inline dentro del paso (creado por renderProtocolo)
+  let host = document.getElementById('paso-doc-editor-host');
+  // Fallback: si no encontramos host inline (porque el doc es opcional o
+  // fuera de pasos), usar el #doc-editor-content legacy
+  if (!host) host = document.getElementById('doc-editor-content');
+
+  host.innerHTML = `
+    <div class="paso-doc-editor-inline">
+      <div class="paso-doc-editor-actions">
+        <button class="btn btn-primary" onclick="descargarDocx()" id="btn-descargar-docx">
+          <span aria-hidden="true">📄</span> Descargar Word
+        </button>
+        <button class="btn btn-secondary" onclick="descargarPDF()" id="btn-descargar-pdf">
+          <span aria-hidden="true">📑</span> Imprimir / PDF
+        </button>
+        <button class="btn btn-ghost" id="btn-completar-doc" onclick="marcarDocCompleto()">
+          ✓ Marcar como firmado
+        </button>
+        <button class="btn btn-ghost" onclick="cerrarEditorInline()">
+          ▲ Contraer
+        </button>
+      </div>
+      <div class="validacion-banner" id="validacion-banner" tabindex="-1"></div>
+      ${(doc.campos||[]).map(c=>renderCampo(c, valores, camposPrellenados)).join('')}
     </div>
-    <div class="doc-titulo-form">${escape(doc.nombre)}</div>
-    ${doc.fundamento?`<div class="doc-fundamento-form">📖 ${escape(doc.fundamento)}</div>`:''}
-    ${(doc.campos||[]).map(c=>renderCampo(c, valores, camposPrellenados)).join('')}
   `;
-  // Reflejar estado completado en el botón terciario
+  // Reflejar estado completado en el botón
   actualizarBotonCompletar();
 
-  // Agregar listeners para guardado en tiempo real + limpiar marca prefilled al editar
-  cont.querySelectorAll('input, textarea, select').forEach(el => {
+  // Scroll suave al editor expandido
+  setTimeout(() => {
+    const card = document.getElementById('paso-doc-' + docId);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 80);
+
+  // Listeners para guardado en tiempo real + limpiar prefilled
+  host.querySelectorAll('input, textarea, select').forEach(el => {
     el.addEventListener('input', () => {
       if (!state.docsValores[docId]) state.docsValores[docId] = {};
       state.docsValores[docId][el.dataset.campo] = el.value;
-      // Si el usuario edita un campo, ya no es "prerellenado"
       el.classList.remove('prefilled');
       const tag = el.parentElement.querySelector('.campo-prefill-tag');
       if (tag) tag.remove();
-      // Limpiar error si lo había
       el.classList.remove('error');
       const err = el.parentElement.querySelector('.campo-error');
       if (err) err.textContent = '';
     });
   });
+}
+
+// Cierra el editor inline expandido dentro del paso
+function cerrarEditorInline(){
+  state.docActivo = null;
+  renderColumnaRuta();
 }
 
 function actualizarBotonCompletar(){
@@ -4634,20 +4959,32 @@ function cerrarEditor(){
 
 function marcarDocCompleto(){
   if (!state.docActivo) return;
-  state.docsCompletos.add(state.docActivo);
-  const doc = CATALOGO.catalogo_documentos[state.docActivo];
-  // Transformar el botón en chip estático (sin cerrar el editor para que el usuario vea el cambio)
-  actualizarBotonCompletar();
-  // Animación sutil de confirmación
-  const btn = $('btn-completar-doc');
-  if (btn){
-    btn.style.transform = 'scale(1.08)';
-    setTimeout(() => btn.style.transform = '', 300);
+  const docId = state.docActivo;
+  state.docsCompletos.add(docId);
+  const doc = CATALOGO.catalogo_documentos[docId];
+  guardarEstado();
+
+  // Auto-completar el paso si TODOS sus docs ya están firmados
+  const pasoAfectado = (state.rutaPasos || []).findIndex(p =>
+    (p.documentos_generar || []).includes(docId) &&
+    (p.documentos_generar || []).every(d => state.docsCompletos.has(d))
+  );
+  if (pasoAfectado >= 0 && !state.pasosCompletados.has(pasoAfectado)){
+    state.pasosCompletados.add(pasoAfectado);
+    guardarEstado();
+    agregarMensajeAsistente({
+      texto: `✓ Paso <strong>${pasoAfectado + 1}</strong> completado automáticamente: <em>${escape(state.rutaPasos[pasoAfectado].titulo)}</em>. ${state.pasosCompletados.size === state.rutaPasos.length ? '🎉 Ha completado todos los pasos del protocolo.' : 'Continúe con el siguiente paso.'}`,
+      fundamento: state.rutaPasos[pasoAfectado].fundamento
+    });
+  } else {
+    agregarMensajeAsistente({
+      texto: `✓ Documento <strong>${escape(doc.nombre)}</strong> firmado. Recuerde firmar físicamente con las partes involucradas.`,
+      fundamento: doc.fundamento
+    });
   }
-  agregarMensajeAsistente({
-    texto: `✓ Documento <strong>${escape(doc.nombre)}</strong> marcado como completado. Recuerde que debe ser firmado físicamente por las partes involucradas. Puede continuar editándolo o volver al expediente.`,
-    fundamento: doc.fundamento
-  });
+
+  // Re-render para reflejar el cambio en la card del paso (estado + bordes)
+  renderColumnaRuta();
 }
 
 // === CHAT ===
