@@ -1691,14 +1691,14 @@ body{
   display:flex; align-items:center; gap:var(--space-3);
   text-decoration:none; color:var(--text);
 }
-/* Logo institucional (escudo SMJ) dentro de badge circular */
+/* Logo institucional (escudo SMJ) dentro de badge squircle (cuadrado con esquinas curvas) */
 .brand-logo-wrap{
   display:flex; align-items:center; justify-content:center;
   width:52px; height:52px;
   flex-shrink:0;
-  /* Puntas circulares: el contenedor encierra el escudo en círculo */
+  /* Marco cuadrado con esquinas curvas estilo iOS / app icon */
   background:var(--bg-surface);
-  border-radius:50%;
+  border-radius:14px;
   border:1px solid var(--border-soft);
   padding:6px;
   box-shadow:0 2px 8px rgba(26,22,20,.08), inset 0 0 0 1px rgba(255,255,255,.6);
