@@ -4250,14 +4250,14 @@ async function enviarMensajeIA(texto){
   // Burbuja de respuesta donde se va a streaming
   const burbuja = document.createElement('div');
   burbuja.className = 'mensaje mensaje-asistente mensaje-ia';
-  burbuja.innerHTML = `<span class="mensaje-bienvenida-tag versalitas text-dorado">Modo IA · ${escape(IA_ADAPTERS[iaState.provider]?.nombre || iaState.provider)}</span><div class="mensaje-cuerpo"></div>`;
+  burbuja.innerHTML = `<span class="mensaje-bienvenida-tag versalitas text-dorado">Modo IA · respondiendo…</span><div class="mensaje-cuerpo"></div>`;
 
   try {
     const systemPrompt = construirSystemPromptChat();
     let primeroChunk = true;
     let acumulado = '';
 
-    await llamarIA({
+    const resultado = await llamarIA({
       systemPrompt,
       userPrompt: texto,
       onChunk: (chunk, todo) => {
@@ -4269,8 +4269,27 @@ async function enviarMensajeIA(texto){
         acumulado = todo;
         burbuja.querySelector('.mensaje-cuerpo').innerHTML = formatearMarkdownSimple(escape(todo));
         cont.scrollTop = cont.scrollHeight;
+      },
+      onProveedorActivo: (cfg) => {
+        const tag = burbuja.querySelector('.mensaje-bienvenida-tag');
+        if (tag) tag.textContent = `Modo IA · ${nombreCfg(cfg)}`;
+      },
+      onFallback: (fallido, siguiente, err) => {
+        // Toast no intrusivo · el chat continúa
+        mostrarToastIA(`${nombreCfg(fallido)} no disponible · usando ${nombreCfg(siguiente)}`, 'warn');
+        // Resetear lo acumulado del proveedor fallido (no se mostraba aún)
+        acumulado = '';
+        if (!primeroChunk){
+          burbuja.querySelector('.mensaje-cuerpo').innerHTML = '';
+        }
       }
     });
+
+    // Actualizar tag con el proveedor real que respondió
+    if (resultado?.proveedorUsado){
+      const tag = burbuja.querySelector('.mensaje-bienvenida-tag');
+      if (tag) tag.textContent = `Modo IA · ${nombreCfg(resultado.proveedorUsado)}`;
+    }
 
     // Guardar en historial
     state.historialChat.push({ user: texto, asistente: acumulado, fundamento: '', ts: Date.now(), modo: 'ia' });
@@ -4388,11 +4407,14 @@ async function ejecutarMejora(inputId, accion, etiqueta){
     const systemPrompt = 'Eres asistente de redacción jurídica para el sector educativo colombiano. ' + prompt.instruccion;
     const resultado = await llamarIA({
       systemPrompt,
-      userPrompt: original
+      userPrompt: original,
+      onFallback: (fallido, siguiente) => {
+        indicator.innerHTML = `<span class="ia-procesando-dots"><span></span><span></span><span></span></span> ${escape(siguiente.nombre || siguiente.provider)}…`;
+      }
     });
 
     // Reemplazar el contenido del textarea con la versión mejorada
-    textarea.value = resultado.trim();
+    textarea.value = (resultado.texto || '').trim();
 
     // Guardar en docsValores si estamos en editor de doc
     if (state.docActivo){
@@ -4745,7 +4767,14 @@ ${construirCatalogoNodos()}
 Si la situación es Tipo III: SIEMPRE incluye "Notificar a Policía Nacional inmediatamente" en acciones_inmediatas y advertencias claras.`;
 
   try {
-    const respuesta = await llamarIA({ systemPrompt, userPrompt: texto });
+    const resultado = await llamarIA({
+      systemPrompt,
+      userPrompt: texto,
+      onFallback: (fallido, siguiente) => {
+        mostrarToastIA(`${nombreCfg(fallido)} no disponible · usando ${nombreCfg(siguiente)}`, 'warn');
+      }
+    });
+    const respuesta = resultado.texto || '';
 
     // Intentar parsear JSON · puede venir envuelto en ```json
     let json = respuesta.trim().replace(/^```json\s*/i, '').replace(/```\s*$/i, '');
@@ -6040,15 +6069,53 @@ inicializarTema();
 const IA_STORAGE_KEY = 'conciencia:ia:v1';
 
 // Estado IA (se persiste en localStorage)
+// ============================================================
+// iaState v3.1 · Multi-proveedor con fallback automático
+// providers: array ordenado por prioridad (índice 0 = primer intento)
+// Cada provider es independiente con su propia key/modelo/etc.
+// ============================================================
 const iaState = {
   enabled: false,
-  provider: 'anthropic',   // 'anthropic' | 'openai' | 'google' | 'custom'
-  apiKey: '',
-  model: 'claude-haiku-4-5',
   anonimizar: true,
-  customEndpoint: '',
-  customModel: ''
+  providers: [],          // Array<ProveedorCfg>
+  ultimoProveedorUsado: null  // id del proveedor que respondió la última vez
 };
+
+// Esquema de un proveedor:
+// {
+//   id: 'cfg-1700000000000-abc',
+//   nombre: 'Mi Gemini gratis',
+//   provider: 'google',   // anthropic | openai | google | custom
+//   model: 'gemini-2.5-flash',
+//   apiKey: 'AIza...',
+//   customEndpoint: '',
+//   customModel: '',
+//   activo: true
+// }
+
+function nuevoIdProveedor(){
+  return 'cfg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+}
+
+// Compatibilidad legacy · espejo del primer proveedor activo
+// para que código viejo que lee iaState.provider/apiKey/model siga
+// funcionando sin romper nada.
+function sincronizarEspejoLegacy(){
+  const primero = iaState.providers.find(p => p.activo && p.apiKey);
+  if (primero){
+    iaState.provider       = primero.provider;
+    iaState.apiKey         = primero.apiKey;
+    iaState.model          = primero.model;
+    iaState.customEndpoint = primero.customEndpoint || '';
+    iaState.customModel    = primero.customModel || '';
+  } else {
+    iaState.provider = 'anthropic';
+    iaState.apiKey = '';
+    iaState.model = 'claude-haiku-4-5';
+    iaState.customEndpoint = '';
+    iaState.customModel = '';
+  }
+}
 
 // Modelos disponibles por proveedor
 const IA_MODELOS = {
@@ -6071,25 +6138,69 @@ const IA_MODELOS = {
   custom: []
 };
 
-// Persistencia
+// ============================================================
+// Persistencia · cada provider con su apiKey ofuscada en base64
+// ============================================================
+function ofuscarKey(k){
+  if (!k) return '';
+  return '__b64__' + btoa(unescape(encodeURIComponent(k)));
+}
+function desofuscarKey(k){
+  if (!k || !k.startsWith?.('__b64__')) return k || '';
+  try { return decodeURIComponent(escape(atob(k.slice(7)))); }
+  catch(e){ return ''; }
+}
+
 function guardarIA(){
   try {
-    const snap = { ...iaState };
-    // Por seguridad básica, la apiKey se guarda en base64 (no cifrado real,
-    // solo evita lectura casual). Es suficiente para localStorage en BYOK.
-    if (snap.apiKey) snap.apiKey = '__b64__' + btoa(unescape(encodeURIComponent(snap.apiKey)));
+    sincronizarEspejoLegacy();
+    const snap = {
+      enabled: iaState.enabled,
+      anonimizar: iaState.anonimizar,
+      providers: (iaState.providers || []).map(p => ({
+        ...p,
+        apiKey: ofuscarKey(p.apiKey)
+      })),
+      ultimoProveedorUsado: iaState.ultimoProveedorUsado
+    };
     localStorage.setItem(IA_STORAGE_KEY, JSON.stringify(snap));
   } catch(e){ console.warn('IA: no se pudo guardar', e); }
 }
+
 function cargarIA(){
   try {
     const raw = localStorage.getItem(IA_STORAGE_KEY);
     if (!raw) return;
     const s = JSON.parse(raw);
-    if (s.apiKey?.startsWith('__b64__')){
-      try { s.apiKey = decodeURIComponent(escape(atob(s.apiKey.slice(7)))); } catch(e){ s.apiKey = ''; }
+
+    // Migración v3.0 → v3.1 · single → array
+    if (s.provider && !Array.isArray(s.providers)){
+      const apiKey = s.apiKey?.startsWith?.('__b64__')
+        ? desofuscarKey(s.apiKey)
+        : (s.apiKey || '');
+      s.providers = apiKey ? [{
+        id: nuevoIdProveedor(),
+        nombre: 'Configuración inicial',
+        provider: s.provider,
+        model: s.model || '',
+        apiKey,
+        customEndpoint: s.customEndpoint || '',
+        customModel: s.customModel || '',
+        activo: true
+      }] : [];
+      delete s.provider; delete s.apiKey; delete s.model;
+      delete s.customEndpoint; delete s.customModel;
     }
+
+    // Desofuscar keys de cada proveedor
+    if (Array.isArray(s.providers)){
+      s.providers = s.providers.map(p => ({ ...p, apiKey: desofuscarKey(p.apiKey) }));
+    } else {
+      s.providers = [];
+    }
+
     Object.assign(iaState, s);
+    sincronizarEspejoLegacy();
   } catch(e){ console.warn('IA: no se pudo cargar', e); }
 }
 cargarIA();
@@ -6140,18 +6251,21 @@ function desanonimizarTexto(texto, mapa){
 // ============================================================
 // Adaptadores por proveedor · cada uno expone fetch + parse
 // ============================================================
+// ============================================================
+// Adaptadores · cada uno recibe cfg explícito (no lee del global)
+// ============================================================
 const IA_ADAPTERS = {
   anthropic: {
     nombre: 'Anthropic Claude',
-    endpoint: () => 'https://api.anthropic.com/v1/messages',
-    headers: () => ({
-      'x-api-key': iaState.apiKey,
+    endpoint: (cfg) => 'https://api.anthropic.com/v1/messages',
+    headers: (cfg) => ({
+      'x-api-key': cfg.apiKey,
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true',
       'content-type': 'application/json'
     }),
-    body: (systemPrompt, userPrompt, modelo, stream) => JSON.stringify({
-      model: modelo,
+    body: (cfg, systemPrompt, userPrompt, stream) => JSON.stringify({
+      model: cfg.model,
       max_tokens: 2000,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
@@ -6169,13 +6283,13 @@ const IA_ADAPTERS = {
   },
   openai: {
     nombre: 'OpenAI',
-    endpoint: () => 'https://api.openai.com/v1/chat/completions',
-    headers: () => ({
-      'Authorization': 'Bearer ' + iaState.apiKey,
+    endpoint: (cfg) => 'https://api.openai.com/v1/chat/completions',
+    headers: (cfg) => ({
+      'Authorization': 'Bearer ' + cfg.apiKey,
       'content-type': 'application/json'
     }),
-    body: (systemPrompt, userPrompt, modelo, stream) => JSON.stringify({
-      model: modelo,
+    body: (cfg, systemPrompt, userPrompt, stream) => JSON.stringify({
+      model: cfg.model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -6195,12 +6309,12 @@ const IA_ADAPTERS = {
   },
   google: {
     nombre: 'Google Gemini',
-    endpoint: () => {
-      const m = iaState.model || 'gemini-2.0-flash';
-      return `https://generativelanguage.googleapis.com/v1beta/models/${m}:streamGenerateContent?key=${iaState.apiKey}&alt=sse`;
+    endpoint: (cfg) => {
+      const m = cfg.model || 'gemini-2.5-flash';
+      return `https://generativelanguage.googleapis.com/v1beta/models/${m}:streamGenerateContent?key=${cfg.apiKey}&alt=sse`;
     },
-    headers: () => ({ 'content-type': 'application/json' }),
-    body: (systemPrompt, userPrompt) => JSON.stringify({
+    headers: (cfg) => ({ 'content-type': 'application/json' }),
+    body: (cfg, systemPrompt, userPrompt) => JSON.stringify({
       contents: [{ parts: [{ text: userPrompt }] }],
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: { maxOutputTokens: 2000 }
@@ -6216,13 +6330,13 @@ const IA_ADAPTERS = {
   },
   custom: {
     nombre: 'Custom (OpenAI-compatible)',
-    endpoint: () => iaState.customEndpoint || 'https://api.openai.com/v1/chat/completions',
-    headers: () => ({
-      'Authorization': 'Bearer ' + iaState.apiKey,
+    endpoint: (cfg) => cfg.customEndpoint || 'https://api.openai.com/v1/chat/completions',
+    headers: (cfg) => ({
+      'Authorization': 'Bearer ' + cfg.apiKey,
       'content-type': 'application/json'
     }),
-    body: (systemPrompt, userPrompt, modelo, stream) => JSON.stringify({
-      model: modelo,
+    body: (cfg, systemPrompt, userPrompt, stream) => JSON.stringify({
+      model: cfg.customModel || cfg.model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -6242,54 +6356,120 @@ const IA_ADAPTERS = {
   }
 };
 
+// Devuelve el nombre legible de una config (para toasts y badges)
+function nombreCfg(cfg){
+  if (!cfg) return '?';
+  if (cfg.nombre) return cfg.nombre;
+  const adapter = IA_ADAPTERS[cfg.provider];
+  const modelo = cfg.customModel || cfg.model || '?';
+  return (adapter?.nombre || cfg.provider) + ' · ' + modelo;
+}
+
 // ============================================================
-// llamarIA(systemPrompt, userPrompt, onChunk?) → Promise<string>
-// Si onChunk se pasa, hace streaming. Si no, devuelve completo.
+// Toast IA · feedback no intrusivo de fallback / errores / estado
 // ============================================================
-async function llamarIA({ systemPrompt, userPrompt, onChunk, anonimizar = true }){
-  if (!iaState.enabled) throw new Error('Modo IA desactivado en configuración.');
-  if (!iaState.apiKey) throw new Error('Falta la API key. Configúrela en ⚙️ Configuración.');
-  const adapter = IA_ADAPTERS[iaState.provider];
-  if (!adapter) throw new Error('Proveedor de IA desconocido: ' + iaState.provider);
+function mostrarToastIA(mensaje, tipo){
+  const stack = (() => {
+    let s = document.getElementById('toast-stack-ia');
+    if (!s){
+      s = document.createElement('div');
+      s.id = 'toast-stack-ia';
+      s.style.cssText = 'position:fixed;bottom:88px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:9999;pointer-events:none;';
+      document.body.appendChild(s);
+    }
+    return s;
+  })();
+  const t = document.createElement('div');
+  t.className = `toast-ia toast-ia-${tipo || 'info'}`;
+  t.style.cssText = [
+    'background:var(--bg-surface,#fff)',
+    'border:1px solid var(--border-soft,#E5DDD0)',
+    'border-left:3px solid ' + (tipo==='warn'?'#B86E1F':tipo==='error'?'#B91C1C':'#3A6B4D'),
+    'border-radius:10px',
+    'padding:10px 14px',
+    'font:600 13px/1.4 "Inter Tight",system-ui,sans-serif',
+    'color:var(--text,#1A1614)',
+    'box-shadow:0 4px 16px rgba(0,0,0,0.08)',
+    'max-width:340px',
+    'opacity:0;transform:translateX(20px);transition:all .25s ease',
+    'pointer-events:auto'
+  ].join(';');
+  t.textContent = mensaje;
+  stack.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(0)'; });
+  setTimeout(() => {
+    t.style.opacity='0'; t.style.transform='translateX(20px)';
+    setTimeout(() => t.remove(), 250);
+  }, 4500);
+}
+
+// ¿Vale la pena reintentar con el siguiente proveedor o el error es del input?
+function esErrorReintentableEntreProveedores(err){
+  const status = err?.status;
+  if (!status) return true;  // sin status = network error → reintentar
+  if ([401, 403, 404, 408, 429, 500, 502, 503, 504].includes(status)) return true;
+  // 400 con créditos/cuota/saldo → saldo agotado en ese proveedor → reintentar otro
+  if (status === 400 && /credit|balance|quota|insufficient/i.test(err.raw || err.message || '')) return true;
+  return false;
+}
+
+// ============================================================
+// llamarIAconCfg · llamada a UN proveedor específico (sin fallback)
+// Lanza error con .status y .raw si falla, para que el orchestador
+// decida si vale la pena reintentar con otro proveedor.
+// ============================================================
+async function llamarIAconCfg({ cfg, systemPrompt, userPrompt, onChunk, anonimizar = true }){
+  const adapter = IA_ADAPTERS[cfg.provider];
+  if (!adapter) throw new Error('Proveedor desconocido: ' + cfg.provider);
+  if (!cfg.apiKey) throw new Error(`Falta API key para ${nombreCfg(cfg)}`);
 
   // Anonimización
   const anonSystem = anonimizar ? anonimizarTexto(systemPrompt) : { textoAnon: systemPrompt, mapa: {} };
-  const anonUser = anonimizar ? anonimizarTexto(userPrompt) : { textoAnon: userPrompt, mapa: {} };
-  const mapaTotal = { ...anonSystem.mapa, ...anonUser.mapa };
+  const anonUser   = anonimizar ? anonimizarTexto(userPrompt)   : { textoAnon: userPrompt,   mapa: {} };
+  const mapaTotal  = { ...anonSystem.mapa, ...anonUser.mapa };
 
-  const modelo = iaState.provider === 'custom' ? iaState.customModel : iaState.model;
   const stream = !!onChunk;
-
-  const resp = await fetch(adapter.endpoint(), {
-    method: 'POST',
-    headers: adapter.headers(),
-    body: adapter.body(anonSystem.textoAnon, anonUser.textoAnon, modelo, stream)
-  });
+  let resp;
+  try {
+    resp = await fetch(adapter.endpoint(cfg), {
+      method: 'POST',
+      headers: adapter.headers(cfg),
+      body: adapter.body(cfg, anonSystem.textoAnon, anonUser.textoAnon, stream)
+    });
+  } catch(networkErr){
+    // Errores de red sin status (fetch failed, CORS, etc.)
+    const err = new Error(`No se pudo conectar a ${nombreCfg(cfg)}: ${networkErr.message}`);
+    err.status = 0;
+    err.raw = networkErr.message;
+    throw err;
+  }
 
   if (!resp.ok){
     const errTxt = await resp.text().catch(()=>'');
-    // Mensajes amigables para errores comunes
+    // Mensaje amigable para humanos
     let mensaje;
     if (resp.status === 401 || resp.status === 403){
-      mensaje = 'API key inválida o sin permisos. Revise la key en ⚙️ Configuración.';
+      mensaje = `${nombreCfg(cfg)}: API key inválida o sin permisos.`;
     } else if (resp.status === 429){
-      // Detectar si es cuota gratuita de Gemini o rate limit
       if (errTxt.includes('free_tier') || errTxt.includes('free quota')){
-        mensaje = 'Cuota gratuita agotada hoy. Espere a mañana, active billing en su cuenta del proveedor, o cambie a otro proveedor en ⚙️ Configuración.';
+        mensaje = `${nombreCfg(cfg)}: cuota gratuita agotada hoy.`;
       } else {
-        mensaje = 'Demasiadas solicitudes seguidas (rate limit). Espere unos segundos y reintente.';
+        mensaje = `${nombreCfg(cfg)}: rate limit (demasiadas solicitudes seguidas).`;
       }
     } else if (resp.status === 404){
-      mensaje = 'Modelo no encontrado. El modelo seleccionado puede no estar disponible para su key. Cambie en ⚙️ Configuración.';
-    } else if (resp.status === 500 || resp.status === 502 || resp.status === 503){
-      mensaje = `El proveedor (${IA_ADAPTERS[iaState.provider]?.nombre}) está temporalmente fuera de servicio. Reintente en un momento.`;
+      mensaje = `${nombreCfg(cfg)}: modelo "${cfg.customModel||cfg.model}" no disponible para esta key.`;
+    } else if (resp.status === 400 && /credit|balance|quota|insufficient/i.test(errTxt)){
+      mensaje = `${nombreCfg(cfg)}: cuenta sin saldo / créditos agotados.`;
+    } else if ([500,502,503,504].includes(resp.status)){
+      mensaje = `${nombreCfg(cfg)}: servidor temporalmente fuera de servicio.`;
     } else {
-      const detalle = errTxt.length < 300 ? errTxt : errTxt.slice(0, 300) + '…';
-      mensaje = `HTTP ${resp.status}: ${detalle || resp.statusText}`;
+      const detalle = errTxt.length < 200 ? errTxt : errTxt.slice(0, 200) + '…';
+      mensaje = `${nombreCfg(cfg)} · HTTP ${resp.status}: ${detalle || resp.statusText}`;
     }
     const err = new Error(mensaje);
     err.status = resp.status;
     err.raw = errTxt;
+    err.cfg = cfg;
     throw err;
   }
 
@@ -6310,7 +6490,7 @@ async function llamarIA({ systemPrompt, userPrompt, onChunk, anonimizar = true }
     if (done) break;
     buffer += decoder.decode(value, { stream: true });
     let lineas = buffer.split('\n');
-    buffer = lineas.pop(); // resto sin newline
+    buffer = lineas.pop();
     for (const line of lineas){
       const chunk = adapter.parseStreamChunk(line.trim());
       if (chunk){
@@ -6323,10 +6503,56 @@ async function llamarIA({ systemPrompt, userPrompt, onChunk, anonimizar = true }
   return desanonimizarTexto(acumulado, mapaTotal);
 }
 
-// Test de conexión: pide un "ping" simple
-async function probarConexionIA(){
+// ============================================================
+// llamarIA · ORCHESTADOR con fallback automático
+// Recorre los providers en orden, intenta el primero, y si falla
+// con un error "reintentable" (cuota/saldo/key inválida/rate limit
+// /500-5xx), cae al siguiente automáticamente.
+//
+// Callbacks opcionales:
+//   onProveedorActivo(cfg, idx)  → notifica qué proveedor está intentando
+//   onFallback(cfgFallido, cfgSiguiente, error)  → notifica cambio
+// ============================================================
+async function llamarIA({ systemPrompt, userPrompt, onChunk, onProveedorActivo, onFallback, anonimizar = true }){
+  if (!iaState.enabled) throw new Error('Modo IA desactivado en configuración.');
+  const configs = (iaState.providers || []).filter(p => p.activo && p.apiKey);
+  if (!configs.length) throw new Error('Sin proveedores configurados. Agregue al menos uno en ⚙️ Configuración.');
+
+  const errores = [];
+  for (let i = 0; i < configs.length; i++){
+    const cfg = configs[i];
+    try {
+      if (typeof onProveedorActivo === 'function') onProveedorActivo(cfg, i);
+      const resp = await llamarIAconCfg({ cfg, systemPrompt, userPrompt, onChunk, anonimizar });
+      // Éxito: recordar el proveedor que respondió
+      iaState.ultimoProveedorUsado = cfg.id;
+      guardarIA();
+      return { texto: resp, proveedorUsado: cfg };
+    } catch(err){
+      errores.push({ cfg, err });
+      console.warn(`IA fallback: ${nombreCfg(cfg)} falló →`, err.message);
+      const siguiente = configs[i+1];
+      const reintentable = esErrorReintentableEntreProveedores(err);
+      if (siguiente && reintentable){
+        if (typeof onFallback === 'function') onFallback(cfg, siguiente, err);
+        // Si estábamos haciendo streaming, hay que avisar al consumidor que
+        // reseteamos el output porque el chunk del fallback empieza de cero.
+        continue;
+      }
+      // Sin fallback posible · re-lanzar
+      throw err;
+    }
+  }
+  // Si llegamos aquí, todos los providers fallaron
+  const detalle = errores.map(e => '• ' + e.err.message).join('\n');
+  throw new Error(`Todos los proveedores fallaron:\n${detalle}`);
+}
+
+// Test de conexión para una config específica · usada en el modal
+async function probarConexionIAcfg(cfg){
   try {
-    const resp = await llamarIA({
+    const resp = await llamarIAconCfg({
+      cfg,
       systemPrompt: 'Responde solamente "OK".',
       userPrompt: 'ping',
       anonimizar: false
@@ -6335,6 +6561,13 @@ async function probarConexionIA(){
   } catch(e){
     return { ok: false, error: e.message };
   }
+}
+
+// Wrapper retro-compatible: prueba el primer proveedor activo
+async function probarConexionIA(){
+  const cfg = iaState.providers.find(p => p.activo && p.apiKey);
+  if (!cfg) return { ok: false, error: 'Sin proveedores configurados.' };
+  return probarConexionIAcfg(cfg);
 }
 
 console.log('🎓 ConciencIA v3.0 · Asesor del Debido Proceso · I.E. Sor María Juliana');
