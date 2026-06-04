@@ -3260,9 +3260,8 @@ body{
       </span>
     </a>
     <nav class="nav-main" aria-label="Navegación principal">
-      <a href="#hoja-ruta">Hoja de ruta</a>
-      <a href="#expediente">Expediente</a>
-      <a href="#asistente">Asistente</a>
+      <a href="#" onclick="iniciarProceso();return false">Nuevo caso</a>
+      <a href="#" onclick="verMisCasos();return false">Mis casos</a>
       <a href="#" onclick="abrirInfo();return false">Manual</a>
       <a href="presentacion-arbol.html" target="_blank" rel="noopener" class="nav-cta"><span class="play" aria-hidden="true">▶</span> Cómo funciona</a>
     </nav>
@@ -4087,6 +4086,17 @@ function iniciarProceso(){
     }
   }
   abrirModalIniciarCaso();
+}
+
+// Navega a "Mis casos" desde el menú: renderiza la lista y baja a la sección.
+function verMisCasos(){
+  renderListaCasos();
+  const sec = document.getElementById('mis-casos-section');
+  if (sec && !sec.hidden){
+    sec.scrollIntoView({ behavior:'smooth', block:'start' });
+  } else {
+    mostrarToastIA('Aún no hay casos registrados. Inicie uno con «Nuevo caso».', 'warn');
+  }
 }
 
 function abrirModalIniciarCaso(){
