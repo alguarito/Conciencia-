@@ -6288,6 +6288,12 @@ function aplicarSugerenciaIA(nodoId){
     guardarEstado();
   }
   navegarA(nodoId);
+  // UX · llevar al docente a la hoja de ruta recién renderizada. Sin esto, el modal
+  // se cierra y el protocolo se pinta fuera de pantalla → parece que "no se mostró nada".
+  // En rAF para correr después de que cerrarModal restaure el foco (que mueve el viewport).
+  requestAnimationFrame(() => {
+    document.getElementById('ruta-content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 }
 
 // === INICIO ===
