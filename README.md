@@ -8,7 +8,7 @@
 **Institución Educativa Sor María Juliana** · Cartago, Valle del Cauca
 
 [![Licencia: CC BY-NC-SA 4.0](https://img.shields.io/badge/Licencia-CC%20BY--NC--SA%204.0-6B1820?style=flat-square)](LICENSE)
-[![Versión](https://img.shields.io/badge/Versión-2.0-B89968?style=flat-square)](#)
+[![Versión](https://img.shields.io/badge/Versión-3.0-B89968?style=flat-square)](#)
 [![Estado](https://img.shields.io/badge/Estado-MVP%20activo-3A6B4D?style=flat-square)](#)
 [![PWA](https://img.shields.io/badge/PWA-instalable-6B1820?style=flat-square)](#)
 
@@ -191,7 +191,7 @@ Lea [CONTRIBUTING.md](CONTRIBUTING.md) para conocer el proceso. Los principales 
 
 ## 🗺️ Hoja de ruta
 
-### v2.0 — MVP actual ✅
+### v2.0 — MVP ✅
 - [x] Árbol completo (30 protocolos, 176 pasos)
 - [x] 124 plantillas de documentos
 - [x] Generación real de Word y PDF
@@ -200,13 +200,21 @@ Lea [CONTRIBUTING.md](CONTRIBUTING.md) para conocer el proceso. Los principales 
 - [x] Auto-rellenado entre documentos
 - [x] PWA instalable
 
-### v2.1 — Próxima (planeada)
-- [ ] Persistencia local cifrada (no perder el caso al recargar)
-- [ ] Lista de casos múltiples
-- [ ] Exportar/importar expediente completo
+### v2.1 — Multi-caso ✅
+- [x] Lista de casos múltiples ("Mis casos")
+- [x] Persistencia local del expediente (no se pierde al recargar)
+- [x] Alarmas por plazo + notificaciones del navegador
+- [x] Timeline con los documentos dentro de cada paso del protocolo
 
-### v3.0 — Futuro
-- [ ] Modo IA con API key personal (respuestas generativas)
+### v3.0 — Asesor con IA (actual) ✅
+- [x] Modo IA **opcional** con API key personal (BYOK), complementa el modo offline
+- [x] Multi-proveedor con fallback automático (Anthropic / OpenAI / Google)
+- [x] Chat con IA en streaming, "✨ Mejorar texto" y clasificador asistido
+- [x] Anonimización de datos del caso antes de enviarlos a la IA
+
+### Futuro
+- [ ] Persistencia local cifrada
+- [ ] Exportar/importar expediente completo
 - [ ] Integración opcional con Drive institucional
 - [ ] Estadísticas anonimizadas de uso por institución
 

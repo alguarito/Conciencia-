@@ -1,9 +1,9 @@
 // === ConciencIA Service Worker v3.0.0-multicaso-notif ===
 // Estrategia: Network-first para index.html (siempre fresco),
 // cache-first para assets estáticos. Notificaciones locales.
-// Build: 2026-05-27 · Multi-caso + Fase D notificaciones
+// Build: 2026-06-03 · Multi-caso + Fase D notificaciones + fix CDN docx
 
-const CACHE_NAME = 'conciencia-v3.0.0-notif-20260527';
+const CACHE_NAME = 'conciencia-v3.0.1-docxfix-20260603';
 const CORE_ASSETS = [
   './',
   './index.html',
@@ -17,7 +17,8 @@ const CORE_ASSETS = [
 const EXTERNAL_CACHE = [
   'https://fonts.googleapis.com',
   'https://fonts.gstatic.com',
-  'https://cdnjs.cloudflare.com'
+  'https://cdnjs.cloudflare.com',
+  'https://cdn.jsdelivr.net'
 ];
 
 // === INSTALACIÓN: cachear core assets ===
