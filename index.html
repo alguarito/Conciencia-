@@ -8485,11 +8485,19 @@ const IA_ADAPTERS = {
       return `https://generativelanguage.googleapis.com/v1beta/models/${m}:${metodo}?key=${cfg.apiKey}${sufijoSSE}`;
     },
     headers: (cfg) => ({ 'content-type': 'application/json' }),
-    body: (cfg, systemPrompt, userPrompt) => JSON.stringify({
-      contents: [{ parts: [{ text: userPrompt }] }],
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      generationConfig: { maxOutputTokens: 2000 }
-    }),
+    body: (cfg, systemPrompt, userPrompt) => {
+      const m = cfg.model || 'gemini-2.5-flash';
+      const generationConfig = { maxOutputTokens: 8192 };
+      // En Gemini 2.5 Flash el "thinking" consume el presupuesto de salida y trunca el
+      // JSON (se cortaba en "ruta_..."). Se desactiva (thinkingBudget 0). En 2.5 Pro no
+      // se puede desactivar, pero el límite mayor da margen; en 2.0 no aplica.
+      if (/2\.5-flash/.test(m)) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+      return JSON.stringify({
+        contents: [{ parts: [{ text: userPrompt }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig
+      });
+    },
     parseResponse: (data) => data.candidates?.[0]?.content?.parts?.[0]?.text || '',
     parseStreamChunk: (line) => {
       if (!line.startsWith('data: ')) return '';
