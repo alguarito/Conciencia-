@@ -6274,9 +6274,26 @@ function limpiarHistorialNotifManual(){
 
 function aplicarSugerenciaIA(nodoId){
   cerrarModal('modal-clasificador-ia');
-  // Si no hay caso, iniciar uno mínimo automático en el array multi-caso
-  if (!state.caso){
-    sincronizarBufferACaso();
+  // El clasificador "Describir caso con IA" describe una situación NUEVA. Si el caso
+  // activo es un expediente REAL (con nombre o progreso), NO lo sobrescribimos: abrimos
+  // un caso nuevo (el activo queda guardado intacto en el array multi-caso). Antes esto
+  // reusaba el caso activo y le aplicaba el protocolo de otro estudiante por encima.
+  const c = state.caso;
+  const esExpedienteReal = c && (
+    (c.estudianteNombre && c.estudianteNombre !== 'Por identificar') ||
+    (state.pasosCompletados && state.pasosCompletados.size > 0)
+  );
+  if (esExpedienteReal){
+    const ok = confirm(
+      `Este análisis abrirá un CASO NUEVO.\n\n` +
+      `El caso activo (${state.casoActivoId} · ${c.estudianteNombre || 'sin nombre'}) ` +
+      `queda guardado intacto en "Mis casos".\n\n¿Continuar?`
+    );
+    if (!ok) return;
+  }
+  // Crear el caso nuevo, salvo que ya estemos en un placeholder vacío reutilizable.
+  if (!c || esExpedienteReal){
+    sincronizarBufferACaso(); // guarda el caso activo (si lo hay) en su entrada del array
     const nuevoCaso = {
       id: generarCasoId(),
       fechaApertura: new Date().toISOString().slice(0,10),
