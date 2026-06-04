@@ -7999,6 +7999,122 @@ async function precargarLogoInstitucional(){
 precargarLogoInstitucional();
 
 // === ESTADO DE CARGA DE LIBRERÍAS ===
+// ============================================================
+// MODO DEMOSTRACIÓN · siembra 3 casos de ejemplo con ?demo en la URL.
+// Respalda los casos reales antes de sembrar; salirDemo() los restaura.
+// Los documentos se diligencian solos con los ejemplos de CAMPO_AYUDA.
+// ============================================================
+function _valorDemo(cm, caso){
+  if (cm.tipo === 'boolean') return true;
+  if (cm.tipo === 'fecha') return new Date().toISOString().slice(0,10);
+  if (cm.tipo === 'hora') return '10:30';
+  if (cm.tipo === 'numero') return '3.7';
+  if (cm.tipo === 'select'){
+    const ops = (cm.opciones || []).filter(o => o && !/seleccione/i.test(o));
+    return ops[0] || '';
+  }
+  const mapaCaso = {
+    estudiante_nombre: caso.estudianteNombre, estudiante: caso.estudianteNombre, nombre_estudiante: caso.estudianteNombre,
+    estudiante_documento: caso.estudianteDocumento, documento: caso.estudianteDocumento, documento_identidad: caso.estudianteDocumento,
+    estudiante_grado: caso.estudianteGrado, grado: caso.estudianteGrado, grado_solicitado: caso.estudianteGrado,
+    estudiante_grupo: caso.estudianteGrupo, grupo: caso.estudianteGrupo,
+    acudiente_nombre: caso.acudienteNombre, nombre_acudiente: caso.acudienteNombre,
+    acudiente_telefono: caso.acudienteTelefono, acudiente_documento: caso.acudienteDocumento, acudiente_email: caso.acudienteEmail,
+    director_grupo: caso.directorGrupo, funcionario: caso.funcionarioReporta, funcionario_reporta: caso.funcionarioReporta,
+    numero_proceso: caso.id, numero_radicado: caso.id, numero_expediente: caso.id, numero_radicado_original: caso.id
+  };
+  if (mapaCaso[cm.id]) return mapaCaso[cm.id];
+  const ay = (typeof CAMPO_AYUDA !== 'undefined' && CAMPO_AYUDA[cm.id]) || {};
+  if (ay.ejemplo) return ay.ejemplo;
+  return 'Diligenciado para demostración.';
+}
+function _construirCasoDemo(base, protoId, clasif, pasosHechos){
+  const proto = (typeof ARBOL !== 'undefined' && ARBOL.nodos[protoId]) || {};
+  const pasos = proto.pasos || [];
+  const n = (pasosHechos == null) ? pasos.length : Math.min(pasosHechos, pasos.length);
+  const pasosCompletados = [], docsCompletos = [], docsValores = {};
+  pasos.forEach((paso, i) => {
+    if (i >= n) return;
+    pasosCompletados.push(i);
+    (paso.documentos_generar || []).forEach(docId => {
+      if (!docsCompletos.includes(docId)) docsCompletos.push(docId);
+      const doc = CATALOGO.catalogo_documentos[docId];
+      if (!doc) return;
+      docsValores[docId] = docsValores[docId] || {};
+      (doc.campos || []).forEach(cm => {
+        if (['firma','firmas_multiples'].includes(cm.tipo)) return;
+        docsValores[docId][cm.id] = _valorDemo(cm, base);
+      });
+    });
+  });
+  return Object.assign({}, base, {
+    nodoActual: protoId, protocoloActual: protoId, clasificacion: clasif,
+    rutaPasos: pasos, pasosCompletados, docsCompletos, docsValores, historialNodos: []
+  });
+}
+function cargarCasosDemo(){
+  if (localStorage.getItem('conciencia:casos:respaldo') === null){
+    localStorage.setItem('conciencia:casos:respaldo', localStorage.getItem(CASOS_STORAGE_KEY) || '[]');
+    localStorage.setItem('conciencia:caso-activo:respaldo', localStorage.getItem(CASO_ACTIVO_STORAGE_KEY) || '');
+  }
+  const dias = d => new Date(Date.now() - d*86400000).toISOString().slice(0,10);
+  const ahora = () => new Date().toISOString();
+  const c1 = _construirCasoDemo({
+    id:'CASO-2026-0148', fechaApertura: dias(34),
+    estudianteNombre:'Mariana López Trujillo', estudianteDocumento:'TI 1098765432',
+    estudianteGrado:'9°', estudianteGrupo:'1', estudianteJornada:'Mañana', estudianteInclusion:false,
+    acudienteNombre:'Gloria Trujillo Pérez', acudienteTelefono:'320 555 7841',
+    acudienteDocumento:'CC 31.880.452', acudienteEmail:'gloria.trujillo@example.com',
+    directorGrupo:'Lic. Andrés Patiño', funcionarioReporta:'Coord. Marta Salcedo',
+    estado:'cerrado', ultimoUpdate: ahora()
+  }, 'n_protocolo_tipo_ii', { codigo:'TIPO_II', titulo:'Situación Tipo II — Falta grave' }, null);
+  const c2 = _construirCasoDemo({
+    id:'CASO-2026-0152', fechaApertura: dias(6),
+    estudianteNombre:'Santiago Ríos Mejía', estudianteDocumento:'TI 1099887766',
+    estudianteGrado:'7°', estudianteGrupo:'2', estudianteJornada:'Mañana', estudianteInclusion:false,
+    acudienteNombre:'Fernando Ríos Calle', acudienteTelefono:'311 222 9090',
+    acudienteDocumento:'CC 16.452.119', acudienteEmail:'fernando.rios@example.com',
+    directorGrupo:'Lic. Carolina Méndez', funcionarioReporta:'Coord. Marta Salcedo',
+    estado:'abierto', ultimoUpdate: ahora()
+  }, 'n_protocolo_falta_grave', { codigo:'FALTA_GRAVE', titulo:'Falta grave (no Tipo II)' }, 3);
+  const c3 = _construirCasoDemo({
+    id:'CASO-2026-0155', fechaApertura: dias(0),
+    estudianteNombre:'Valentina Gómez Ariza', estudianteDocumento:'TI 1100334455',
+    estudianteGrado:'6°', estudianteGrupo:'3', estudianteJornada:'Tarde', estudianteInclusion:true,
+    acudienteNombre:'Patricia Ariza Gómez', acudienteTelefono:'315 778 4512',
+    acudienteDocumento:'CC 29.119.776', acudienteEmail:'patricia.ariza@example.com',
+    directorGrupo:'Lic. Jorge Vélez', funcionarioReporta:'Doc. Luis Henao',
+    estado:'en-espera', ultimoUpdate: ahora()
+  }, 'n_protocolo_tipo_i', { codigo:'TIPO_I', titulo:'Situación Tipo I — Falta leve' }, 1);
+  state.casos = [c1, c2, c3];
+  sincronizarCasoABuffer(c1.id);
+  guardarEstado();
+  renderListaCasos();
+  try { renderColumnaRuta(); } catch(e){}
+  _mostrarBannerDemo();
+  const sec = document.getElementById('mis-casos-section');
+  if (sec && !sec.hidden) sec.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function salirDemo(){
+  const resp = localStorage.getItem('conciencia:casos:respaldo');
+  if (resp !== null){
+    localStorage.setItem(CASOS_STORAGE_KEY, resp);
+    const ra = localStorage.getItem('conciencia:caso-activo:respaldo') || '';
+    if (ra) localStorage.setItem(CASO_ACTIVO_STORAGE_KEY, ra); else localStorage.removeItem(CASO_ACTIVO_STORAGE_KEY);
+    localStorage.removeItem('conciencia:casos:respaldo');
+    localStorage.removeItem('conciencia:caso-activo:respaldo');
+  }
+  location.href = location.pathname;
+}
+function _mostrarBannerDemo(){
+  if (document.getElementById('demo-banner')) return;
+  const b = document.createElement('div');
+  b.id = 'demo-banner';
+  b.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:60;display:flex;align-items:center;gap:10px;background:var(--vino);color:#fff;padding:9px 14px 9px 16px;border-radius:9999px;box-shadow:0 8px 24px rgba(26,22,20,0.20);font-size:13px;font-weight:600';
+  b.innerHTML = '🎬 Modo demostración · 3 casos de ejemplo <button onclick="salirDemo()" style="background:#fff;color:var(--vino);border:none;border-radius:9999px;padding:5px 12px;font-weight:700;cursor:pointer;min-height:30px">Restaurar mis casos</button>';
+  document.body.appendChild(b);
+}
+
 window.addEventListener('load', () => {
   if (typeof docx === 'undefined' || typeof saveAs === 'undefined'){
     console.warn('⚠️ Librerías de generación Word no disponibles. La descarga estará deshabilitada.');
@@ -8014,6 +8130,10 @@ window.addEventListener('load', () => {
 
   // UX-003 · restaurar casos guardados (multi-caso v3 con migración v2)
   restaurarEstado();
+  // Modo demostración · ?demo siembra 3 casos de ejemplo (respaldando los reales)
+  if (new URLSearchParams(location.search).has('demo')){
+    try { cargarCasosDemo(); } catch(e){ console.warn('Modo demo:', e); }
+  }
   const totalCasos = (state.casos || []).length;
   if (totalCasos > 0){
     console.log(`✅ ${totalCasos} caso(s) restaurado(s) desde almacenamiento local`);
