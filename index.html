@@ -5662,6 +5662,8 @@ function construirCatalogoNodos(){
     .join('\n');
 }
 
+// Recuerda el último análisis IA para que aplicarSugerenciaIA pueda prellenar el caso nuevo
+let _ultimoAnalisisIA = null;
 async function analizarConIA(){
   const texto = $('clasif-ia-input').value.trim();
   if (!texto){
@@ -5704,8 +5706,11 @@ Estructura EXACTA del JSON:
   "razonamiento": "1-2 frases · por qué encaja en esa categoría · cita artículo del Manual si aplica",
   "ruta_arbol": "id del nodo del árbol más apropiado para iniciar (de la lista abajo)",
   "acciones_inmediatas": ["acción 1", "acción 2"],
-  "advertencias": "lo que el docente debe tener en cuenta · si hay riesgo grave o se necesita escalar"
+  "advertencias": "lo que el docente debe tener en cuenta · si hay riesgo grave o se necesita escalar",
+  "datos_estudiante": { "nombre": "nombre completo del estudiante o null", "grado": "grado en formato 8° o Transición, o null", "grupo": "indicador del grupo, ej. 2 o A, o null" }
 }
+
+EXTRACCIÓN DE DATOS · En "datos_estudiante" pon SOLO lo que la narración diga de forma explícita. Usa null en cada campo que no se mencione. Grado en formato numeral + ° ("8°") o "Transición"; el grupo es solo el indicador ("2", "A"), sin el grado. NUNCA inventes nombres, grados ni grupos: si no están en el texto, null.
 
 Nodos disponibles del árbol (ids exactos):
 ${construirCatalogoNodos()}
@@ -5747,6 +5752,9 @@ Comienza tu respuesta directamente con el carácter { y termina con }.`;
       btn.innerHTML = '<span aria-hidden="true">✨</span> Analizar otra vez';
       return;
     }
+
+    // Recordar el análisis para prellenar el caso nuevo en aplicarSugerenciaIA
+    _ultimoAnalisisIA = analisis;
 
     // Render del resultado
     const tipoLabels = {
@@ -6278,6 +6286,11 @@ function aplicarSugerenciaIA(nodoId){
   // activo es un expediente REAL (con nombre o progreso), NO lo sobrescribimos: abrimos
   // un caso nuevo (el activo queda guardado intacto en el array multi-caso). Antes esto
   // reusaba el caso activo y le aplicaba el protocolo de otro estudiante por encima.
+  // Datos que la IA extrajo de la narración (si los hay) para prellenar el caso nuevo.
+  const dat = (_ultimoAnalisisIA && _ultimoAnalisisIA.datos_estudiante) || {};
+  const nombreExtraido = (dat.nombre && String(dat.nombre).trim()) || '';
+  const gradoExtraido  = (dat.grado  && String(dat.grado).trim())  || '';
+  const grupoExtraido  = (dat.grupo  && String(dat.grupo).trim())  || '';
   const c = state.caso;
   const esExpedienteReal = c && (
     (c.estudianteNombre && c.estudianteNombre !== 'Por identificar') ||
@@ -6297,7 +6310,9 @@ function aplicarSugerenciaIA(nodoId){
     const nuevoCaso = {
       id: generarCasoId(),
       fechaApertura: new Date().toISOString().slice(0,10),
-      estudianteNombre: 'Por identificar',
+      estudianteNombre: nombreExtraido || 'Por identificar',
+      estudianteGrado: gradoExtraido,
+      estudianteGrupo: grupoExtraido,
       acudienteNombre: 'Por identificar',
       acudienteTelefono: 'Por identificar',
       funcionarioReporta: state.funcionario || 'Docente',
@@ -6308,6 +6323,13 @@ function aplicarSugerenciaIA(nodoId){
     };
     state.casos.push(nuevoCaso);
     sincronizarCasoABuffer(nuevoCaso.id);
+    guardarEstado();
+  } else if (c && nombreExtraido){
+    // Reutilizando un placeholder vacío: aprovechar lo que la IA extrajo de la narración.
+    if (!c.estudianteNombre || c.estudianteNombre === 'Por identificar') c.estudianteNombre = nombreExtraido;
+    if (!c.estudianteGrado && gradoExtraido) c.estudianteGrado = gradoExtraido;
+    if (!c.estudianteGrupo && grupoExtraido) c.estudianteGrupo = grupoExtraido;
+    sincronizarBufferACaso();
     guardarEstado();
   }
   navegarA(nodoId);
