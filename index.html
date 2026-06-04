@@ -4794,6 +4794,9 @@ const AUTORELLENO_MAP = [
   // ya asigna. Editable: si la institución usa otro radicado, el docente lo sobrescribe.
   // numero_radicado_siuce NO entra aquí: es el radicado externo de la plataforma SIUCE.
   [/^numero_proceso$|^numero_radicado$|^numero_expediente$|^numero_radicado_original$|^radicado$/, () => state.caso?.id],
+  // Veredicto de la IA (si se clasificó con IA): tipificación preliminar y hechos.
+  [/^tipificacion_preliminar$|^tipificacion$/, () => state.caso?.tipificacionIA],
+  [/^hechos_imputados$|^hechos$/, () => state.caso?.narracionIA],
   [/^fecha$|^fecha_emision$|^fecha_apertura$|^fecha_presentacion$|^fecha_reporte$|^fecha_elaboracion$/, () => new Date().toISOString().slice(0,10)],
   [/^estudiante$|estudiante_nombre|^nombre_estudiante$/, () => state.caso?.estudianteNombre],
   [/estudiante_documento|^documento_estudiante$|^documento$/, () => state.caso?.estudianteDocumento],
@@ -5871,6 +5874,7 @@ Comienza tu respuesta directamente con el carácter { y termina con }.`;
 
     // Recordar el análisis para prellenar el caso nuevo en aplicarSugerenciaIA
     _ultimoAnalisisIA = analisis;
+    _ultimoAnalisisIA._narracion = texto; // la narración alimenta hechos_imputados
 
     // Render del resultado
     const tipoLabels = {
@@ -6403,10 +6407,22 @@ function aplicarSugerenciaIA(nodoId){
   // un caso nuevo (el activo queda guardado intacto en el array multi-caso). Antes esto
   // reusaba el caso activo y le aplicaba el protocolo de otro estudiante por encima.
   // Datos que la IA extrajo de la narración (si los hay) para prellenar el caso nuevo.
-  const dat = (_ultimoAnalisisIA && _ultimoAnalisisIA.datos_estudiante) || {};
+  const ana = _ultimoAnalisisIA || {};
+  const dat = ana.datos_estudiante || {};
   const nombreExtraido = (dat.nombre && String(dat.nombre).trim()) || '';
   const gradoExtraido  = (dat.grado  && String(dat.grado).trim())  || '';
   const grupoExtraido  = (dat.grupo  && String(dat.grupo).trim())  || '';
+  // Veredicto de la IA → tipificación preliminar y hechos para los documentos.
+  const CLASIF_LBL = {
+    TIPO_I:'Situación Tipo I — falta leve', TIPO_II:'Situación Tipo II (Ley 1620)',
+    TIPO_III:'Situación Tipo III — posible delito', FALTA_GRAVE:'Falta grave (régimen disciplinario)',
+    FALTA_GRAVISIMA:'Falta gravísima', ACADEMICO:'Asunto académico (SIE)',
+    RECLAMACION_ACADEMICA:'Reclamación académica', JUSTICIA_RESTAURATIVA:'Justicia restaurativa', PQRS:'PQRS'
+  };
+  const tipificacionIA = ana.clasificacion
+    ? (CLASIF_LBL[ana.clasificacion] || ana.clasificacion) + (ana.razonamiento ? '. ' + ana.razonamiento : '')
+    : '';
+  const narracionIA = (ana._narracion && String(ana._narracion).trim()) || '';
   const c = state.caso;
   const esExpedienteReal = c && (
     (c.estudianteNombre && c.estudianteNombre !== 'Por identificar') ||
@@ -6429,6 +6445,8 @@ function aplicarSugerenciaIA(nodoId){
       estudianteNombre: nombreExtraido || 'Por identificar',
       estudianteGrado: gradoExtraido,
       estudianteGrupo: grupoExtraido,
+      tipificacionIA: tipificacionIA,
+      narracionIA: narracionIA,
       acudienteNombre: 'Por identificar',
       acudienteTelefono: 'Por identificar',
       funcionarioReporta: state.funcionario || 'Docente',
@@ -6440,11 +6458,13 @@ function aplicarSugerenciaIA(nodoId){
     state.casos.push(nuevoCaso);
     sincronizarCasoABuffer(nuevoCaso.id);
     guardarEstado();
-  } else if (c && nombreExtraido){
-    // Reutilizando un placeholder vacío: aprovechar lo que la IA extrajo de la narración.
-    if (!c.estudianteNombre || c.estudianteNombre === 'Por identificar') c.estudianteNombre = nombreExtraido;
+  } else if (c && (nombreExtraido || tipificacionIA || narracionIA)){
+    // Reutilizando un placeholder vacío: aprovechar lo que la IA extrajo / determinó.
+    if (nombreExtraido && (!c.estudianteNombre || c.estudianteNombre === 'Por identificar')) c.estudianteNombre = nombreExtraido;
     if (!c.estudianteGrado && gradoExtraido) c.estudianteGrado = gradoExtraido;
     if (!c.estudianteGrupo && grupoExtraido) c.estudianteGrupo = grupoExtraido;
+    if (!c.tipificacionIA && tipificacionIA) c.tipificacionIA = tipificacionIA;
+    if (!c.narracionIA && narracionIA) c.narracionIA = narracionIA;
     sincronizarBufferACaso();
     guardarEstado();
   }
