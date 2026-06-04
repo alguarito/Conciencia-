@@ -1,12 +1,13 @@
 // === ConciencIA Service Worker v3.0.0-multicaso-notif ===
 // Estrategia: Network-first para index.html (siempre fresco),
 // cache-first para assets estáticos. Notificaciones locales.
-// Build: 2026-06-03 · Multi-caso + Fase D notificaciones + fix CDN docx
+// Build: 2026-06-04 · IA→documentos, autollenado, ayudas por campo, presentación
 
-const CACHE_NAME = 'conciencia-v3.0.1-docxfix-20260603';
+const CACHE_NAME = 'conciencia-v3.1.0-20260604';
 const CORE_ASSETS = [
   './',
   './index.html',
+  './presentacion-arbol.html',
   './manifest.webmanifest',
   './icons/icon.svg',
   './icons/icon-192.png',

@@ -2657,6 +2657,19 @@ body{
   padding:var(--space-2) 0; transition:color var(--motion-fast);
 }
 .nav-main a:hover{ color:var(--vino); }
+/* Ítem destacado · abre la presentación del árbol */
+.nav-main a.nav-cta{
+  color:var(--vino); border:1px solid var(--vino);
+  padding:5px 13px; border-radius:var(--radius-full);
+  display:inline-flex; align-items:center; gap:6px;
+  transition:background var(--motion-fast), transform var(--motion-fast);
+}
+.nav-main a.nav-cta:hover{
+  color:var(--vino);
+  background:color-mix(in srgb, var(--vino) 12%, transparent);
+  transform:translateY(-1px);
+}
+.nav-main a.nav-cta .play{ font-size:9px; line-height:1; }
 .topbar-actions{
   display:flex; align-items:center; gap:var(--space-3);
 }
@@ -3251,7 +3264,7 @@ body{
       <a href="#expediente">Expediente</a>
       <a href="#asistente">Asistente</a>
       <a href="#" onclick="abrirInfo();return false">Manual</a>
-      <a href="presentacion-arbol.html" target="_blank" rel="noopener">Cómo funciona</a>
+      <a href="presentacion-arbol.html" target="_blank" rel="noopener" class="nav-cta"><span class="play" aria-hidden="true">▶</span> Cómo funciona</a>
     </nav>
     <div class="topbar-actions">
       <span class="modo-badge" id="modo-badge" title="Funciona sin internet">
