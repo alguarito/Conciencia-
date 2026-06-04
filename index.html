@@ -4966,6 +4966,76 @@ function aplicarAutoRelleno(doc, valores){
   return prellenados;
 }
 
+// ============================================================
+// AYUDAS POR CAMPO · explicación + ejemplo bajo cada campo del documento.
+// Núcleo disciplinario (observador, llamado, apertura, citación, versión libre,
+// resolución sancionatoria, recursos). { ayuda } se muestra bajo la etiqueta;
+// { ejemplo } se usa como placeholder en campos de texto/textarea.
+// Un campo del catálogo puede sobreescribir con sus propios c.ayuda / c.ejemplo.
+// ============================================================
+const CAMPO_AYUDA = {
+  // — Observador —
+  fecha_hecho: { ayuda: 'Día en que ocurrió la conducta. Si fue reiterada, registre la fecha del último hecho.' },
+  hora_hecho: { ayuda: 'Hora aproximada en que ocurrió el hecho.' },
+  lugar_hecho: { ayuda: 'Lugar exacto donde ocurrió.', ejemplo: 'Aula 8°-2 · Patio principal · Cancha' },
+  descripcion_hecho: { ayuda: 'Relato objetivo de lo ocurrido: qué pasó, quién y cómo. Sin juicios ni calificativos.', ejemplo: 'Durante la clase de Matemáticas, el estudiante salió del aula sin autorización y no regresó por el resto de la jornada.' },
+  testigos: { ayuda: 'Personas que presenciaron el hecho, con su calidad.', ejemplo: 'Prof. Juan Pérez (docente del aula); estudiante María Gómez (8°-2)' },
+  version_estudiante: { ayuda: 'Lo que el estudiante manifiesta sobre el hecho, en sus propias palabras.', ejemplo: 'El estudiante refiere que salió porque se sentía indispuesto.' },
+  compromiso: { ayuda: 'Compromiso concreto y verificable que asume el estudiante.', ejemplo: 'Permanecer en el aula durante toda la jornada y presentar excusa si se ausenta.' },
+
+  // — Llamado de atención —
+  fecha: { ayuda: 'Fecha del documento (normalmente hoy).' },
+  tipo_llamado: { ayuda: 'Verbal o escrito, según la gravedad y si hay reiteración.' },
+  motivo: { ayuda: 'Conducta que motiva el llamado, citando el numeral del Art. 39 si aplica.', ejemplo: 'Uso del celular en clase pese a llamados previos (Art. 39, num. 2).' },
+  articulo_violado: { ayuda: 'Numeral del Art. 39 (faltas leves) que se incumplió.' },
+
+  // — Acta de apertura —
+  fecha_apertura: { ayuda: 'Fecha en que se abre formalmente el proceso (normalmente hoy).' },
+  numero_proceso: { ayuda: 'Número de radicado del proceso. Se autollena con el número de caso; edítelo si su institución usa otro esquema.', ejemplo: 'CASO-2026-5877' },
+  hechos_imputados: { ayuda: 'Hechos que se le atribuyen al estudiante, de forma clara y delimitada. Son la base de la imputación.', ejemplo: 'Reiteración de evasiones: 20 anotaciones en el observador y evasión de 3 horas el 4 de junio de 2026.' },
+  tipificacion_preliminar: { ayuda: 'Clasificación inicial de la falta según el Manual (sujeta a confirmación tras la versión libre).', ejemplo: 'Falta grave — reiteración de faltas leves (Art. 40, num. 3).' },
+  diligencias_a_practicar: { ayuda: 'Actuaciones que se realizarán para esclarecer los hechos.', ejemplo: 'Recepción de versión libre; revisión del observador; entrevista con el director de grupo.' },
+
+  // — Citación a versión libre —
+  fecha_emision: { ayuda: 'Fecha en que se emite y firma la citación.' },
+  fecha_audiencia: { ayuda: 'Fecha citada para que el estudiante rinda su versión libre. Dé un tiempo razonable de preparación.' },
+  hora_audiencia: { ayuda: 'Hora citada para la diligencia de versión libre.' },
+  lugar: { ayuda: 'Lugar donde se realizará la diligencia.', ejemplo: 'Coordinación de Convivencia, I.E. Sor María Juliana' },
+  derecho_defensa_explicado: { ayuda: 'Marque si se le explicó al estudiante su derecho a la defensa, a ser oído y a estar acompañado por su acudiente.' },
+
+  // — Acta de versión libre —
+  asistentes: { ayuda: 'Quiénes asisten a la diligencia, con nombre, cargo y firma.', ejemplo: 'Coordinador(a); estudiante; acudiente; director(a) de grupo' },
+  narracion_libre: { ayuda: 'Versión libre de los hechos en palabras del propio estudiante, sin presión ni inducción.', ejemplo: 'El estudiante manifiesta libremente que…' },
+  preguntas_aclaratorias: { ayuda: 'Preguntas que el funcionario formula para aclarar los hechos.', ejemplo: '¿Por qué salió del aula? ¿Avisó a algún docente?' },
+  respuestas_estudiante: { ayuda: 'Respuestas del estudiante a las preguntas aclaratorias.' },
+  pruebas_solicitadas: { ayuda: 'Pruebas que el estudiante pide que se practiquen en su defensa.', ejemplo: 'Testimonio del compañero presente; revisión de la minuta de asistencia.' },
+  manifestacion_acudiente: { ayuda: 'Lo que el acudiente expresa durante la diligencia.' },
+
+  // — Resolución sancionatoria —
+  numero_resolucion: { ayuda: 'Número de esta resolución. Es propio de este documento (no se comparte con otros).', ejemplo: 'Resolución No. 012 de 2026' },
+  considerandos: { ayuda: 'Fundamentos de hecho y de derecho que sustentan la decisión (cada uno inicia con "CONSIDERANDO que…").', ejemplo: 'CONSIDERANDO que se surtió la versión libre el 6 de junio; CONSIDERANDO que los hechos quedaron probados con…' },
+  fundamentos_juridicos: { ayuda: 'Normas en que se apoya la decisión.', ejemplo: 'Art. 29 C.P.; Arts. 40 y 43 del Manual de Convivencia; Ley 1620 de 2013.' },
+  hechos_probados: { ayuda: 'Hechos que quedaron demostrados en el proceso, con su soporte probatorio.', ejemplo: 'Quedó probada la evasión reiterada con el observador y la versión libre del estudiante.' },
+  tipo_sancion: { ayuda: 'Sanción a imponer, proporcional a la falta (Art. 38).' },
+  duracion_sancion: { ayuda: 'Duración, si la sanción es temporal.', ejemplo: '3 días hábiles · N/A' },
+  fecha_inicio_sancion: { ayuda: 'Fecha de inicio de la sanción, si aplica.' },
+  fecha_fin_sancion: { ayuda: 'Fecha de finalización de la sanción, si aplica.' },
+  recursos_procedentes: { ayuda: 'Recursos que proceden y su plazo — garantía del debido proceso.', ejemplo: 'Proceden reposición y apelación dentro de los 3 días hábiles siguientes a la notificación (Art. 43, num. 7).' },
+  constancia_notificacion: { ayuda: 'Constancia de cómo y cuándo se notificó al estudiante y al acudiente.' },
+
+  // — Recursos (reposición / apelación) —
+  fecha_presentacion: { ayuda: 'Fecha en que se radica el recurso. Debe estar dentro del plazo (3 días hábiles desde la notificación).' },
+  fecha_notificacion_decision: { ayuda: 'Fecha en que se notificó la decisión que ahora se recurre. Marca el inicio del plazo.' },
+  fecha_decision_reposicion: { ayuda: 'Fecha de la resolución que resolvió la reposición (la que ahora se apela).' },
+  decision_recurrida: { ayuda: 'La decisión exacta que se impugna.', ejemplo: 'Resolución No. 012 de 2026, que impuso 3 días de suspensión.' },
+  hechos: { ayuda: 'Hechos que sustentan el recurso, desde la perspectiva del recurrente.' },
+  argumentos_juridicos: { ayuda: 'Razones de derecho por las que la decisión debe revocarse o modificarse.', ejemplo: 'Se vulneró el debido proceso al no practicarse la prueba solicitada (Art. 29 C.P.).' },
+  argumentos_apelacion: { ayuda: 'Razones por las que se apela ante la instancia superior (Consejo Directivo).' },
+  pruebas_aportadas: { ayuda: 'Pruebas que se aportan junto con el recurso.' },
+  pruebas_nuevas: { ayuda: 'Pruebas no presentadas antes, que se aportan en la apelación.' },
+  pretensiones: { ayuda: 'Lo que concretamente se solicita a la autoridad.', ejemplo: 'Que se revoque la sanción · que se sustituya por un correctivo pedagógico.' }
+};
+
 function renderCampo(c, valores, prellenados){
   // prellenados es Map<campoId, {origen, origenNombre, campoOrigen?}>
   // Aceptar Set legacy para compatibilidad
@@ -4995,12 +5065,19 @@ function renderCampo(c, valores, prellenados){
     : '';
   const errorDiv = `<div class="campo-error" id="${errorId}" aria-live="polite"></div>`;
   const etiqueta = c.etiqueta || c.id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  // Ayuda + ejemplo por campo (diccionario CAMPO_AYUDA, con override desde el catálogo)
+  const _ay = CAMPO_AYUDA[c.id] || {};
+  const ayudaTxt = c.ayuda || _ay.ayuda || '';
+  const ejemplo = c.ejemplo || _ay.ejemplo || '';
+  const ayudaDiv = ayudaTxt ? `<div class="campo-help campo-ayuda">${escape(ayudaTxt)}</div>` : '';
+  const phAttr = ejemplo ? ` placeholder="${escape(ejemplo)}"` : '';
 
   if (c.tipo === 'textarea')
     return `<div class="campo-form" data-mejorar-ia="1">
       <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
+      ${ayudaDiv}
       <div class="textarea-wrap">
-        <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3" ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>
+        <textarea id="${inputId}" class="campo-textarea ${claseExtra}" data-campo="${c.id}" rows="3"${phAttr} ${ariaReq} ${ariaDescribed}>${escape(v)}</textarea>
         ${iaState.enabled ? `<button type="button" class="btn-ia-mejorar" onclick="abrirMenuMejorar(this,'${inputId}','${escape(etiqueta)}')" aria-label="Mejorar con IA" title="Mejorar con IA"><span aria-hidden="true">✨</span></button>` : ''}
       </div>
       ${prefillOrigen}${help}${errorDiv}
@@ -5008,6 +5085,7 @@ function renderCampo(c, valores, prellenados){
   if (c.tipo === 'select' && c.opciones)
     return `<div class="campo-form">
       <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
+      ${ayudaDiv}
       <select id="${inputId}" class="campo-select ${claseExtra}" data-campo="${c.id}" ${ariaReq} ${ariaDescribed}>${c.opciones.map(o=>`<option ${v===o?'selected':''}>${escape(o)}</option>`).join('')}</select>${prefillOrigen}${errorDiv}
     </div>`;
   if (c.tipo === 'firma' || c.tipo === 'firmas_multiples')
@@ -5016,14 +5094,18 @@ function renderCampo(c, valores, prellenados){
       <div aria-labelledby="${inputId}-label" style="border:1px dashed var(--border); padding:18px; text-align:center; font-style:italic; color:var(--text-subtle); font-size:var(--fs-sm); border-radius:var(--radius-md)">— Espacio para firma física —</div>
     </div>`;
   if (c.tipo === 'boolean')
-    return `<div class="campo-form" style="display:flex; align-items:center; gap:var(--space-2); padding:var(--space-2) 0">
-      <input type="checkbox" id="${inputId}" data-campo="${c.id}" ${v?'checked':''} style="width:20px; height:20px; accent-color:var(--vino); cursor:pointer" ${ariaReq}>
-      <label class="campo-label" for="${inputId}" style="margin:0; cursor:pointer">${escape(etiqueta)}${req}${labelObl}</label>
+    return `<div class="campo-form">
+      <div style="display:flex; align-items:center; gap:var(--space-2); padding:var(--space-2) 0">
+        <input type="checkbox" id="${inputId}" data-campo="${c.id}" ${v?'checked':''} style="width:20px; height:20px; accent-color:var(--vino); cursor:pointer" ${ariaReq}>
+        <label class="campo-label" for="${inputId}" style="margin:0; cursor:pointer">${escape(etiqueta)}${req}${labelObl}</label>
+      </div>
+      ${ayudaDiv}
     </div>`;
   const tipo = c.tipo === 'fecha' ? 'date' : c.tipo === 'hora' ? 'time' : c.tipo === 'datetime' ? 'datetime-local' : c.tipo === 'numero' ? 'number' : c.tipo === 'email' ? 'email' : 'text';
   return `<div class="campo-form">
     <label class="campo-label" for="${inputId}">${escape(etiqueta)}${req}${labelObl}${tagPrefill}</label>
-    <input id="${inputId}" type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}" ${ariaReq} ${ariaDescribed}>${prefillOrigen}${help}${errorDiv}
+    ${ayudaDiv}
+    <input id="${inputId}" type="${tipo}" class="campo-input ${claseExtra}" data-campo="${c.id}" value="${escape(v)}"${phAttr} ${ariaReq} ${ariaDescribed}>${prefillOrigen}${help}${errorDiv}
   </div>`;
 }
 
