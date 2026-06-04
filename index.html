@@ -5679,14 +5679,18 @@ async function analizarConIA(){
   const systemPrompt = `Eres ConciencIA, asesor del debido proceso de la I.E. Sor María Juliana (Cartago, Valle del Cauca, Colombia). Tu tarea: analizar la descripción de una situación escolar y proponer la clasificación según el Manual de Convivencia.
 
 Categorías:
-- TIPO_I · Falta leve · conducta esporádica SIN daño físico, sin recurrencia (Art. 39: inasistencia, llegar tarde, uniforme, agresión verbal puntual). Competencia: cualquier docente.
-- TIPO_II · Falta grave · agresión escolar real, ciberacoso, recurrencia de faltas leves (Art. 40). Competencia: Coordinador.
-- TIPO_III · Posible delito · violencia sexual, lesiones, armas, drogas (Ley 599/2000). Competencia: Rector + Policía Nacional + ICBF.
+- TIPO_I · Falta leve · conducta esporádica SIN daño físico, sin recurrencia (Art. 39: inasistencia, llegar tarde, uniforme, agresión verbal puntual). Competencia: cualquier docente. Ruta: n_protocolo_tipo_i.
+- TIPO_II · Situación Tipo II de Ley 1620 · agresión escolar REAL con víctima de convivencia: acoso/bullying, ciberacoso, agresión física o psicológica que NO constituye delito (Art. 40 num 1). Competencia: Coordinador / Comité de Convivencia. Ruta: n_protocolo_tipo_ii.
+- TIPO_III · Posible delito · violencia sexual, lesiones, armas, drogas (Ley 599/2000). Competencia: Rector + Policía Nacional + ICBF. Ruta: n_protocolo_tipo_iii.
+- FALTA_GRAVE · Falta grave del RÉGIMEN DISCIPLINARIO que NO es situación Tipo II: reiteración de faltas leves, daño a enseres o planta física, fraude, uso indebido reiterado (Art. 40). Competencia: Coordinador. Ruta: n_protocolo_falta_grave.
+- FALTA_GRAVISIMA · Falta gravísima del régimen disciplinario (las más severas del Manual, sin que necesariamente sean delito). Competencia: Rector / Consejo Directivo. Ruta: n_protocolo_falta_gravisima.
 
 ACADEMICO · si es sobre calificaciones, plan de mejoramiento, promoción (SIE 2025).
 RECLAMACION_ACADEMICA · si el estudiante/acudiente impugna una nota.
 JUSTICIA_RESTAURATIVA · si la situación es ideal para mediación (sin daño grave).
 PQRS · si es petición, queja, reclamo o sugerencia.
+
+DISTINCIÓN CLAVE: "Situación Tipo II" (Ley 1620) exige agresión o acoso escolar con víctima de convivencia. La REITERACIÓN de faltas leves (Art. 39: "si la falta leve es reiterativa se convierte en falta grave") es FALTA_GRAVE del régimen disciplinario, NO TIPO_II — salvo que las conductas reiteradas sean en sí mismas agresiones escolares.
 
 REGLAS DE FORMATO (críticas):
 - Responde ÚNICAMENTE el objeto JSON, nada antes ni después.
@@ -5696,7 +5700,7 @@ REGLAS DE FORMATO (críticas):
 
 Estructura EXACTA del JSON:
 {
-  "clasificacion": "TIPO_I | TIPO_II | TIPO_III | ACADEMICO | RECLAMACION_ACADEMICA | JUSTICIA_RESTAURATIVA | PQRS",
+  "clasificacion": "TIPO_I | TIPO_II | TIPO_III | FALTA_GRAVE | FALTA_GRAVISIMA | ACADEMICO | RECLAMACION_ACADEMICA | JUSTICIA_RESTAURATIVA | PQRS",
   "razonamiento": "1-2 frases · por qué encaja en esa categoría · cita artículo del Manual si aplica",
   "ruta_arbol": "id del nodo del árbol más apropiado para iniciar (de la lista abajo)",
   "acciones_inmediatas": ["acción 1", "acción 2"],
@@ -5747,8 +5751,10 @@ Comienza tu respuesta directamente con el carácter { y termina con }.`;
     // Render del resultado
     const tipoLabels = {
       TIPO_I: { txt:'Tipo I · Falta leve',  cls:'badge-success' },
-      TIPO_II: { txt:'Tipo II · Falta grave', cls:'badge-warning' },
+      TIPO_II: { txt:'Tipo II · Situación de convivencia', cls:'badge-warning' },
       TIPO_III: { txt:'Tipo III · Posible delito', cls:'badge-vino' },
+      FALTA_GRAVE: { txt:'Falta grave (no Tipo II)', cls:'badge-warning' },
+      FALTA_GRAVISIMA: { txt:'Falta gravísima', cls:'badge-vino' },
       ACADEMICO: { txt:'Académico', cls:'badge-neutral' },
       RECLAMACION_ACADEMICA: { txt:'Reclamación académica', cls:'badge-neutral' },
       JUSTICIA_RESTAURATIVA: { txt:'Justicia restaurativa', cls:'badge-success' },
