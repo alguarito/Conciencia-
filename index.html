@@ -4790,6 +4790,10 @@ function actualizarBotonCompletar(){
 // AUTORELLENO · NIVEL 1 · datos básicos del caso → campos del documento
 // ============================================================
 const AUTORELLENO_MAP = [
+  // El número de proceso/radicado/expediente = el id del caso (CASO-AAAA-NNNN) que la app
+  // ya asigna. Editable: si la institución usa otro radicado, el docente lo sobrescribe.
+  // numero_radicado_siuce NO entra aquí: es el radicado externo de la plataforma SIUCE.
+  [/^numero_proceso$|^numero_radicado$|^numero_expediente$|^numero_radicado_original$|^radicado$/, () => state.caso?.id],
   [/^fecha$|^fecha_emision$|^fecha_apertura$|^fecha_presentacion$|^fecha_reporte$|^fecha_elaboracion$/, () => new Date().toISOString().slice(0,10)],
   [/^estudiante$|estudiante_nombre|^nombre_estudiante$/, () => state.caso?.estudianteNombre],
   [/estudiante_documento|^documento_estudiante$|^documento$/, () => state.caso?.estudianteDocumento],
@@ -4889,6 +4893,28 @@ function buscarValorSemantico(campoId, currentDocId){
   return null;
 }
 
+// Campos PROPIOS de cada documento: NO se comparten por id (cada acta/resolución/oficio
+// tiene su propio número y su propia decisión). Fechas/horas/firmas se excluyen por tipo.
+const CAMPOS_PROPIOS_DOC = new Set([
+  'numero_acta','numero_resolucion','numero_oficio','numero_diploma',
+  'decision','decision_final','decision_definitiva','decision_rector',
+  'decision_promocion','decision_continuidad','decision_notificada',
+  'decisiones','decisiones_adoptadas','votacion','orden_dia','deliberacion',
+  'proyecto_decision','redaccion_propuesta'
+]);
+
+// NIVEL 2b · "llenar una vez": busca el MISMO campo (igual id) ya diligenciado en otro
+// documento del expediente, para no volver a pedir el mismo dato en cada formato.
+function buscarValorMismoCampo(campoId, currentDocId){
+  for (const [docId, vals] of Object.entries(state.docsValores || {})){
+    if (docId === currentDocId) continue;
+    if (vals[campoId] && String(vals[campoId]).trim().length > 0){
+      return { valor: vals[campoId], origen: docId, campoOrigen: campoId };
+    }
+  }
+  return null;
+}
+
 function aplicarAutoRelleno(doc, valores){
   // Estructura nueva: Map<campoId, { origen?: string, origenNombre?: string }>
   const prellenados = new Map();
@@ -4918,7 +4944,15 @@ function aplicarAutoRelleno(doc, valores){
     // NIVEL 2 · semántico entre documentos del expediente
     // Solo aplica a campos de texto/textarea/fecha/hora (no checkbox/firma)
     if (!['texto','textarea','fecha','hora','datetime','select'].includes(campo.tipo)) return;
-    const hallazgo = buscarValorSemantico(campo.id, doc.id);
+    let hallazgo = buscarValorSemantico(campo.id, doc.id);
+    // NIVEL 2b · mismo campo (igual id) en otro documento → "llenar una vez".
+    // Solo texto/textarea de contenido; excluye fechas/horas (cada doc la suya) y los
+    // campos propios de cada documento (números de acta/resolución, decisiones).
+    if (!hallazgo
+        && ['texto','textarea'].includes(campo.tipo)
+        && !CAMPOS_PROPIOS_DOC.has(campo.id)){
+      hallazgo = buscarValorMismoCampo(campo.id, doc.id);
+    }
     if (hallazgo){
       valores[campo.id] = hallazgo.valor;
       const docOrigen = CATALOGO.catalogo_documentos?.[hallazgo.origen];
