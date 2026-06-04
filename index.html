@@ -7841,9 +7841,14 @@ const IA_ADAPTERS = {
   },
   google: {
     nombre: 'Google Gemini',
-    endpoint: (cfg) => {
+    endpoint: (cfg, stream) => {
       const m = cfg.model || 'gemini-2.5-flash';
-      return `https://generativelanguage.googleapis.com/v1beta/models/${m}:streamGenerateContent?key=${cfg.apiKey}&alt=sse`;
+      // Gemini distingue stream/no-stream por ENDPOINT, no por el body:
+      // · sin streaming → generateContent  (JSON normal · lo consume resp.json())
+      // · con streaming → streamGenerateContent + alt=sse (líneas "data: " · SSE)
+      const metodo = stream ? 'streamGenerateContent' : 'generateContent';
+      const sufijoSSE = stream ? '&alt=sse' : '';
+      return `https://generativelanguage.googleapis.com/v1beta/models/${m}:${metodo}?key=${cfg.apiKey}${sufijoSSE}`;
     },
     headers: (cfg) => ({ 'content-type': 'application/json' }),
     body: (cfg, systemPrompt, userPrompt) => JSON.stringify({
@@ -7963,7 +7968,7 @@ async function llamarIAconCfg({ cfg, systemPrompt, userPrompt, onChunk, anonimiz
   const stream = !!onChunk;
   let resp;
   try {
-    resp = await fetch(adapter.endpoint(cfg), {
+    resp = await fetch(adapter.endpoint(cfg, stream), {
       method: 'POST',
       headers: adapter.headers(cfg),
       body: adapter.body(cfg, anonSystem.textoAnon, anonUser.textoAnon, stream)
