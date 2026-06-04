@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConciencIA · El árbol de decisión — Presentación</title>
+<meta name="description" content="Cómo funciona el árbol de decisión determinístico de ConciencIA, paso a paso. Plataforma offline para el debido proceso de la I.E. Sor María Juliana.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-app:#FAF7F2; --bg-surface:#FFFFFF; --bg-surface-2:#F0EBE3;
+  --text:#1A1614; --text-2:#3D3633; --text-muted:#71665E; --text-on-vino:#FFFFFF;
+  --vino:#6B1820; --vino-2:#8B2230; --vino-dark:#5A1318; --vino-soft:#F2D9DA;
+  --dorado:#8B6F3F; --dorado-claro:#B89968; --dorado-warm:#F5C77E; --dorado-soft:rgba(139,111,63,0.08);
+  --border:#9C9486; --border-soft:#E5DDD0; --divider:#D6CFC2;
+  --success:#3A6B4D; --warning:#B86E1F; --danger:#B91C1C; --critical-top:#8B0E1A;
+  --ff-sans:'Inter Tight',system-ui,-apple-system,sans-serif;
+  --ff-serif:'Crimson Pro',Georgia,'Times New Roman',serif;
+  --ff-mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:40px; --s9:48px; --s10:64px;
+  --r-md:8px; --r-lg:12px; --r-xl:16px; --r-2xl:24px; --r-full:9999px;
+  --sh-md:0 4px 12px rgba(26,22,20,0.06); --sh-lg:0 8px 24px rgba(26,22,20,0.08);
+  --sh-crit:0 8px 32px rgba(107,24,32,0.20);
+  --ease-out:cubic-bezier(0.16,1,0.3,1); --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--ff-sans); background:var(--bg-app); color:var(--text);
+  font-size:15px; line-height:1.5; font-variant-numeric:tabular-nums;
+  overflow:hidden;
+}
+/* fondo decorativo sutil */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 85% -8%, rgba(139,111,63,0.10), transparent 60%),
+    radial-gradient(800px 520px at -5% 105%, rgba(107,24,32,0.07), transparent 55%);
+}
+
+/* ── Deck ───────────────────────────────────────── */
+.deck{position:relative; z-index:1; height:100vh; width:100vw}
+.slide{
+  position:absolute; inset:0; display:none;
+  padding:clamp(24px,5vh,64px) clamp(24px,6vw,96px);
+  flex-direction:column; justify-content:center;
+  overflow:auto;
+}
+.slide.active{display:flex; animation:slideIn .5s var(--ease-out)}
+@keyframes slideIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.slide-inner{width:100%; max-width:1180px; margin:0 auto}
+
+/* stagger de entrada para hijos marcados */
+.slide.active .fx{opacity:0; animation:fxIn .55s var(--ease-out) forwards}
+.slide.active .fx:nth-child(1){animation-delay:.05s}
+.slide.active .fx:nth-child(2){animation-delay:.13s}
+.slide.active .fx:nth-child(3){animation-delay:.21s}
+.slide.active .fx:nth-child(4){animation-delay:.29s}
+.slide.active .fx:nth-child(5){animation-delay:.37s}
+.slide.active .fx:nth-child(6){animation-delay:.45s}
+@keyframes fxIn{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none}}
+
+/* ── Tipografía ─────────────────────────────────── */
+.eyebrow{
+  font-variant-caps:all-small-caps; letter-spacing:.08em; font-weight:600;
+  font-size:14px; color:var(--dorado); margin-bottom:var(--s4); display:flex;
+  align-items:center; gap:var(--s3);
+}
+.eyebrow::after{content:""; height:1px; flex:1; background:var(--divider); max-width:120px}
+h1.display{font-weight:900; font-size:clamp(40px,6.5vw,76px); line-height:.97; letter-spacing:-.025em}
+h1.display em{font-family:var(--ff-serif); font-style:italic; font-weight:500; color:var(--vino)}
+h2.section{font-weight:800; font-size:clamp(28px,4vw,46px); line-height:1.1; letter-spacing:-.022em; margin-bottom:var(--s5)}
+.lead{font-size:clamp(17px,2vw,22px); color:var(--text-2); line-height:1.5; max-width:62ch}
+.lead-serif{font-family:var(--ff-serif); font-style:italic; font-size:clamp(18px,2.2vw,26px); color:var(--text-2); line-height:1.4}
+.meta{font-family:var(--ff-mono); font-size:12px; color:var(--text-muted); letter-spacing:0}
+
+/* ── Componentes ────────────────────────────────── */
+.badge{
+  display:inline-flex; align-items:center; gap:var(--s2); padding:6px 14px;
+  border-radius:var(--r-full); font-family:var(--ff-mono); font-size:12px; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase;
+}
+.badge-offline{background:rgba(58,107,77,0.12); color:var(--success)}
+.dot-pulse{width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 0 0 rgba(58,107,77,.5); animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(58,107,77,.45)} 70%{box-shadow:0 0 0 9px rgba(58,107,77,0)} 100%{box-shadow:0 0 0 0 rgba(58,107,77,0)}}
+
+.grid{display:grid; gap:var(--s5)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:860px){.g3,.g2{grid-template-columns:1fr}}
+
+.card{
+  background:var(--bg-surface); border:1px solid var(--border-soft);
+  border-radius:var(--r-xl); padding:var(--s7); box-shadow:var(--sh-md);
+}
+.card .ico{font-size:30px; line-height:1; margin-bottom:var(--s4)}
+.card h3{font-weight:700; font-size:19px; margin-bottom:var(--s2); letter-spacing:-.01em}
+.card p{color:var(--text-muted); font-size:15px}
+
+/* nodo del árbol (pieza visual base) */
+.node{
+  display:inline-flex; flex-direction:column; gap:4px; padding:var(--s4) var(--s5);
+  background:var(--bg-surface); border:1.5px solid var(--border-soft);
+  border-radius:var(--r-lg); box-shadow:var(--sh-md); text-align:left; min-width:160px;
+}
+.node .ntype{font-variant-caps:all-small-caps; letter-spacing:.05em; font-weight:600; font-size:12px; color:var(--dorado)}
+.node .nttl{font-weight:700; font-size:15px; line-height:1.2}
+.node.q{border-color:var(--dorado-claro)}
+.node.q .ntype{color:var(--dorado)}
+.node.start{background:var(--vino); color:var(--text-on-vino); border-color:var(--vino)}
+.node.start .ntype{color:var(--dorado-warm)}
+.node.proto{border-color:var(--vino); border-left-width:5px}
+.node.proto .ntype{color:var(--vino)}
+
+/* pipeline horizontal */
+.pipe{display:flex; align-items:stretch; gap:0; flex-wrap:wrap}
+.pipe .stage{
+  flex:1 1 0; min-width:150px; background:var(--bg-surface); border:1px solid var(--border-soft);
+  border-radius:var(--r-lg); padding:var(--s5) var(--s4); text-align:center; box-shadow:var(--sh-md);
+  position:relative;
+}
+.pipe .stage .ico{font-size:30px}
+.pipe .stage .st-ttl{font-weight:700; font-size:15px; margin-top:6px; letter-spacing:-.01em}
+.pipe .stage .st-sub{font-size:12px; color:var(--text-muted); margin-top:2px}
+.pipe .arrow{display:flex; align-items:center; color:var(--dorado-claro); font-size:26px; padding:0 6px; align-self:center}
+@media(max-width:860px){.pipe{flex-direction:column} .pipe .arrow{transform:rotate(90deg); padding:4px 0}}
+
+/* chips de ramas */
+.chips{display:flex; flex-wrap:wrap; gap:var(--s3)}
+.chip{
+  display:inline-flex; align-items:center; gap:var(--s2); padding:10px 16px; border-radius:var(--r-full);
+  background:var(--bg-surface); border:1px solid var(--border-soft); font-weight:600; font-size:14.5px;
+  box-shadow:var(--sh-md);
+}
+.chip.hl{background:var(--vino); color:var(--text-on-vino); border-color:var(--vino)}
+.chip .e{font-size:16px}
+
+/* clasificaciones */
+.verdict{border-radius:var(--r-lg); padding:var(--s5); border:1px solid var(--border-soft); background:var(--bg-surface); box-shadow:var(--sh-md)}
+.verdict .vt{font-variant-caps:all-small-caps; letter-spacing:.04em; font-weight:700; font-size:13px}
+.verdict .vd{font-size:13px; color:var(--text-muted); margin-top:4px}
+.verdict.lev{border-left:5px solid var(--success)} .verdict.lev .vt{color:var(--success)}
+.verdict.grav{border-left:5px solid var(--warning)} .verdict.grav .vt{color:var(--warning)}
+.verdict.crit{border-left:5px solid var(--vino); background:linear-gradient(135deg,var(--vino-soft),var(--bg-surface))} .verdict.crit .vt{color:var(--vino)}
+
+/* pasos del protocolo */
+.steps{display:grid; grid-template-columns:repeat(2,1fr); gap:var(--s3)}
+@media(max-width:760px){.steps{grid-template-columns:1fr}}
+.step{display:flex; gap:var(--s3); align-items:flex-start; padding:var(--s3) var(--s4); background:var(--bg-surface); border:1px solid var(--border-soft); border-radius:var(--r-md)}
+.step .num{flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--vino); color:#fff; font-weight:700; font-size:13px; display:grid; place-items:center; font-family:var(--ff-mono)}
+.step .stx b{font-weight:600; font-size:14.5px; display:block; line-height:1.25}
+.step .stx span{font-size:11.5px; color:var(--text-muted); font-family:var(--ff-mono)}
+
+/* recorrido (slide caso) */
+.flow{display:flex; align-items:center; gap:var(--s2); flex-wrap:wrap; justify-content:center}
+.flow .fnode{padding:var(--s3) var(--s4); border-radius:var(--r-lg); background:var(--bg-surface); border:1.5px solid var(--border-soft); box-shadow:var(--sh-md); font-weight:600; font-size:14px; text-align:center; min-width:120px}
+.flow .fnode small{display:block; font-variant-caps:all-small-caps; letter-spacing:.04em; color:var(--dorado); font-weight:700; font-size:11px}
+.flow .fnode.ans{background:var(--bg-surface-2); border-style:dashed}
+.flow .fnode.verdict-amber{border-color:var(--warning); border-left-width:5px}
+.flow .fnode.fproto{background:var(--vino); color:#fff; border-color:var(--vino)}
+.flow .fnode.fproto small{color:var(--dorado-warm)}
+.flow .farr{color:var(--dorado-claro); font-size:22px}
+@media(max-width:760px){.flow{flex-direction:column} .flow .farr{transform:rotate(90deg)}}
+
+.note{margin-top:var(--s6); font-family:var(--ff-serif); font-style:italic; font-size:18px; color:var(--text-2)}
+.kvs{display:flex; gap:var(--s6); flex-wrap:wrap; margin-top:var(--s6)}
+.kv{display:flex; flex-direction:column}
+.kv b{font-weight:800; font-size:30px; font-family:var(--ff-serif); color:var(--vino); line-height:1}
+.kv span{font-variant-caps:all-small-caps; letter-spacing:.05em; font-size:12px; color:var(--text-muted); font-weight:600}
+
+/* ── Chrome de navegación ───────────────────────── */
+.progress{position:fixed; top:0; left:0; height:3px; background:var(--vino); z-index:30; transition:width .4s var(--ease-out)}
+.nav{position:fixed; bottom:20px; right:24px; z-index:30; display:flex; align-items:center; gap:var(--s3)}
+.navbtn{
+  width:46px; height:46px; border-radius:var(--r-full); border:1px solid var(--border);
+  background:var(--bg-surface); color:var(--text); font-size:20px; cursor:pointer;
+  display:grid; place-items:center; box-shadow:var(--sh-md); transition:all .15s var(--ease-out);
+}
+.navbtn:hover{background:var(--vino); color:#fff; border-color:var(--vino); transform:translateY(-1px)}
+.navbtn:disabled{opacity:.35; cursor:default}
+.navbtn:focus-visible{outline:3px solid var(--vino); outline-offset:2px}
+.counter{font-family:var(--ff-mono); font-size:13px; color:var(--text-muted); min-width:48px; text-align:center}
+.dots{position:fixed; bottom:26px; left:50%; transform:translateX(-50%); z-index:30; display:flex; gap:7px}
+.dots button{width:9px; height:9px; border-radius:50%; border:none; background:var(--divider); cursor:pointer; padding:0; transition:all .2s}
+.dots button.on{background:var(--vino); width:24px; border-radius:var(--r-full)}
+.dots button:focus-visible{outline:2px solid var(--vino); outline-offset:2px}
+.brandtag{position:fixed; bottom:24px; left:28px; z-index:30; font-family:var(--ff-serif); font-style:italic; font-size:15px; color:var(--text-muted)}
+.brandtag b{font-style:normal; font-weight:700; color:var(--vino)}
+.hint{margin-top:var(--s8); font-size:13px; color:var(--text-muted); display:flex; align-items:center; gap:var(--s2)}
+kbd{font-family:var(--ff-mono); font-size:11px; background:var(--bg-surface-2); border:1px solid var(--border-soft); border-radius:6px; padding:2px 7px}
+
+@media(max-width:760px){.brandtag{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important; transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- 1 · Portada -->
+  <section class="slide" aria-label="Portada">
+    <div class="slide-inner">
+      <p class="eyebrow fx">I.E. Sor María Juliana · Asesor del Debido Proceso</p>
+      <h1 class="display fx">El <em>árbol</em> de decisión</h1>
+      <p class="lead fx" style="margin-top:var(--s5)">Cómo ConciencIA guía el debido proceso disciplinario y académico, paso a paso — fundamentado en el Manual de Convivencia y el SIE, y <strong>sin necesidad de internet</strong>.</p>
+      <div class="fx" style="margin-top:var(--s7); display:flex; gap:var(--s3); flex-wrap:wrap; align-items:center">
+        <span class="badge badge-offline"><span class="dot-pulse"></span> Funciona offline</span>
+        <span class="meta">30 protocolos · 176 pasos · 124 plantillas</span>
+      </div>
+      <p class="hint fx"><kbd>→</kbd> o clic para avanzar · <kbd>←</kbd> para volver</p>
+    </div>
+  </section>
+
+  <!-- 2 · La idea -->
+  <section class="slide" aria-label="La idea">
+    <div class="slide-inner">
+      <p class="eyebrow fx">La idea</p>
+      <h2 class="section fx">Una guía con criterio, que no depende de la conexión.</h2>
+      <div class="grid g3" style="margin-top:var(--s5)">
+        <div class="card fx"><div class="ico">🌳</div><h3>Determinístico</h3><p>La misma situación, respondida igual, lleva siempre al mismo protocolo. Sin azar, sin opiniones: reglas claras del Manual.</p></div>
+        <div class="card fx"><div class="ico">🔌</div><h3>100% offline</h3><p>Todo el árbol vive en el navegador del docente. Una vez cargado, funciona sin internet y sin enviar datos a ningún servidor.</p></div>
+        <div class="card fx"><div class="ico">⚖️</div><h3>Fundamentado</h3><p>Cada pregunta, clasificación y paso cita su base legal — el Manual de Convivencia y el SIE 2025.</p></div>
+      </div>
+      <p class="note fx">La inteligencia artificial es opcional y complementaria: el árbol determinístico garantiza que la app nunca falla.</p>
+    </div>
+  </section>
+
+  <!-- 3 · El recorrido (pipeline) -->
+  <section class="slide" aria-label="El recorrido">
+    <div class="slide-inner">
+      <p class="eyebrow fx">El recorrido</p>
+      <h2 class="section fx">Cinco momentos, una sola ruta lógica.</h2>
+      <div class="pipe fx" style="margin-top:var(--s6)">
+        <div class="stage"><div class="ico">🧭</div><div class="st-ttl">Inicio</div><div class="st-sub">¿Qué situación es?</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">❓</div><div class="st-ttl">Preguntas</div><div class="st-sub">El árbol indaga</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">🏷️</div><div class="st-ttl">Clasificación</div><div class="st-sub">El veredicto</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">📋</div><div class="st-ttl">Protocolo</div><div class="st-sub">Pasos verificables</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">📄</div><div class="st-ttl">Documentos</div><div class="st-sub">Actas firmables</div></div>
+      </div>
+      <p class="note fx">A esto se suma el <strong>seguimiento</strong>: plazos, responsables y alarmas para no dejar vencer ninguna etapa.</p>
+    </div>
+  </section>
+
+  <!-- 4 · Paso 1: el punto de partida -->
+  <section class="slide" aria-label="Paso 1">
+    <div class="slide-inner">
+      <p class="eyebrow fx">Paso 1 · El punto de partida</p>
+      <h2 class="section fx">El árbol abre con una sola pregunta.</h2>
+      <div class="node start fx" style="margin-bottom:var(--s6)"><span class="ntype">Nodo raíz · pregunta</span><span class="nttl" style="font-size:19px">¿Qué tipo de situación o procedimiento desea gestionar?</span></div>
+      <p class="lead fx" style="margin-bottom:var(--s4)">Una respuesta elige la rama. Hay <strong>doce</strong> caminos posibles:</p>
+      <div class="chips fx">
+        <span class="chip hl"><span class="e">⚖️</span> Conducta / disciplinario</span>
+        <span class="chip"><span class="e">📚</span> Académico (SIE)</span>
+        <span class="chip"><span class="e">✋</span> Reclamación de nota</span>
+        <span class="chip"><span class="e">🔁</span> Recursos disciplinarios</span>
+        <span class="chip"><span class="e">🤝</span> Justicia restaurativa</span>
+        <span class="chip"><span class="e">🏠</span> Escolaridad en casa</span>
+        <span class="chip"><span class="e">📨</span> PQRS</span>
+        <span class="chip"><span class="e">👥</span> Comité de Convivencia</span>
+        <span class="chip"><span class="e">📝</span> Admisión / matrícula</span>
+        <span class="chip"><span class="e">🎓</span> Graduación</span>
+        <span class="chip"><span class="e">🚨</span> Ruta de Atención Integral</span>
+        <span class="chip"><span class="e">🧭</span> Orientación previa</span>
+      </div>
+      <p class="note fx">Seguiremos la rama <strong>disciplinaria</strong> como ejemplo.</p>
+    </div>
+  </section>
+
+  <!-- 5 · Paso 2: el árbol pregunta -->
+  <section class="slide" aria-label="Paso 2">
+    <div class="slide-inner">
+      <p class="eyebrow fx">Paso 2 · El árbol pregunta</p>
+      <h2 class="section fx">Preguntas claras; el docente responde lo que sabe.</h2>
+      <div class="grid g2 fx" style="align-items:start">
+        <div class="node q"><span class="ntype">Pregunta</span><span class="nttl">¿La situación generó daño al cuerpo o a la salud de algún involucrado?</span>
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:var(--text-2)">
+            <span>→ No, ningún daño físico</span>
+            <span>→ Sí, sin incapacidad</span>
+            <span>→ Sí, graves / con armas <strong style="color:var(--vino)">⚠ Tipo III</strong></span>
+          </div>
+        </div>
+        <div class="node q"><span class="ntype">Siguiente pregunta</span><span class="nttl">¿La conducta es repetida o sistemática contra la misma persona?</span>
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:var(--text-2)">
+            <span>→ No, fue un hecho aislado</span>
+            <span>→ Sí, se ha repetido <strong style="color:var(--warning)">→ agrava</strong></span>
+          </div>
+        </div>
+      </div>
+      <p class="note fx">Cada respuesta poda el árbol: descarta caminos y acerca el veredicto. Siempre se puede retroceder sin perder datos.</p>
+    </div>
+  </section>
+
+  <!-- 6 · Paso 3: clasificación -->
+  <section class="slide" aria-label="Paso 3">
+    <div class="slide-inner">
+      <p class="eyebrow fx">Paso 3 · La clasificación</p>
+      <h2 class="section fx">El árbol entrega un veredicto fundamentado.</h2>
+      <div class="grid g2 fx" style="gap:var(--s3)">
+        <div class="verdict lev"><div class="vt">Tipo I · Falta leve</div><div class="vd">Conducta esporádica, sin daño. Competencia del docente.</div></div>
+        <div class="verdict grav"><div class="vt">Tipo II · Falta grave</div><div class="vd">Agresión escolar o acoso (Ley 1620). Competencia del Coordinador.</div></div>
+        <div class="verdict grav"><div class="vt">Falta grave (no Tipo II)</div><div class="vd">Régimen disciplinario: reiteración de faltas leves, daños, fraude.</div></div>
+        <div class="verdict crit"><div class="vt">Tipo III · Falta gravísima</div><div class="vd">Posible delito: lesiones, armas, violencia sexual. Rector + Policía + ICBF.</div></div>
+      </div>
+      <p class="note fx">No es una corazonada: es la regla del Manual aplicada a las respuestas dadas. <span class="meta" style="font-size:13px">+ Falta gravísima disciplinaria.</span></p>
+    </div>
+  </section>
+
+  <!-- 7 · Paso 4: protocolo -->
+  <section class="slide" aria-label="Paso 4">
+    <div class="slide-inner">
+      <p class="eyebrow fx">Paso 4 · El protocolo</p>
+      <h2 class="section fx">Cada veredicto abre su protocolo paso a paso.</h2>
+      <p class="lead fx" style="margin-bottom:var(--s5)">Ejemplo · <strong>Protocolo de atención Situación Tipo II</strong> — cada paso indica responsable, plazo y fundamento.</p>
+      <div class="steps fx">
+        <div class="step"><span class="num">1</span><span class="stx"><b>Atención inmediata física y mental</b><span>Docente Orientador · Art. 34</span></span></div>
+        <div class="step"><span class="num">2</span><span class="stx"><b>Adoptar medidas de protección</b><span>Coordinador · inmediato</span></span></div>
+        <div class="step"><span class="num">3</span><span class="stx"><b>Informar a padres / acudientes</b><span>Coordinador · mismo día</span></span></div>
+        <div class="step"><span class="num">4</span><span class="stx"><b>Versión libre con confidencialidad</b><span>Garantía de defensa · Art. 29 C.P.</span></span></div>
+        <div class="step"><span class="num">5</span><span class="stx"><b>Verificar si corresponde a Tipo III</b><span>Punto de control</span></span></div>
+        <div class="step"><span class="num">6</span><span class="stx"><b>Definir acciones restaurativas</b><span>Justicia restaurativa preferente</span></span></div>
+      </div>
+      <p class="note fx">El docente marca cada paso como cumplido; la plataforma vigila los plazos.</p>
+    </div>
+  </section>
+
+  <!-- 8 · Paso 5: documentos -->
+  <section class="slide" aria-label="Paso 5">
+    <div class="slide-inner">
+      <p class="eyebrow fx">Paso 5 · Los documentos</p>
+      <h2 class="section fx">De la decisión al documento firmable, al instante.</h2>
+      <div class="pipe fx" style="margin-top:var(--s4)">
+        <div class="stage"><div class="ico">🗂️</div><div class="st-ttl">El paso pide un formato</div><div class="st-sub">Acta · Citación · Resolución</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">✍️</div><div class="st-ttl">Se llena solo</div><div class="st-sub">Datos del caso heredados</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">✅</div><div class="st-ttl">Validación jurídica</div><div class="st-sub">Bloquea si falta lo obligatorio</div></div>
+        <div class="arrow">→</div>
+        <div class="stage"><div class="ico">📄</div><div class="st-ttl">Word + PDF</div><div class="st-sub">Con firma institucional</div></div>
+      </div>
+      <div class="kvs fx">
+        <div class="kv"><b>124</b><span>Plantillas</span></div>
+        <div class="kv"><b>30</b><span>Protocolos</span></div>
+        <div class="kv"><b>176</b><span>Pasos verificables</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Caso de ejemplo recorrido -->
+  <section class="slide" aria-label="Caso de ejemplo">
+    <div class="slide-inner">
+      <p class="eyebrow fx">El recorrido completo · un caso real</p>
+      <h2 class="section fx">De una situación a su debido proceso, en segundos.</h2>
+      <div class="flow fx" style="margin-top:var(--s5)">
+        <div class="fnode start" style="background:var(--vino); color:#fff; border-color:var(--vino)"><small style="color:var(--dorado-warm)">Inicio</small>Conducta disciplinaria</div>
+        <span class="farr">→</span>
+        <div class="fnode ans"><small>Respuesta</small>Sin daño físico</div>
+        <span class="farr">→</span>
+        <div class="fnode ans"><small>Respuesta</small>Es repetitiva</div>
+        <span class="farr">→</span>
+        <div class="fnode verdict-amber"><small style="color:var(--warning)">Clasificación</small>Tipo II · Falta grave</div>
+        <span class="farr">→</span>
+        <div class="fnode fproto"><small>Protocolo</small>6 pasos + documentos</div>
+      </div>
+      <p class="note fx" style="text-align:center; margin-top:var(--s8)">Mismo caso, mismas respuestas → siempre el mismo debido proceso. Eso es ser <strong>determinístico</strong>.</p>
+    </div>
+  </section>
+
+  <!-- 10 · Cierre -->
+  <section class="slide" aria-label="Cierre">
+    <div class="slide-inner" style="text-align:center">
+      <p class="eyebrow fx" style="justify-content:center">Por qué importa</p>
+      <h1 class="display fx" style="font-size:clamp(34px,5.5vw,64px)">Sin internet. Sin sesgo.<br><em>Con fundamento.</em></h1>
+      <p class="lead fx" style="margin:var(--s6) auto 0; text-align:center">El árbol determinístico protege el debido proceso: presunción de inocencia, derecho a la defensa y confidencialidad, aplicados igual en cada caso — esté o no conectado el colegio.</p>
+      <div class="fx" style="margin-top:var(--s8)">
+        <p class="lead-serif" style="color:var(--vino)">ConciencIA</p>
+        <p class="meta" style="margin-top:6px">I.E. Sor María Juliana · Cartago, Valle del Cauca · «Moral pedestal de la sabiduría»</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Chrome -->
+<div class="dots" id="dots" role="tablist" aria-label="Diapositivas"></div>
+<nav class="nav" aria-label="Navegación de la presentación">
+  <button class="navbtn" id="prev" aria-label="Anterior">‹</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button class="navbtn" id="next" aria-label="Siguiente">›</button>
+</nav>
+<div class="brandtag"><b>ConciencIA</b> · El árbol de decisión</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const dotsWrap = document.getElementById('dots');
+
+  // dots
+  slides.forEach((_, idx) => {
+    const b = document.createElement('button');
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-label', 'Ir a la diapositiva ' + (idx+1));
+    b.addEventListener('click', () => go(idx));
+    dotsWrap.appendChild(b);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function go(n){
+    i = Math.max(0, Math.min(total-1, n));
+    slides.forEach((s,idx) => s.classList.toggle('active', idx===i));
+    dots.forEach((d,idx) => { d.classList.toggle('on', idx===i); d.setAttribute('aria-selected', idx===i); });
+    progress.style.width = ((i+1)/total*100) + '%';
+    counter.textContent = (i+1) + ' / ' + total;
+    prev.disabled = (i===0);
+    next.disabled = (i===total-1);
+  }
+  const nextFn = () => go(i+1);
+  const prevFn = () => go(i-1);
+
+  next.addEventListener('click', nextFn);
+  prev.addEventListener('click', prevFn);
+
+  // teclado
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextFn(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevFn(); }
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(total-1);
+  });
+
+  // clic para avanzar (ignora controles)
+  document.getElementById('deck').addEventListener('click', e => {
+    if (e.target.closest('button, a, .nav, .dots')) return;
+    nextFn();
+  });
+
+  // swipe táctil
+  let x0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) (dx < 0 ? nextFn() : prevFn());
+    x0 = null;
+  }, {passive:true});
+
+  go(0);
+})();
+</script>
+</body>
+</html>
