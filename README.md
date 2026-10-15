@@ -229,7 +229,7 @@ Usted es libre de:
 - **Adaptar** — remezclar, transformar y crear a partir del material
 
 Bajo las siguientes condiciones:
-- **Atribución** — Debe dar crédito apropiado a la I.E. Sor María Juliana y al PhD. Álvaro Cárdenas Orozco
+- **Atribución** — Debe dar crédito apropiado a la I.E. Sor María Juliana y al PhD. Alvaro Cardenas Orozco
 - **NoComercial** — No puede utilizar el material con fines comerciales
 - **CompartirIgual** — Si remezcla o transforma, debe distribuir bajo la misma licencia
 
@@ -240,7 +240,7 @@ Lea el texto completo en [LICENSE](LICENSE).
 ## 👥 Créditos
 
 **Concepción y dirección académica**
-PhD. Álvaro Cárdenas Orozco
+PhD. Alvaro Cardenas Orozco
 Docente de Tecnología e Informática
 I.E. Sor María Juliana, Cartago, Valle del Cauca
 
